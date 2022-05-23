@@ -92,11 +92,11 @@ Donde `type`:
 
 El flujo final del Onboarding de un nuevo usuarios:
 
-![](/home/mzito/dev/work/identicon/docs/images/signup-flow-final.png)
+![](./images/signup-flow-final.png)
 
 ## Propuesta 
 
 El flujo e interacciones se detalla en el siguiente diagrama:
 
-![](/home/mzito/dev/work/identicon/docs/images/signup-flow-proposal.png)
+![](./images/signup-flow-proposal.png)
 

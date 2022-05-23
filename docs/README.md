@@ -1,9 +1,9 @@
 
 # Indice de documentación
 
-### Conceptos ###
+### Qué es ? ###
 
-[Conceptos básicos](conceptos-basicos.md)
+[Conceptos básicos](./conceptos-basicos.md)
 
 ### Como funciona ? ###
 
@@ -17,4 +17,4 @@
 
 ### Otros recursos ###
 
-[Artículos y notas](referencias.md)
+[Artículos y notas](./referencias.md)
