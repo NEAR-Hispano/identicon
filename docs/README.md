@@ -1,5 +1,5 @@
 
-# Indice de documentación
+# Índice de documentación
 
 ### Qué es ? ###
 
