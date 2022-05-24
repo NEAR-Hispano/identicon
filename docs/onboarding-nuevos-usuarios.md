@@ -91,15 +91,11 @@ En el GW se resguardan los datos básicos de la cuenta y su relación con el ema
 | V |jperez2021@gx.com|DECC...yzHX|true|abcd...B3wk| {...}                            |
 | X |dev@someone.com|0123...nmUV|true|eNMO...B3wk| {...}|
 
-Donde `type`:
+Donde 
 
-- `R`: Requester
-
-- `S`: Subject
-
-- `V`: Validator
-
-- `X`: Extern
+- `type` es el tipo de usuario: `R`: Requester, `S`: Subject, `V`: Validator, `X`: Extern
+- `auth_key` es el ya conocido [JSON Web Token (JWT)](https://es.wikipedia.org/wiki/JSON_Web_Token) construido utilizando información de la cuenta, el email, etc. (a determinar durante el desarrollo).
+- `account_keys` es el par de claves (pub/priv) del cuenta de NEAR, generados al crearla.
 
 ## Flujo de mensajes 
 
