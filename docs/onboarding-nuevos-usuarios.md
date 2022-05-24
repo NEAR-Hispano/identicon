@@ -2,7 +2,10 @@
 
 **Objetivos** 
 
-- Facilitar el onboarding de nuevos usuarios que no tienen ningún conocimiento del mundo cripto, utilizando técnicas ya conocidas y probadas en la Web2.
+Utilizaremos técnicas ya conocidas y probadas en la Web2 para conseguir estos objetivos:
+
+- Facilitar el onboarding de nuevos usuarios que no tienen ningún conocimiento del mundo cripto.
+- Minimizar la fricción al registrarse, con especial foco en la usabilidad, evitando tener que crear una wallet e ingresar contraseñas.
 - Vincular las cuentas en NEAR a correos de los usuarios y acceder a la App usando solo un passcode.
 - Permitir que los nuevos usuarios puedan solicitar una verificación en forma inmediata, sin tener que "fondear" sus cuentas.
 
