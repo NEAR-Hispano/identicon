@@ -57,11 +57,21 @@ Los nombres de cuentas serán asignadas por el GW del modo en que se asignan la 
 
 El `account_id` de la cuenta es su clave pública: `BGCCDDHfysuuVnaNVtEhhqeT4k9Muyem3Kpgq2U1m9HX`.
 
-#### Uso de la API por usuarios externos
+#### Uso del Gateway (GW) por parte de la App (UI)
 
-Cuando un usuario externo desea usar la API de Identicon, se debe logear inicialmente como cualquier otro usuario. 
+Cuando un usuario fue dado de alta, se generará para el mismo una `AUTH_KEY` que se guardará en el almacenamiento local de su navegador (`localStorage`), en forma similar a como opera el wallet de NEAR.
 
-Obtendra así un `API_KEY` (similar a como funcionan muchas APIs) y además dispondrá del nombre de la cuenta creada para su uso. La información estará disponible en su Dashboard, desde donde puede renovar su API_KEY.
+Mientras esté conectado, la UI usará esta AUTH_KEY para interactuar con el GW, pasando la AUTH_KEY en el header  `Authorization = Bearer AUTH_KEY` en cada llamado al GW.
+
+Si cierra la ventana del navegador, y vuelve a abrir la App en un momento futuro, se lee la AUTH_KEY del `localStorage` y se puede seguir trabjando igual que antes, sin necesidad de conectarse nuevamente. 
+
+Si eligiera desconectarse, o borrar completamente el `localStorage` (por ej: borrando todas sus cookies) deberá logearse nuevamente enviando su email, esperando el passcode que enviará el GW e ingresando el passcode recibido. Esto vuelve a generar otra AUTH_KEY con la cual ya puede continuar trabajando o realizar nuevas solicitudes.
+
+#### Uso de la API por parte de usuarios externos
+
+Cuando un usuario externo desea usar la API de Identicon, se debe registrar inicialmente como cualquier otro usuario. 
+
+Obtendra así una `API_KEY` (similar a como funcionan muchas APIs) y además dispondrá del nombre de la cuenta creada para su uso. La información estará disponible en su Tablero personal, desde donde puede renovar su API_KEY.
 
 Para usar la API deberá usar esta API_KEY pasando el header  `Authorization = Bearer API_KEY` en el cada llamado.
 
@@ -71,12 +81,12 @@ Debido a que las cuentas se fondearán inicialmente solo con el monto necesario 
 
 En el GW se resguardan los datos básicos de la cuenta y su relación con el email, por ejemplo:
 
-|type|email|account_id|verified| keys                             |
-|--|--|--|--|--|
-|R|marux2022@gx.com|BGCC...m9HX|false|{"public":"...","private":"..."}|
-|S|mlauvalez@gx.com|ACCC...67HX|true| {...}                            |
-| V    |jperez2021@gx.com|DECC...yzHX|true| {...}                            |
-| X    |dev@someone.com|0123...nmUV|true|{...}|
+|type|email|account_id|verified|auth_key|account_keys|
+|--|--|--|--|--|--|
+| R |marux2022@gx.com|BGCC...m9HX|false|eyJh...B3wk|{"pub":"...","priv":"..."}|
+| S |mlauvalez@gx.com|ACCC...67HX|true|ecff...B3wk| {...}                            |
+| V |jperez2021@gx.com|DECC...yzHX|true|abcd...B3wk| {...}                            |
+| X |dev@someone.com|0123...nmUV|true|eNMO...B3wk| {...}|
 
 Donde `type`:
 
