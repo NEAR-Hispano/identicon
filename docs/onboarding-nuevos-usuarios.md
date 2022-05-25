@@ -101,7 +101,7 @@ Donde
 
 El flujo final del Onboarding de un nuevo usuarios:
 
-![](./images/signup-flow-final.png)
+![](./images/Signup_flow.png)
 
 ## Propuesta 
 
