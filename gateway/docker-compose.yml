@@ -1,0 +1,59 @@
+version: "3.7"
+
+x-common-variables: &common-variables
+  NODE_ENV: ${NODE_ENV}
+  EXPRESS_PORT: ${EXPRESS_PORT}
+  API_VERSION: ${API_VERSION}
+  DB_HOST: ${DB_HOST}
+  DB_NAME: ${DB_NAME}
+  DB_USER: ${DB_USER}
+  DB_PASS: ${DB_PASS}
+  DB_PATH: ${DB_PATH}
+
+services:
+  local:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    image: identicon-gw
+    environment:
+      <<: *common-variables
+    ports:
+      - '${EXPRESS_PORT}:${EXPRESS_PORT}'
+      - '9229:9229'
+    container_name: identicon-gw_local
+    volumes:
+      - ./docker/setup:/setup
+      - ./src:/app/src
+      - ./db:/app/db
+    entrypoint: []
+    command: ["/setup/entry-point-local.sh"]
+    tty: true
+
+  test:
+    build:
+      context: .
+    image: identicon-gw
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./coverage:/app/coverage
+    container_name: identicon-gw_test
+    environment:
+      <<: *common-variables
+    entrypoint: ["yarn", "test"]
+
+  lint:
+    build:
+      context: .
+    image: identicon-gw
+    volumes:
+      - ./src:/app/src
+      - ./.eslintrc.json:/app/.eslintrc.json
+    container_name: identicon-gw_lint
+    tty: true
+    entrypoint: ["yarn", "run", "lint"]
+
+networks:
+  default:
+    name: identicon-gw
