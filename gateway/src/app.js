@@ -38,7 +38,10 @@ morgan(app, {
 app.use('/v1/health', utilsRoutes);
 app.use('/v1/accounts'/*, AuthMiddleware*/, accountsRoutes);
 
-sequelize.sync({ alter: true }).then(() => {
+sequelize.sync({ 
+  sync: true
+  // alter: true 
+}).then(() => {
   console.log("Sequelize drop and re-sync db completed");
   app.listen(port, () => {
     console.log(`Api started at http://localhost:${port}`);

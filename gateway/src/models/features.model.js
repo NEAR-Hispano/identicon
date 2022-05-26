@@ -1,5 +1,5 @@
-const AccountsModel = (sequelize, { DataTypes }) => {
-  const Accounts = sequelize.define("accounts", {
+const FeaturesModel = (sequelize, { DataTypes }) => {
+  const Features = sequelize.define("features", {
     uid: {
       type: DataTypes.STRING(100),
       unique: true,
@@ -8,56 +8,35 @@ const AccountsModel = (sequelize, { DataTypes }) => {
         notEmpty: true,
       }
     },
-    state: {
-      type: DataTypes.ENUM("A", "I", "D"),
-      allowNull: true,
-    },
-    type: {
-      type: DataTypes.ENUM("RQ", "VL", "APP"),
-      allowNull: true,
-    },
-    email: {
+    country: {
       type: DataTypes.STRING(100),
-      unique: true,
       allowNull: true,
       validate: {
         notEmpty: true,
       }
     },
-    phone: {
+    region: {
       type: DataTypes.STRING(100),
-      unique: true,
       allowNull: true,
       validate: {
         notEmpty: true,
       }
-    },
-    keys: {
-      type: DataTypes.BLOB,
-      allowNull: true,
-      validate: {
-        notEmpty: true,
-      }
-    },
-    verified: {
-      type: DataTypes.ENUM("TRUE", "FALSE"),
-      defaultValue: "FALSE"
-    },
-    personal_info: {
-      type: DataTypes.BLOB,
-      allowNull: true,
-      validate: {
-        notEmpty: true,
-      }
-    },
-    subject_id: {
+    },    
+    comune: {
       type: DataTypes.STRING(100),
-      allowNull: false,
+      allowNull: true,
       validate: {
         notEmpty: true,
       }
     },
-    linked_account_uid: {
+    coords: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+      validate: {
+        notEmpty: true,
+      }
+    },
+    idioms: {
       type: DataTypes.STRING(100),
       allowNull: true,
       validate: {
@@ -67,7 +46,7 @@ const AccountsModel = (sequelize, { DataTypes }) => {
   },
   {
     freezeTableName: true,
-    //timestamps: true,
+    timestamps: false,
     underscored: true
   });
 
@@ -79,7 +58,7 @@ const AccountsModel = (sequelize, { DataTypes }) => {
 
   };
 */
-  return Accounts;
+  return Features;
 };
 
-module.exports = AccountsModel;
+module.exports = FeaturesModel;

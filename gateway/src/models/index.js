@@ -13,15 +13,17 @@ const sequelize = new Sequelize(
       acquire: 30000,
       idle: 10000
     },
-    storage: `${config.database.db_path}/${config.database.name}.sqlite`
+    storage: `${config.database.path}/${config.database.name}.sqlite`
   }
 );
 
 // db models
 const AccountsModel = require("./accounts.model.js");
+const FeaturesModel = require("./features.model.js");
 
 const models = {
-  AccountsModel: AccountsModel(sequelize, Sequelize)
+  AccountsModel: AccountsModel(sequelize, Sequelize),
+  FeaturesModel: FeaturesModel(sequelize, Sequelize)
 } 
 
 // db relations
