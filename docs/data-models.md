@@ -16,9 +16,11 @@ Design goals:
 
 ## Gateway DB Data Model ##
 
-*Preliminar work in progress. We use SQLite3 datatypes.* 
+:hand: This is preliminar work in progress and may change in the future. 
 
-![Schema ERD](./images/Gateway_DB_Schema.png)
+We use SQLite3 datatypes to describe the table attributes as they are general and can be easily adapted to other SQL variants.
+
+![Gateway DB Schema](./images/Gateway_DB_Schema.png)
 
 #### Table `accounts` ####
 
@@ -112,118 +114,87 @@ This is  helper table for mantaining the relation with a signup/recovery session
 
 ## Blockchain data model
 
-**NOTE** Preliminar work in progress. Extracted form [first (naive) implementation](../contracts/README.md#Structures).
+:hand:  This is preliminar work in progress. Some definitions below may change.  It is bases on the [first (naive) implementation](../contracts/README.md#Structures) of the VerificationContract but updated.
 
-~~~
-// The Subject government identification as a string formed 
-// using "{country}_{type}_{number}", ex: 'ar_dni_12488353'
-// compatible with [NEAR DID](https://github.com/ontology-tech/DID-spec-near/blob/master/NEAR/DID-Method-NEAR.md)
-// so we can have a NEAR DID like "did:near:ar_dni_12488353.near" 
-type SubjectId = String;  
+The descriptions here follow the RUST conventions and datatypes usage, but in an informal way. The formal definitions will be found in the code in [contracts/src/definitions.rs](../contracts/src/definitions.rs).
 
-// A NEAR account ID, ex: 'juanmescher.near'
-type ValidatorId = String; 
+![Blockchain State Schema](./images/Blockchain_State_Schema.png)
 
-// A DateTime in ISO format 'AAAA-MM-DD hh:mm:ss', ex: '2022-03-27 00:00:00'
-type ISODateTime = String; 
+#### Custom types #### 
 
-// The Time Window in which the verification must be performed
-struct TimeWindow {
-  starts: ISODateTime,
-  ends: ISODateTime
-}
+**Simple types**
 
-// All the relevant Subject information
-struct SubjectInfo {
-  encripted: String
-}
+|Custom type|RUST Type|Description|
+|--|--|--|
+| SubjectId | String | The Subject government identification as a string formed using `{country}_{type}_{number}`, ex: `ar_dni_12488353` |
+|ValidatorId|String|A NEAR AccountId, ex: `juanmescher.near` or `5GDZ...ekUj`|
+|ISODateTime|String|A DateTime in ISO-8601 format: `AAAA-MM-DD hh:mm:ss`|
+|TimeWindow|struct|The Time Window in which the verification must be performed<br />`{ starts: ISODateTime,  ends: ISODateTime }`|
+|RequestInfo|String|Relevant request information, but fully **encripted**. It will usually be an encripted JSON object, whose contents will dependen on the VerificationType.|
 
-// The different verification services 
-enum VerificationType {
-  /// Validates that the Subject is alive, and lives in the indicated Location.
-  /// It also implies a ProofOfIdentity. This is a recurrent validation, 
-  // meaning it must be repeated every month.
-  ProofOfLife,
-  
-  /// Validates that the Subject is who he says he is, and that is (obviously) alive.
-  ProofOfIdentity,
+**enum VerificationType**
 
-  // Not implemented, reserved for future use
-  ProofOfExistence { asset: String },
-  ProofOfState { asset: String },
-  ProofOfOwnership { asset: String },
-  ProofOfService { service: String },
-}
+Enumerates the  different verification services variants:
 
-enum VerificationState {
-  /// Started but waiting for the validator results  
-  Pending, // code: P
+| Case                | Description                                                  |
+| ------------------- | ------------------------------------------------------------ |
+| PoLife              | Validates that the Subject is alive, and lives in the indicated Location. It also implies a ProofOfIdentity. This is a recurrent validation, meaning it must be repeated every month. |
+| PoIdentity          | Validates that the Subject is who he says he is, and that is (obviously) alive. |
+| PoExistence (asset) | Not implemented, reserved for future use.                    |
+| PoState (asset)     | Not implemented, reserved for future use.                    |
+| PoOwnership (asset) | Not implemented, reserved for future use.                    |
+| PoService (asset)   | Not implemented, reserved for future use.                    |
 
-  /// Verification result is approved
-  Approved, // code: AP
+**enum VerificationState**
 
-  /// Verification result is Rejected
-  Rejected { why: String }, // code: RX
+Enumerates the different states in which a given request may be. Some requests may require a *why: String* to describe the reason for the given state change.
 
-  /// It is not possible to do the verification, due to some reason which exceeds 
-  /// the Validator possibilites, such as inaccesible area, weather, etc
-  NotPossible { why: String }, // code: NP
+| Case              | Description                                                  |
+| ----------------- | ------------------------------------------------------------ |
+| Pending           | Started but waiting for the validator results. Code ` P`     |
+| Approved          | Verification result is approved.  Code ` AP`                 |
+| Rejected (why)    | Verification result is Rejected.  Code ` RX`                 |
+| NotPossible (why) | It is not possible to do the verification, due to some reason which exceeds the Validator possibilites, such as inaccesible area, weather, etc. Code `NP` |
+| WillNotDo (why)   | Validator will not do the verification, for some personal reason, but it requires a cause and explanation. Too many of this refusals may eliminate the Validator from the validators pool. Code `WND` |
+| Canceled (why)    | Verification was canceled by Requestor. Code `CX`            |
 
-  /// Validator will not do the verification, for some personal reason,
-  /// but it requires a cause and explanation. Too many of this refusals 
-  /// may eliminate the Validator from the validators pool.
-  WillNotDo { why: String } // code: WND
-  
-  /// Verification was canceled by Requestor
-  Canceled { why: String } // code: CX
-}
+**struct VerificationResult**
 
-// The min and max required validators to verify a given request
-// it may vary randomly between MIN and MAX
-const MIN_VALIDATORS = 3;
-const MAX_VALIDATORS = 4;
+This struct describes the result reported by a given validator. When the validator has not yet performed the validation, it just describes the assigned task.
 
-struct VerificationResult {
-  validator_id: ValidatorId,
-  result: VerificationState,
-  timestamp: ISODateTime,
-}
+| Property     | Type              | Description                                                  |
+| ------------ | ----------------- | ------------------------------------------------------------ |
+| validator_id | ValidatorId       | The validator account assigned to perform this validation.   |
+| result       | VerificationState | The result state. It may be in differente states, depending on the validator actions. |
+| timestamp    | ISODateTime       | The timestamp when the validation was performed, or an empty timestamp otherwise. |
 
-struct VerificationRequest {
-  // the verification service required, which may include additional info
-  // for some types such as ProofOfOwnership(asset) or ProofOfService(service).
-  is_type: VerificationType,
-  
-  // this is the account who requested the verification and will pay for it,
-  // and is NOT the same as the subject to be verified.
-  requestor_id: AccountId,
-  
-  // this is the subject to be verified, which is ALLWAYS a real human being,
-  // cats, dogs and other pets may be considered in the future :-)
-  subject_id: SubjectId,
-  subject_info: SubjectInfo,
-  when: TimeWindow,
-  
-  // the verification state of the whole request, as a result of the individual
-  // verifications. If any of the individual verifications is Rejected, then the
-  // whole verification is Rejected.
-  state: VerificationState, 
-  
-  // the array [MIN_VALIDATORS..MAX_VALIDATORS] of individual validator verifications  
-  results: Vec<VerificationResult> 
-}
+**struct VerificationCertificate NFT**
 
-pub struct VerificationContract {
-  // the pending verifications as a iterable Map keyed by SubjectId
-  verifications: UnorderedMap<SubjectId, VerificationRequest>,
-  
-  // the assigned validations, as a Map keyed by ValidatorId
-  // the value is a (variable) list of the SubjectIds to verify
-  assignments: UnorderedMap<ValidatorId, Vec<SubjectId>>,
-  
-  // the Pool of validators, as an array of ValidatorIds
-  validators: Vec<ValidatorId>,
-}
+:warning: **URGENT** :warning: MUST define this as soon as possible.
 
-~~~
+**struct VerificationRequest**
 
+This fully describes a given request for verification. Requests may be of different types, but we currently we will only deal with the PoLife and PoIdentity cases. 
+
+| Property      | Type                    | Description                                                  |
+| ------------- | ----------------------- | ------------------------------------------------------------ |
+| request_uid   | RequestId               | The current UUID of this request, as given by the caller API or dApp. |
+| is_type       | VerificationType        | The verification service required, which may include additional info for some types. |
+| requestor_uid | AccountId               | This is the account who requested the verification and will pay for it, and is NOT the same as the subject to be verified. |
+| subject_id    | SubjectId               | This is the subject to be verified, which is ALLWAYS a real human being. Ccats, dogs and other pets may be considered in the future- |
+| info          | RequestInfo             | Relevant request information, but fully **encripted**.       |
+| when          | TimeWindow,             | The time window in which this verification MUST be performed. |
+| state         | VerificationState       | The verification state of the whole request, as a result of the individual verifications. If any of the individual verifications is Rejected, then the whole verification is Rejected. |
+| results       | Vec                     | The array [MIN_VALIDATORS..MAX_VALIDATORS] of individual validator VerificationsResults. |
+| certificate   | VerificationCertificate | The final certificate emitted by the verification process.   |
+
+#### contract struct VerificationContract ####
+
+This contains the full contract state.
+
+| Property      | Type         | Description                                                  |
+| ------------- | ------------ | ------------------------------------------------------------ |
+| verifications | UnorderedMap | The pending verifications as an iterable Map keyed by RequestId. When a verification is completed, it must be removed. The value is the VerificationRequest to be performed. |
+| subjects      | UnorderedMap | The pending verifications as an iterable Map but keyed by SubjectId, so we avoid traversing the verifications Map to find if a given subject has one or more pending requests. The value is a (variable) array of the pending requests of this particular subject. |
+| assignments   | UnorderedMap | The assigned validations, as an iterable Map keyed by ValidatorId. The value is a (variable) array of the RequestIds to be verified by this validator. |
+| validators    | Vec          | The Pool of validators, as an array of ValidatorIds.         |
