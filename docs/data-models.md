@@ -100,18 +100,14 @@ BC transactions linked to some particular request. Note that all transaction inf
 
 #### Table `Sessions` ####
 
-This is  helper table for mantaining the reation with a session_key and  the corresponding passcode sent for a signup or a recovery account handshake. Once the passcode has been verified it will be removed from the table.
-
-ignups and recoveries currently active authorization keys. If certain AUTH_KEY is present in this table it indicates that it is a valid key, and we can proceed with the request. 
-
-*NOTE: This may not be needed. The info encripted in the JWT token may be enough to process the request.*
+This is  helper table for mantaining the relation with a signup/recovery session_key and  the corresponding passcode sent for aan account signup/recovery/login handshake. Once the passcode has been verified (or rejected) it MUST be removed from the table.
 
 |Column name|Datatype|Description|
 |--|--|--|
-| `key` | text | UNIQUE JWT authorization token |
-| passcode | integer | A numeric passcode |
+| `key` | text | The signup/recovery/login session key |
+| passcode | integer | A numeric passcode for validating signup/login |
 | created_utc | text | Created UTC timestamp in ISO-8601 format |
-| expires_utc | text |  Max time for a passcode life, UTC time stamp in ISO-8601 format.  |
+| expires_utc | text |  Max time for the passcode life, UTC time stamp in ISO-8601 format.  |
 
 
 ## Blockchain data model
