@@ -28,7 +28,7 @@ This table is used mainly for onboarding new users and mantaining registered use
 |--|--|--|
 | `uid` | text | UNIQUE NEAR account ID  |
 | state | text | `A`: active `I`: Inactive `D`: deleted |
-| type | text | `RQ`: Requester, `VL`: Validator, `APP`: Application |
+| type | text | `RQ`: Requester, `VL`: Validator, `XA`: External app |
 | email | text | Account email |
 | phone | text | Account phone |
 | keys | blob | **Encripted JSON** account pub/priv keys |
