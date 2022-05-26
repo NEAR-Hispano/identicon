@@ -11,3 +11,18 @@ Cargo.lock
 
 /res/
 /neardev/
+
+
+## Gateway Folder ( nodejs project )
+/gateway/.DS_Store
+/gateway/.vscode
+/gateway/node_modules
+/gateway/package-lock.json
+/gateway/coverage
+/gateway/.env
+/gateway/logs/*
+/gateway/src/package-lock.json
+/gateway/src/tests/reports/*
+/gateway/*.zip
+/gateway/temp/*
+/gateway/db/*
