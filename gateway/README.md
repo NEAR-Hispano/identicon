@@ -1,2 +1,5 @@
-## run project
+## Run GW project
+``` 
+docker-compose up gw-local
+```
 

@@ -20,10 +20,14 @@ const sequelize = new Sequelize(
 // db models
 const AccountsModel = require("./accounts.model.js");
 const FeaturesModel = require("./features.model.js");
+const VerificationsModel = require("./verifications.model.js");
+const TransactionsModel = require("./transactions.model.js");
 
 const models = {
   AccountsModel: AccountsModel(sequelize, Sequelize),
-  FeaturesModel: FeaturesModel(sequelize, Sequelize)
+  FeaturesModel: FeaturesModel(sequelize, Sequelize),
+  VerificationsModel: VerificationsModel(sequelize, Sequelize),
+  TransactionsModel: TransactionsModel(sequelize, Sequelize)
 } 
 
 // db relations
