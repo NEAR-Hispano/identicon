@@ -1,6 +1,6 @@
 # Data Models
 
-Nomenclature:
+Naming conventions:
 
 - `BC`: NEAR Blockchain
 - `GW`: Gateway (mediator)
@@ -11,14 +11,18 @@ Design goals:
 
 - Keep most of the info *inside* the BC data space.
 - Use the GW as an encryption layer *over* the BC.
-- Use the GW DB as an indexer and for onboarding account info.
+- Use the GW DB as an indexer and for onboarding new users.
 - Keep the GW as minimum layer for a simple OpenAPI.
 
 ## Gateway DB Data Model ##
 
 *Preliminar work in progress. We use SQLite3 datatypes.* 
 
+![Schema ERD](./images/Gateway_DB_Schema.png)
+
 #### Table `accounts` ####
+
+This table is used mainly for onboarding new users and mantaining registered users linked to its NEAR account and keys. There is also needed for account recovery using email or phone.
 
 |Column name|Datatype|Description|
 |--|--|--|
@@ -27,26 +31,28 @@ Design goals:
 | type | text | `RQ`: Requester, `VL`: Validator, `APP`: Application |
 | email | text | Account email |
 | phone | text | Account phone |
-| created_utc | text | Created UTC time stamp in ISO-8601 format |
-| updated_utc | text | Last update UTC time stamp in ISO-8601 format |
 | keys | blob | **Encripted JSON** account pub/priv keys |
 | state | text | `A`: active `I`: Inactive `X`: deleted |
 | verified | text | Verification state, `TRUE` or `FALSE` |
 | personal_info | text | **Encripted JSON** personal info |
 | subject_id | text | Subject ID, example: `ar_dni_12345678`, may be empty |
 | linked_account_uid | text | A NEAR account ID linked to this account, used by validators to receive payments. |
-| | | |
+| created_utc | text | Created UTC time stamp in ISO-8601 format |
+| updated_utc | text | Last update UTC time stamp in ISO-8601 format |
 
-The `personal_info` JSON:
-- full_name: Full person name, may be empty.
-- birthday: 
-- age: 
-- country: Country code.
-- region: Region code (province, state, ...).
-- comune: Region subdivisions code (county, Municipio, comuna, etc) code |
-- idioms: Comma separated list of lang codes.
-- address: Full address information, expressed as a string which can be used by Maps APIs to find location.
-- ?: other ?
+The `personal_info` JSON:
+
+| Attribute | Datatype | Description |
+| --------- | ----------- | ---- |
+|full_name| text | Full person name, may be empty|
+|birthday|text||
+|age| integer | |
+|country | text | Country code|
+| region | text | Region code (province, state, ...) |
+| comune | text | Region subdivisions code (county, Municipio, comuna, etc) code |
+| idioms | text | Comma separated list of lang codes |
+| address | text | Full address information, expressed as a string which can be used by Maps APIs to find location |
+|  other ? | ? | ? |
 
 #### Table `Features` ####
 
@@ -54,7 +60,7 @@ This is a helper table is used to select validators, according to certain featur
 
 |Column name|Datatype|Description|
 |--|--|--|
-| `uid` | text | UNIQUE NEAR account ID |
+| `account_uid` | text | UNIQUE account Uid |
 | country | text | Country code |
 | region | text | Region code |
 | comune | text | Comune code |
@@ -80,7 +86,7 @@ Requested verifications, which can be in different states. This is mainly used a
 
 #### Table `Transactions` ####
 
-BC transactions linked to some particular request. Note that all transaction info is stored in the BC.
+BC transactions linked to some particular request. Note that all transaction info is stored in the BC, here we just maintain a copy of some minimal info.
 
 |Column name|Datatype|Description|
 |--|--|--|
@@ -90,19 +96,22 @@ BC transactions linked to some particular request. Note that all transaction inf
 | actor_uid | text | Actor account uid which participated in this transaction |
 | tx_uid | text | Transaction UID in the BC |
 | tx_log | text | JSON additional information from TX log |
+| created_utc | text | Created UTC time stamp in ISO-8601 format |
 
 #### Table `Sessions` ####
 
-A table of currently active authorization keys. If certain AUTH_KEY is present in this table it indicates that it is a valid key, and we can proceed with the request. 
+This is  helper table for mantaining the reation with a session_key and  the corresponding passcode sent for a signup or a recovery account handshake. Once the passcode has been verified it will be removed from the table.
+
+ignups and recoveries currently active authorization keys. If certain AUTH_KEY is present in this table it indicates that it is a valid key, and we can proceed with the request. 
 
 *NOTE: This may not be needed. The info encripted in the JWT token may be enough to process the request.*
 
 |Column name|Datatype|Description|
 |--|--|--|
 | `key` | text | UNIQUE JWT authorization token |
-| created_utc | text | Created UTC time stamp in ISO-8601 format |
-| updated_utc | text | Last update UTC time stamp in ISO-8601 format |
-| expires_utc | text |  Expiration UTC time stamp in ISO-8601 format. This may be ignored for now ? |
+| passcode | integer | A numeric passcode |
+| created_utc | text | Created UTC timestamp in ISO-8601 format |
+| expires_utc | text |  Max time for a passcode life, UTC time stamp in ISO-8601 format.  |
 
 
 ## Blockchain data model
@@ -219,5 +228,6 @@ pub struct VerificationContract {
   // the Pool of validators, as an array of ValidatorIds
   validators: Vec<ValidatorId>,
 }
+
 ~~~
 
