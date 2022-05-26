@@ -114,17 +114,17 @@ This is  helper table for mantaining the relation with a signup/recovery session
 
 ## Blockchain data model
 
-:hand:  This is preliminar work in progress. Some definitions below may change.  It is bases on the [first (naive) implementation](../contracts/README.md#Structures) of the VerificationContract but updated.
+:hand:  This is preliminar work in progress. Some definitions below may change.  It is based on the [first (naive) implementation](../contracts/README.md#Structures) of the VerificationContract but updated.
 
 The descriptions here follow the RUST conventions and datatypes usage, but in an informal way. The formal definitions will be found in the code in [contracts/src/definitions.rs](../contracts/src/definitions.rs).
 
 ![Blockchain State Schema](./images/Blockchain_State_Schema.png)
 
-#### Custom types #### 
+### Custom types ###
 
 **Simple types**
 
-|Custom type|RUST Type|Description|
+|Custom|RUST Type|Description|
 |--|--|--|
 | SubjectId | String | The Subject government identification as a string formed using `{country}_{type}_{number}`, ex: `ar_dni_12488353` |
 |ValidatorId|String|A NEAR AccountId, ex: `juanmescher.near` or `5GDZ...ekUj`|
@@ -137,7 +137,7 @@ The descriptions here follow the RUST conventions and datatypes usage, but in an
 Enumerates the  different verification services variants:
 
 | Case                | Description                                                  |
-| ------------------- | ------------------------------------------------------------ |
+| ------------------------- | ------------------------------------------------------------ |
 | PoLife              | Validates that the Subject is alive, and lives in the indicated Location. It also implies a ProofOfIdentity. This is a recurrent validation, meaning it must be repeated every month. |
 | PoIdentity          | Validates that the Subject is who he says he is, and that is (obviously) alive. |
 | PoExistence (asset) | Not implemented, reserved for future use.                    |
@@ -149,14 +149,14 @@ Enumerates the  different verification services variants:
 
 Enumerates the different states in which a given request may be. Some requests may require a *why: String* to describe the reason for the given state change.
 
-| Case              | Description                                                  |
-| ----------------- | ------------------------------------------------------------ |
-| Pending           | Started but waiting for the validator results. Code ` P`     |
-| Approved          | Verification result is approved.  Code ` AP`                 |
-| Rejected (why)    | Verification result is Rejected.  Code ` RX`                 |
-| NotPossible (why) | It is not possible to do the verification, due to some reason which exceeds the Validator possibilites, such as inaccesible area, weather, etc. Code `NP` |
-| WillNotDo (why)   | Validator will not do the verification, for some personal reason, but it requires a cause and explanation. Too many of this refusals may eliminate the Validator from the validators pool. Code `WND` |
-| Canceled (why)    | Verification was canceled by Requestor. Code `CX`            |
+| Case                 | Description                                                  |
+| -------------------- | ------------------------------------------------------------ |
+| Pending              | Started but waiting for the validator results. Code ` P`     |
+| Approved             | Verification result is approved.  Code ` AP`                 |
+| Rejected (why)       | Verification result is Rejected.  Code ` RX`                 |
+| NotPossible (why)    | It is not possible to do the verification, due to some reason which exceeds the Validator possibilites, such as inaccesible area, weather, etc. Code `NP` |
+| WillNotDo (why)      | Validator will not do the verification, for some personal reason, but it requires a cause and explanation. Too many of this refusals may eliminate the Validator from the validators pool. Code `WND` |
+| Canceled (why)       | Verification was canceled by Requestor. Code `CX`            |
 
 **struct VerificationResult**
 
@@ -183,12 +183,12 @@ This fully describes a given request for verification. Requests may be of differ
 | requestor_uid | AccountId               | This is the account who requested the verification and will pay for it, and is NOT the same as the subject to be verified. |
 | subject_id    | SubjectId               | This is the subject to be verified, which is ALLWAYS a real human being. Ccats, dogs and other pets may be considered in the future- |
 | info          | RequestInfo             | Relevant request information, but fully **encripted**.       |
-| when          | TimeWindow,             | The time window in which this verification MUST be performed. |
+| when          | TimeWindow              | The time window in which this verification MUST be performed. |
 | state         | VerificationState       | The verification state of the whole request, as a result of the individual verifications. If any of the individual verifications is Rejected, then the whole verification is Rejected. |
 | results       | Vec                     | The array [MIN_VALIDATORS..MAX_VALIDATORS] of individual validator VerificationsResults. |
 | certificate   | VerificationCertificate | The final certificate emitted by the verification process.   |
 
-#### contract struct VerificationContract ####
+### Contract struct VerificationContract ###
 
 This contains the full contract state.
 
