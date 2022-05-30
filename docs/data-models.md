@@ -181,13 +181,25 @@ This fully describes a given request for verification. Requests may be of differ
 | ------------- | ----------------------- | ------------------------------------------------------------ |
 | request_uid   | RequestId               | The current UUID of this request, as given by the caller API or dApp. |
 | is_type       | VerificationType        | The verification service required, which may include additional info for some types. |
-| requestor_uid | AccountId               | This is the account who requested the verification and will pay for it, and is NOT the same as the subject to be verified. |
+| requester_uid | AccountId               | This is the account who requested the verification and will pay for it, and is NOT the same as the subject to be verified. |
 | subject_id    | SubjectId               | This is the subject to be verified, which is ALLWAYS a real human being. Ccats, dogs and other pets may be considered in the future- |
 | info          | RequestInfo             | Relevant request information, but fully **encripted**.       |
 | when          | TimeWindow              | The time window in which this verification MUST be performed. |
 | state         | VerificationState       | The verification state of the whole request, as a result of the individual verifications. If any of the individual verifications is Rejected, then the whole verification is Rejected. |
 | results       | Vec                     | The array [MIN_VALIDATORS..MAX_VALIDATORS] of individual validator VerificationsResults. |
 | certificate   | VerificationCertificate | The final certificate emitted by the verification process.   |
+
+**struct Spending**
+
+This struct describes the spending allowed and used in a given time period for a given requester. At the start of each time period (each month), depending on the requester type (`RQ`, `VL` or `XA`) we assign a free quota to each requester. Every time he/she makes a request we discount it from his/her free quota. When no more free quota is available, the requester account must be funded to continue using the service.
+
+| Property     | Type              | Description                                                  |
+| ------------ | ----------------- | ------------------------------------------------------------ |
+| requester_id | AccountId       | This is the account who requested the verification.   |
+| from | ISODate | Starting date for the period, ex: '2022-01-06'.|
+| to | ISODate |  Ending date for the period, ex: '2022-30-06'. |
+| free | u16 | Quantity of free requests this account can do in the given time period.  |
+| consumed | u16 | Quantity of requests this account did in the given time period. | 
 
 ### Contract struct VerificationContract ###
 
@@ -199,3 +211,5 @@ This contains the full contract state.
 | subjects      | UnorderedMap | The pending verifications as an iterable Map but keyed by SubjectId, so we avoid traversing the verifications Map to find if a given subject has one or more pending requests. The value is a (variable) array of the pending requests of this particular subject. |
 | assignments   | UnorderedMap | The assigned validations, as an iterable Map keyed by ValidatorId. The value is a (variable) array of the RequestIds to be verified by this validator. |
 | validators    | Vec          | The Pool of validators, as an array of ValidatorIds.         |
+| spendings | UnorderedMap | The spending as an iterable Map keyed by AccountId. The value is the free and used requests quota of this particular account. |
+
