@@ -8,7 +8,7 @@ Starts the onboarding process for a new user.
 
 Must include either a "phone" or an "email"  property in the body. The server will proceed according to which one is present in the body.
 
-~~~http
+~~~
 headers:
   Content-Type: application/json
   Accept: application/json
@@ -21,7 +21,7 @@ body:
 
 Will send a passcode to the email or phone, and return a `session_key` linked to the sent `passcode` needed to continue the onboarding.
 
-~~~http
+~~~
 headers:
   Status: 200 OK. User not registered, we already send a "passcode" to this email or phone, please wait.
   Content-Type: application/json
@@ -45,7 +45,7 @@ Used when the user has logged out and it's AUTH_KEY has been erased from the Loc
 
 Must include either a "phone" or an "email"  property in the body. The server will proceed according to which one is present in the body.
 
-~~~http
+~~~
 headers:
   Content-Type: application/json
   Accept: application/json
@@ -58,7 +58,7 @@ body:
 
 Server will send a passcode to the email or phone, and return a `session_key` linked to the sent `passcode` needed to continue the recovery. 
 
-~~~http
+~~~
 headers:
   Status: 200 OK. User already registered, we already send a "passcode" to this email or phone, wait for it.
   Content-Type: application/json
@@ -81,7 +81,7 @@ When the user has completed the signup or recovery phases, and has entered the r
 
 Must send the `session_key` and the user input `passcode`.
 
-~~~http
+~~~
 headers:
   Content-Type: application/json
   Accept: application/json
@@ -94,7 +94,7 @@ body:
 
 Will return the `AUTH_KEY` which can be used  for all subsequent calls to the API.
 
-~~~http
+~~~
 headers:
   Status: 200 Ok. Login succesfull, can use AUTH_KEY from now on.
   Content-Type: application/json
