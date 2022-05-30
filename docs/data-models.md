@@ -129,6 +129,7 @@ The descriptions here follow the RUST conventions and datatypes usage, but in an
 | SubjectId | String | The Subject government identification as a string formed using `{country}_{type}_{number}`, ex: `ar_dni_12488353` |
 |ValidatorId|String|A NEAR AccountId, ex: `juanmescher.near` or `5GDZ...ekUj`|
 |ISODateTime|String|A DateTime in ISO-8601 format: `AAAA-MM-DD hh:mm:ss`|
+|ISODate|String|A Date in partial ISO-8601 format: `AAAA-MM-DD`|
 |TimeWindow|struct|The Time Window in which the verification must be performed<br />`{ starts: ISODateTime,  ends: ISODateTime }`|
 |RequestInfo|String|Relevant request information, but fully **encripted**. It will usually be an encripted JSON object, whose contents will dependen on the VerificationType.|
 
