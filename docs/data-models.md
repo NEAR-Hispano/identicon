@@ -112,6 +112,15 @@ This is  helper table for mantaining the relation with a signup/recovery session
 | expires_utc | text |  Max time for the passcode life, UTC time stamp in ISO-8601 format.  |
 
 
+## Subjects and Personal Data Access Model ##
+
+:hand: This is preliminar work in progress and may change in the future. 
+
+This takes into account the needs to allow restricted access to some accounts to a subject's personal data. It defines which accounts have been given permission (allowed) to access a certain set of properties (an only those ones).
+
+![Subjects and Personal Data DB Schema](./images/Personal_Data_Access_Schema.png)
+
+
 ## Blockchain data model
 
 :hand:  This is preliminar work in progress. Some definitions below may change.  It is based on the [first (naive) implementation](../contracts/README.md#Structures) of the VerificationContract but updated.
