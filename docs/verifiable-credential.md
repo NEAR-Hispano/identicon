@@ -99,6 +99,6 @@ Both NFTs and VCs are used to uniquely identify something that belongs to an ent
 VCs are also used to prove that a claim made by an entity is true. This claim can be credentials such as PII, university degree, and more. In this case, a gaming club can issue a VC to Lisa to claim that she is the head of their pokemon meetup club.
 In this sense, both NFTs and VCs prove that something belongs to an entity and this could be anything from a PII to a piece of art.
 
-#### Immutable
+#### Inmutable
 The implementation of both NFTs and VCs ensures that the records are immutable, and hence, this adds another layer of security to these tokens and credentials.
 Thus, these are some of the similarities between NFTs and VCs
