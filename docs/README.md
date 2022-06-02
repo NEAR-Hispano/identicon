@@ -5,6 +5,8 @@
 
 [Conceptos básicos](./conceptos-basicos.md)
 
+[Credencial Verificable](./verifiable-credential.md)
+
 ### Como funciona ? ###
 
 ![Flujo general](./images/General_Flow_Diagram.png)

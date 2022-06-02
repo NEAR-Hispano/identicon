@@ -2,7 +2,7 @@
 
 ## What is a *verifiable credential*?
 
-As conceptualized and standardized by the W3C, the verifiable credential can represent all of the same information that a physical credential represents. The addition of technologies, such as digital signatures, makes verifiable credentials more tamper-evident and more trustworthy than their physical counterparts.
+As conceptualized and standardized by the W3C in [Verifiable Credentials Data Model v1.1](https://www.w3.org/TR/vc-data-model/), the verifiable credential can represent all of the same information that a physical credential represents. The addition of technologies, such as digital signatures, makes verifiable credentials more tamper-evident and more trustworthy than their physical counterparts.
 
 Holders of verifiable credentials can generate verifiable presentations and then share these verifiable presentations with verifiers to prove they possess verifiable credentials with certain characteristics.
 
