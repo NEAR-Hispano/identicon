@@ -136,11 +136,13 @@ The descriptions here follow the RUST conventions and datatypes usage, but in an
 |Custom|RUST Type|Description|
 |--|--|--|
 | SubjectId | String | The Subject government identification as a string formed using `{country}_{type}_{number}`, ex: `ar_dni_12488353` |
-|ValidatorId|String|A NEAR AccountId, ex: `juanmescher.near` or `5GDZ...ekUj`|
-|ISODateTime|String|A DateTime in ISO-8601 format: `AAAA-MM-DD hh:mm:ss`|
-|ISODate|String|A Date in partial ISO-8601 format: `AAAA-MM-DD`|
-|TimeWindow|struct|The Time Window in which the verification must be performed<br />`{ starts: ISODateTime,  ends: ISODateTime }`|
-|RequestInfo|String|Relevant request information, but fully **encripted**. It will usually be an encripted JSON object, whose contents will dependen on the VerificationType.|
+|RequesterId|AccountId| The NEAR AccountId of who made the request, ex: `juanmescher.near` or `5GDZ...ekUj`|
+|ValidatorId|AccountId| A NEAR AccountId, ex: `juanmescher.near` or `5GDZ...ekUj`|
+|ContentId|String| The IPFS Content ID of a given photo, video or file. |
+|ISODateTime|String| A DateTime in ISO-8601 format: `AAAA-MM-DD hh:mm:ss`|
+|ISODate|String| A Date in partial ISO-8601 format: `AAAA-MM-DD`|
+|TimeWindow|struct| The Time Window in which the verification must be performed<br />`{ starts: ISODateTime,  ends: ISODateTime }`|
+|RequestInfo|String| Relevant request information, but fully **encripted**. It will usually be an encripted JSON object, whose contents will dependen on the VerificationType.|
 
 **enum VerificationType**
 
@@ -177,6 +179,7 @@ This struct describes the result reported by a given validator. When the validat
 | validator_id | ValidatorId       | The validator account assigned to perform this validation.   |
 | result       | VerificationState | The result state. It may be in differente states, depending on the validator actions. |
 | timestamp    | ISODateTime       | The timestamp when the validation was performed, or an empty timestamp otherwise. |
+| contents | Vec | An array of ContentIDs (photos and videos) attesting the work done. |
 
 **struct VerificationCertificate NFT**
 
