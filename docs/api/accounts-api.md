@@ -27,9 +27,9 @@ headers:
   Content-Type: application/json
   Accept: application/json
 body: 
-  session: "session key"
+  session: "session_key"
   requires_passcode: true
-	requires_password: false
+  requires_password: false
 ~~~
 
 **Errors**:
@@ -64,18 +64,18 @@ headers:
   Content-Type: application/json
   Accept: application/json
 body: 
-  session: "session key"
+  session: "session_key"
   requires_password: false
-	requires_passcode: true
+  requires_passcode: true
 ~~~
 
 Errors:
 - `400 Bad request`:  Incomplete or malformed body. Must fullfill request format.
 - `401 Unauthorized`:  User not registered. Must go to `accounts/signup`.
 
-### POST /accounts/login
+### POST `/accounts/login`
 
-When the user has completed the signup or recovery phases, and has entered the received passcode, so we can establish an authentiacted and authorized connection with the server.
+When the user has completed the signup or recovery phases, and has entered the received passcode, so we can establish an authenticated and authorized connection with the server.
 
 **Request**: 
 
@@ -108,7 +108,25 @@ body:
 - `400 Bad request`:  Incomplete or malformed body. Must fullfill request format.
 - `401 Unauthorized`:  Invalid passcode. Must try again.
 
-### GET `/accounts/:uid`
+### GET `/accounts/current`
+
+Returns all info (including the private personal info) of the currently logged account. Server will use the `Authorization` header to extract the current sessioin and user.
+
+**Request**: 
+
+~~~
+headers:
+  Authorization: "Bearer AUTH_KEY"
+  Content-Type: application/json
+  Accept: application/json
+body: 
+  session: "session_key"
+  passcode: "passcode value" 
+~~~
+
+**Response**: 
+
+!!WIP!! 🚧
 
 ### PUT `/accounts/:uid`
 
