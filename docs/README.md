@@ -3,19 +3,17 @@
 
 ### Qué es ? ###
 
+![Flujo general](./images/General_Flow_Diagram.png)
+
 [Conceptos básicos](./conceptos-basicos.md)
 
 [Credencial Verificable](./verifiable-credential.md)
-
-### Como funciona ? ###
-
-![Flujo general](./images/General_Flow_Diagram.png)
 
 ### Flujos de mensajes ###
 
 [Onboarding nuevos usuarios](./onboarding-nuevos-usuarios.md)
 
-[Solicitud de verificación](./images/Request_Flow_Diagram.png)
+[Solicitud de verificación](./images/Request_Flow_w_API_srv.png)
 
 ## Diseño y arquitectura ###
 
@@ -25,7 +23,9 @@
 
 [Open API](./open-api.md)
 
-[Contrato y métodos](./)
+[Contrato y métodos](./contracts-api.md)
+
+[Minutas de reunión](./meetings.md)
 
 ### Otros recursos ###
 
