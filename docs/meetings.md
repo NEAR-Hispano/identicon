@@ -23,9 +23,9 @@ Porque ? Vamos a fondear una cierta cantidad de verificaciones y no un monto en 
 
 **Decidido**: Usar una moneda estable para definir el monto, por ej USN. Y agregar un metodo al contrato para poder modificar estos parametros:
 
-- `REMOTE_VERIFICATION_COST` (en USN)
+- `VALIDATOR_REMOTE_VERIFICATION_FEE` (en USN)
 
-- `ONSITE_VERIFICATION_COST` (en USN)
+- `VALIDATOR_ONSITE_VERIFICATION_FEE` (en USN)
 
 ### Emisión de certificado
 

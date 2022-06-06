@@ -103,4 +103,4 @@ This is  helper table for mantaining the relation with a signup/recovery session
 
 This takes into account the needs to allow restricted access to some accounts to a subject's personal data. It defines which accounts have been given permission (allowed) to access a certain set of properties (an only those ones).
 
-![Subjects and Personal Data DB Schema](./images/Personal_Data_Access_Schema.png)
+![Subjects and Personal Data DB Schema](../images/Personal_Data_Access_Schema.png)
