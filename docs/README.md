@@ -9,7 +9,7 @@
 
 [Credencial Verificable](./verifiable-credential.md)
 
-### Flujos de mensajes ###
+## Flujos de mensajes ##
 
 [Onboarding nuevos usuarios](./onboarding-nuevos-usuarios.md)
 
@@ -17,15 +17,44 @@
 
 ## Diseño y arquitectura ###
 
-[Arquitectura general](./architecture.md)
+**Convenciones y nomenclatura**:
 
-[Modelo de datos](./data-models.md)
+- `UI`: La interfaz de usuario (Web App).
+- `BC`: La Blockchain NEAR y sus "smart contracts".
+- `GW`: El Gateway, un "mediador" entre la UI y la BC.
+- `DB`: Base de datos alojada en el GW.
+- `TX`: Una transacción en la BC.
 
-[Open API](./open-api.md)
+**Objetivos de diseño**:
 
-[Contrato y métodos](./contracts-api.md)
+- Mantener la mayor parte de la información *dentro* del espacio de datos de la BC.
+- Generar una API simple que pueda ser usada por terceras partes.
+- Facilitar el onboarding simple y sencillo de nuevos usuarios, simplificando la creación de nuevas cuentas y sus respectivas "wallets".
+- Proveer privacidad adicional sobre los datos personales y la anonimidad de los validadores.
 
-[Minutas de reunión](./meetings.md)
+**Arquitectura**
+
+Auí se describe la [Arquitectura general](./architecture.md) de la solución.
+
+**Modelo de datos**:
+
+Dada la arquitectura existen dos modelos de datos relacionados:
+
+- El [Modelo de datos usado por el GW](./models/gateway-data-model.md)
+
+- El [Modelo de datos del Contrato en la BC](./models/contract-data-model.md)
+
+**API**:
+
+La UI y las terceras partes que utilizen el servicio, usarán:
+- La [API del GW](./apis/gateway-api.md)
+
+EL GW en sí mismo (y las Apps que necesiten acceso directo a la BC) pueden usar:
+- La [API del Contrato](./apis/contracts-api.md)
+
+**Minutas**
+
+Mantenemos documentadas en nuestras [Minutas de reunión](./meetings.md) las decisiones de diseño y de desarrollo (y su justificación) que tomamos a lo largo del proyecto.
 
 ### Otros recursos ###
 

@@ -16,13 +16,13 @@ Clients may be of two types:
 
 Endpoints follow the established convention for representing **resources**. Available resources are:
 
-- **[accounts](./api/accounts-api.md)**: All NEAR accounts managed by the GW.
+- **[accounts](./accounts-api.md)**: All NEAR accounts managed by the GW.
 
-- **[verifications](./api/verifications-api.md)**: Verification requests and its associated data.
+- **[verifications](./verifications-api.md)**: Verification requests and its associated data.
 
 - **[tasks]()**: Validator tasks and its results binded to a certain `request_uid` and/or `account_uid`
 
-- **[files]()**: File attachments (such as photos and videos) encripted and uploaded to IPFS, which may be linked to an `account_uid` or `rquest_uid`.
+- **[files]()**: File attachments (such as photos and videos) encripted and uploaded to IPFS, which may be linked to an `account_uid` or `request_uid`.
 
 ### Request
 
