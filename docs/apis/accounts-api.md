@@ -14,6 +14,7 @@ headers:
 body: 
   email: ""
   phone: ""
+  type: "" // `RQ`: Requester, `VL`: Validator, `XA`: External app
 ~~~
 
 **Actions**
@@ -22,7 +23,7 @@ body:
 1. If received email/phone exists in `accounts` table => ERR 409
 1. **Generate `passcode`**
 1. If contact exists in `session`, **Update `session` with new `passcode`**
-1. If contact does no exist in `session`, **Insert into `session` with `key, contact, passcode`**
+1. If contact does no exist in `session`, **Insert into `session(key, contact, passcode, type)`**
 1. **Send email/SMS with passcode** to user using contact
 1. => Response
 
@@ -109,7 +110,7 @@ body:
 1. If no sesion_key or passcode => ERR 400
 1. If received passcode does NOT match existent in `session` table => ERR 401
 1. Find `account` using received `session` contact
-1. If contact NOT exists in `account`, **Create new account**
+1. If contact NOT exists in `account`, **Create new account and NEAR account**
 1. **Generate JWT AUTH_KEY** using new or existent account info
 1. **Delete `session`** with `session_key`
 1. => Response
