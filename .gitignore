@@ -25,4 +25,3 @@ Cargo.lock
 /gateway/src/tests/reports/*
 /gateway/*.zip
 /gateway/temp/*
-/gateway/db/*
