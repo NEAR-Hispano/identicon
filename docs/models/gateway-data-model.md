@@ -93,6 +93,7 @@ This is  helper table for mantaining the relation with a signup/recovery session
 |--|--|--|
 | `key` | text | The signup/recovery/login session key |
 | passcode | integer | A numeric passcode for validating signup/login |
+| contact | text | Email or phone used as contact info to signup/recover/login | 
 | created_utc | text | Created UTC timestamp in ISO-8601 format |
 | expires_utc | text |  Max time for the passcode life, UTC time stamp in ISO-8601 format.  |
 
