@@ -16,6 +16,8 @@ Clients may be of two types:
 
 Endpoints follow the established convention for representing **resources**. Available resources are:
 
+- **[sessions](./sessions-api.md)**: Onboarding and login handshakes.
+
 - **[accounts](./accounts-api.md)**: All NEAR accounts managed by the GW.
 
 - **[verifications](./verifications-api.md)**: Verification requests and its associated data.
