@@ -42,18 +42,38 @@ const Config = {
 };
 
 
+export function getConfig(accountId, privateKey) {
+  /**
+   * Returns the currently active NEAR Config, binded to a given account.
+   * This enables this account for signing transactions.
+   */
+  const config = Config[NETWORK_ID];
+
+  // set up a memory KeyStore for the given Account
+  // see: https://docs.near.org/docs/api/naj-quick-reference#key-store
+  const keyStore = new keyStores.InMemoryKeyStore();
+  keyStore.setKey(NETWORK_ID, accountId, KeyPair.fromString(privateKey));
+  config.keyStore = keyStore;
+
+  return config;
+}
+
+
 export async function createImplicitAccount() {
   /**
    * Creates an implict account, using the MasterAccount, and returns the
    * created account and its public and private keys.
-   * Example:
+   * 
+   * @example:
    *  [account, error] = await createImplictAccount();
-   * @returns: 
-   * - [{id, public_key, private_key}] if success
-   * - [null, error] otherwise
+   * 
+   * @return: 
+   * - `[{id, public_key, private_key}]` if success
+   * - `[null, error]` otherwise
    */
   try {
-    const config = Config[NETWORK_ID];
+    // we need to use some MasterAccount to create a new account
+    const config = getConfig(MASTER_ACCOUNT_ID, MASTER_PRIVATE_KEY);
 
     // create the KeyPair fro the implicit account
     // see: https://github.com/near/near-cli/blob/master/commands/generate-key.js
@@ -61,12 +81,6 @@ export async function createImplicitAccount() {
     const publicKey = keyPair.publicKey.toString();
     const privateKey = keyPair.secretKey.toString();
     const accountId = utils.PublicKey.fromString(publicKey).data.hexSlice()
-
-    // set up a memory KeyStore for the MasterAccount
-    // see: https://docs.near.org/docs/api/naj-quick-reference#key-store
-    const keyStore = new keyStores.InMemoryKeyStore();
-    keyStore.setKey(NETWORK_ID, MASTER_ACCOUNT_ID, KeyPair.fromString(MASTER_PRIVATE_KEY));
-    config.keyStore = keyStore;
 
     // create new account using funds from the master account used to create it
     // see: https://docs.near.org/docs/api/naj-quick-reference#connection
