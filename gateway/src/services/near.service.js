@@ -75,7 +75,7 @@ export async function createImplicitAccount() {
     // we need to use some MasterAccount to create a new account
     const config = getConfig(MASTER_ACCOUNT_ID, MASTER_PRIVATE_KEY);
 
-    // create the KeyPair fro the implicit account
+    // create the KeyPair for the implicit account
     // see: https://github.com/near/near-cli/blob/master/commands/generate-key.js
     const keyPair = KeyPair.fromRandom('ed25519');
     const publicKey = keyPair.publicKey.toString();
@@ -92,7 +92,10 @@ export async function createImplicitAccount() {
       INITIAL_BALANCE // initial balance for new account in yoctoNEAR
     );
 
-    return [{id: accountId, public_key: publicKey, private_key: privateKey}];   
+    return [
+      {id: accountId, public_key: publicKey, private_key: privateKey}, 
+      null // No errors
+    ];   
   }
   catch (error) {
     return [null, error]
