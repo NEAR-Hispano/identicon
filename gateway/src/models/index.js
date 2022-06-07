@@ -1,5 +1,5 @@
-const config = require("../config");
-const Sequelize = require("sequelize");
+const config = require('../config');
+const Sequelize = require('sequelize');
 const sequelize = new Sequelize(
   config.database.name, 
   config.database.user, 
@@ -18,17 +18,17 @@ const sequelize = new Sequelize(
 );
 
 // db models
-const AccountsModel = require("./accounts.model.js");
-const FeaturesModel = require("./features.model.js");
-const VerificationsModel = require("./verifications.model.js");
-const TransactionsModel = require("./transactions.model.js");
+const AccountsModel = require('./accounts.model.js');
+const FeaturesModel = require('./features.model.js');
+const VerificationsModel = require('./verifications.model.js');
+const TransactionsModel = require('./transactions.model.js');
 
 const models = {
   AccountsModel: AccountsModel(sequelize, Sequelize),
   FeaturesModel: FeaturesModel(sequelize, Sequelize),
   VerificationsModel: VerificationsModel(sequelize, Sequelize),
   TransactionsModel: TransactionsModel(sequelize, Sequelize)
-} 
+}; 
 
 // db relations
 Object.keys(models).forEach((key) => {
@@ -39,4 +39,4 @@ Object.keys(models).forEach((key) => {
 
 const Op = Sequelize.Op;
 
-module.exports = { sequelize, models, Op }
+module.exports = { sequelize, models, Op };

@@ -1,5 +1,5 @@
 const FeaturesModel = (sequelize, { DataTypes }) => {
-  const Features = sequelize.define("features", {
+  const Features = sequelize.define('features', {
     // UNIQUE NEAR account ID
     uid: {
       type: DataTypes.STRING(100),

@@ -35,6 +35,7 @@ services:
       context: .
     image: identicon-gw
     volumes:
+      - ./tests:/app/tests
       - ./src:/app/src
       - ./package.json:/app/package.json
       - ./coverage:/app/coverage

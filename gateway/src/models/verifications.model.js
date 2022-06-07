@@ -1,5 +1,5 @@
 const VerificationsModel = (sequelize, { DataTypes }) => {
-  const Verifications = sequelize.define("verifications", {
+  const Verifications = sequelize.define('verifications', {
     // UNIQUE request UUID
     request_uid: {
       type: DataTypes.STRING(100),
@@ -11,7 +11,7 @@ const VerificationsModel = (sequelize, { DataTypes }) => {
     },
     // Request type: ProofOfLife, ...
     type: {
-      type: DataTypes.ENUM("ProofOfLife", "ProofOfIdentity", "ProofOfExistence", "ProofOfState", "ProofOfOwnership", "ProofOfService"),
+      type: DataTypes.ENUM('ProofOfLife', 'ProofOfIdentity', 'ProofOfExistence', 'ProofOfState', 'ProofOfOwnership', 'ProofOfService'),
       allowNull: true,
     },
     // Subject ID, example: ar_dni_12345678, may be empty
@@ -24,12 +24,12 @@ const VerificationsModel = (sequelize, { DataTypes }) => {
     },
     // PN: Pending, ST: Started, FI: Finished
     state: {
-      type: DataTypes.ENUM("PN", "ST", "FI"),
+      type: DataTypes.ENUM('PN', 'ST', 'FI'),
       allowNull: true,
     },
     // AP, RX, NP, WND, CX
     result: {
-      type: DataTypes.ENUM("AP", "RX", "NP", "WND", "CX"),
+      type: DataTypes.ENUM('AP', 'RX', 'NP', 'WND', 'CX'),
       allowNull: true,
     },
     // Must start verification after UTC time stamp in ISO-8601 format
@@ -49,11 +49,11 @@ const VerificationsModel = (sequelize, { DataTypes }) => {
       }
     },
   },
-    {
-      freezeTableName: true,
-      //timestamps: true,
-      underscored: true
-    });
+  {
+    freezeTableName: true,
+    //timestamps: true,
+    underscored: true
+  });
 
 
 

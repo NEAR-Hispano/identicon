@@ -5,13 +5,13 @@ const getAttribute = (attributes, attributeName) => {
     }
   }
   return null;
-}
+};
 
 const removeAttribute = (attributes, attributeName) => {
   return attributes.filter( attr => {
     if (attr.Name === attributeName) return false;
     return true;
   });
-}
+};
 
 module.exports = { getAttribute, removeAttribute };

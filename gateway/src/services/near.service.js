@@ -14,18 +14,19 @@ Implicit accounts work similarly to Bitcoin/Ethereum accounts.
 @created: JUN-03-2022, @mazito
 */
 const nearAPI = require("near-api-js");
+const Uuid = require('uuid');
 const { KeyPair, utils, connect, keyStores } = nearAPI;
 
 const 
   NETWORK_ID = process.env.NETWORK_ID,
   MASTER_ACCOUNT_ID = process.env.MASTER_ACCOUNT_ID
   MASTER_PRIVATE_KEY = process.env.MASTER_PRIVATE_KEY,
-  INITIAL_BALANCE = "10000000000000000000";
-
+  INITIAL_BALANCE = "2000000000000000000000";
+                    //"1810000000000000000000"
 const Config = {
   "testnet": {
     networkId: "testnet",
-    keyStore,
+    keyStore: null,
     nodeUrl: "https://rpc.testnet.near.org",
     walletUrl: "https://wallet.testnet.near.org",
     helperUrl: "https://helper.testnet.near.org",
@@ -33,7 +34,7 @@ const Config = {
   },
   "mainnet": {
       networkId: "mainnet",
-      keyStore,
+      keyStore: null,
       nodeUrl: "https://rpc.mainnet.near.org",
       walletUrl: "https://wallet.mainnet.near.org",
       helperUrl: "https://helper.mainnet.near.org",
@@ -42,24 +43,32 @@ const Config = {
 };
 
 
-export function getConfig(accountId, privateKey) {
+async function getConfig(accountId, privateKey) {
   /**
    * Returns the currently active NEAR Config, binded to a given account.
    * This enables this account for signing transactions.
    */
   const config = Config[NETWORK_ID];
+  console.log(`getConfig ${NETWORK_ID} ${accountId} ${privateKey}`)
 
-  // set up a memory KeyStore for the given Account
   // see: https://docs.near.org/docs/api/naj-quick-reference#key-store
+  // creates keyStore from a private key string
+  // you can define your key here or use an environment variable
+  const { keyStores, KeyPair } = nearAPI;
   const keyStore = new keyStores.InMemoryKeyStore();
-  keyStore.setKey(NETWORK_ID, accountId, KeyPair.fromString(privateKey));
+
+  // creates a public / private key pair using the provided private key
+  const keyPair = KeyPair.fromString(privateKey);
+
+  // adds the keyPair you created to keyStore
+  await keyStore.setKey(NETWORK_ID, accountId, keyPair);  
   config.keyStore = keyStore;
 
   return config;
 }
 
 
-export async function createImplicitAccount() {
+async function createImplicitAccount() {
   /**
    * Creates an implict account, using the MasterAccount, and returns the
    * created account and its public and private keys.
@@ -73,14 +82,20 @@ export async function createImplicitAccount() {
    */
   try {
     // we need to use some MasterAccount to create a new account
-    const config = getConfig(MASTER_ACCOUNT_ID, MASTER_PRIVATE_KEY);
+    const config = await getConfig(MASTER_ACCOUNT_ID, MASTER_PRIVATE_KEY);
 
     // create the KeyPair for the implicit account
     // see: https://github.com/near/near-cli/blob/master/commands/generate-key.js
     const keyPair = KeyPair.fromRandom('ed25519');
     const publicKey = keyPair.publicKey.toString();
     const privateKey = keyPair.secretKey.toString();
-    const accountId = utils.PublicKey.fromString(publicKey).data.hexSlice()
+
+    // create the new accountId using UUIDs, because the implicit way:
+    // does not seem to work for us ???
+    // ??? const accountId = utils.PublicKey.fromString(publicKey).data.hexSlice();
+    const uid = Uuid.v4().replace(new RegExp('-', 'g'), '');
+    const accountId = `${uid}.${MASTER_ACCOUNT_ID}`; 
+    console.log(`createImplicitAccount id='${accountId}' initial=${INITIAL_BALANCE}`);  
 
     // create new account using funds from the master account used to create it
     // see: https://docs.near.org/docs/api/naj-quick-reference#connection
@@ -100,4 +115,9 @@ export async function createImplicitAccount() {
   catch (error) {
     return [null, error]
   }
+}
+
+
+module.exports = {
+  getConfig, createImplicitAccount
 }

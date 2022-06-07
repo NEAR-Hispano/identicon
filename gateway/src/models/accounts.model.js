@@ -1,5 +1,5 @@
 const AccountsModel = (sequelize, { DataTypes }) => {
-  const Accounts = sequelize.define("accounts", {
+  const Accounts = sequelize.define('accounts', {
     // UNIQUE NEAR account ID
     uid: {
       type: DataTypes.STRING(100),
@@ -12,12 +12,12 @@ const AccountsModel = (sequelize, { DataTypes }) => {
     },
     // A: active I: Inactive D: deleted
     state: {
-      type: DataTypes.ENUM("A", "I", "D"),
+      type: DataTypes.ENUM('A', 'I', 'D'),
       allowNull: true,
     },
     // RQ: Requester, VL: Validator, APP: Application
     type: {
-      type: DataTypes.ENUM("RQ", "VL", "APP"),
+      type: DataTypes.ENUM('RQ', 'VL', 'APP'),
       allowNull: true,
     },
     // Account email

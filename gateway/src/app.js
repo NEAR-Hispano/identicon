@@ -1,10 +1,10 @@
 const config = require('./config');
 
-const compression = require('compression')
+const compression = require('compression');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan-body');
-const { sequelize } = require("./models");
+const { sequelize } = require('./models');
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -20,7 +20,7 @@ const accountsRoutes = require('./routes/accounts');
 process.env.uuid = uuidv4();
 
 app.use(cors());
-app.use(express.json({ limit: '25mb', type: ["application/json", "text/plain"] }));
+app.use(express.json({ limit: '25mb', type: ['application/json', 'text/plain'] }));
 app.use(express.urlencoded({ extended: true }));
 
 const logger = {
@@ -42,7 +42,7 @@ sequelize.sync({
   force: true
   // alter: true 
 }).then(() => {
-  console.log("Sequelize drop and re-sync db completed");
+  console.log('Sequelize drop and re-sync db completed');
   app.listen(port, () => {
     console.log(`Api started at http://localhost:${port}`);
   });

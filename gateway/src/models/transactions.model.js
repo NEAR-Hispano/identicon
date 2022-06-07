@@ -1,5 +1,5 @@
 const TransactionsModel = (sequelize, { DataTypes }) => {
-  const Transactions = sequelize.define("transactions", {
+  const Transactions = sequelize.define('transactions', {
     // UNIQUE auto assigned UUID
     uid: {
       type: DataTypes.UUID,
@@ -23,7 +23,7 @@ const TransactionsModel = (sequelize, { DataTypes }) => {
     },
     // Transaction action: RQ; request, VL: validation, CL: conclusion
     action: {
-      type: DataTypes.ENUM("RQ", "VL", "CL"),
+      type: DataTypes.ENUM('RQ', 'VL', 'CL'),
       allowNull: true,
     },
     // Actor account uid which participated in this transaction
@@ -51,11 +51,11 @@ const TransactionsModel = (sequelize, { DataTypes }) => {
       }
     },
   },
-    {
-      freezeTableName: true,
-      //timestamps: true,
-      underscored: true
-    });
+  {
+    freezeTableName: true,
+    //timestamps: true,
+    underscored: true
+  });
 
 
 
