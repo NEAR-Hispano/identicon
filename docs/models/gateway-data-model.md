@@ -46,9 +46,9 @@ This table contains the encripted personal info of all Subjects. This table is n
 
 |Column name|Datatype|Description|
 |--|--|--|
+| `subject_id` | text | Subject ID, example: `ar_dni_12345678`, may be empty |
 | verified | text | Verification state, `TRUE` or `FALSE` |
 | personal_info | text | **Encripted JSON** personal info |
-| subject_id | text | Subject ID, example: `ar_dni_12345678`, may be empty |
 | created_utc | text | Created UTC time stamp in ISO-8601 format |
 | updated_utc | text | Last update UTC time stamp in ISO-8601 format |
 
@@ -66,7 +66,7 @@ The `personal_info` JSON:
 | address | text | Full address information, expressed as a string which can be used by Maps APIs to find location |
 | email | text | Contact email |
 | phone | text | Contact email |
-| preferred | text | Preferred way to contact this Subject: `WHATSAPP `,`TELEGRAM`,`ONSITE`. |
+| preferred | text | Preferred way to contact this Subject: `WHATSAPP`,`TELEGRAM`,`ONSITE`. |
 | health | text | free format description of health status if it applies |
 | extras | text | additional comments |
 
