@@ -43,7 +43,7 @@ body: {
     comune // city code 
     address // free format full address data, understandable by Maps 
     coordinates // GPS coords
-    idioms // list of prefered language codes, ex 'es', 'en' 'po' ...
+    languages // list of prefered language codes, ex 'es', 'en' 'po' ...
     health // free format description of health status if it applies
   }
 ~~~
@@ -84,7 +84,7 @@ body:
     comune // city code 
     address // free format full address data, understandable by Maps 
     coordinates // GPS coords
-    idioms // list of prefered language codes, ex 'es', 'en' 'po' ...
+    languages // list of prefered language codes, ex 'es', 'en' 'po' ...
     health // free format description of health status if it applies
   }
 ~~~
