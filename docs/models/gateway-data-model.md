@@ -6,7 +6,7 @@ We use SQLite3 datatypes to describe the table attributes as they are general an
 
 ![Gateway DB Schema](../images/Gateway_DB_Schema.png)
 
-#### Table `accounts` ####
+#### Table `Accounts` ####
 
 This table is used mainly for onboarding new users and mantaining registered users linked to its NEAR account and keys. There is also needed for account recovery using email or phone.
 
@@ -40,9 +40,11 @@ The `personal_info` JSON:
 | health | text | free format description of health status if it applies |
 | extras | text | additional comments |
 
-#### Table `subjects` ####
+#### Table `Subjects` ####
 
-This table contains the encripted personal info of all Subjects. This table is needed because a Subject does not need a  NEAR account. Only Requester, Validator an External apps  have one.
+This table contains the encripted personal info of all verified (or candidates for verification) Subjects. 
+
+**NOTES**: All accounts MUST have an associated Subject, but not all subjects need an Account. Only Requester, Validator an External subjects really need and Account.
 
 |Column name|Datatype|Description|
 |--|--|--|
