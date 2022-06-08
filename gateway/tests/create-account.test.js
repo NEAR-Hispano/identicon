@@ -1,11 +1,14 @@
 require("dotenv").config();
-const creator = require("./run-create-account.js");
+const nearService = require("../src/services/near.service");
 
 describe('Create NEAR implicit account', () => {
+
   it('should test that nearService is loaded', () => {
+    expect(nearService !== null && nearService !== null ).toBe(true);
+  })
 
-    creator.run();
-
-    // expect(nearService !== null && nearService !== null ).toBe(true);
+  it('should create a new account with no error', async () => {
+    const [account, error] = await nearService.createImplicitAccount();
+    expect(account !== null && error === null ).toBe(true);
   })
 })

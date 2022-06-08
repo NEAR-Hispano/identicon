@@ -49,7 +49,7 @@ async function getConfig(accountId, privateKey) {
    * This enables this account for signing transactions.
    */
   const config = Config[NETWORK_ID];
-  console.log(`getConfig ${NETWORK_ID} ${accountId} ${privateKey}`)
+  console.log(`getConfig '${NETWORK_ID}' '${accountId}' '${privateKey}'`)
 
   // see: https://docs.near.org/docs/api/naj-quick-reference#key-store
   // creates keyStore from a private key string
@@ -59,7 +59,8 @@ async function getConfig(accountId, privateKey) {
 
   // creates a public / private key pair using the provided private key
   const keyPair = KeyPair.fromString(privateKey);
-
+  //const keyPair = new nearAPI.utils.key_pair.KeyPairEd25519(privateKey);
+  
   // adds the keyPair you created to keyStore
   await keyStore.setKey(NETWORK_ID, accountId, keyPair);  
   config.keyStore = keyStore;
