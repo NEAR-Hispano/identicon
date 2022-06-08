@@ -25,20 +25,6 @@ This table is used mainly for onboarding new users and mantaining registered use
 | created_utc | text | Created UTC time stamp in ISO-8601 format |
 | updated_utc | text | Last update UTC time stamp in ISO-8601 format |
 
-The `personal_info` JSON:
-
-| Attribute | Datatype | Description |
-| --------- | ----------- | ---- |
-|full_name| text | Full person name, may be empty|
-|birthday|text| |
-|age| integer | autocalculated age using birthday |
-|country | text | Country code|
-| region | text | Region code (province, state, ...) |
-| comune | text | Region subdivisions code (county, Municipio, comuna, etc) code |
-| idioms | text | Comma separated list of lang codes |
-| address | text | Full address information, expressed as a string which can be used by Maps APIs to find location |
-| health | text | free format description of health status if it applies |
-| extras | text | additional comments |
 
 #### Table `Subjects` ####
 
@@ -127,12 +113,10 @@ This is  helper table for mantaining the relation with a signup/recovery session
 | contact | text | Email or phone used as contact info to signup/recover/login | 
 | type | text | `RQ`: Requester, `VL`: Validator, `XA`: External app |
 | created_utc | text | Created UTC timestamp in ISO-8601 format |
-| expires_utc | text |  Max time for the passcode life, UTC time stamp in ISO-8601 format.  |
+| updated_utc | text |  Max time for the passcode life, UTC time stamp in ISO-8601 format.  |
 
 
 ## Subjects and Personal Data Access Model ##
-
-:hand: This is preliminar work in progress and may change in the future. 
 
 This takes into account the needs to allow restricted access to some accounts to a subject's personal data. It defines which accounts have been given permission (allowed) to access a certain set of properties (an only those ones).
 
