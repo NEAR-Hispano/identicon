@@ -3,11 +3,10 @@ const express = require('express');
 const router = express.Router();
 const accountsController = require('../controllers/accounts.controller');
 
-router.get('/', async (req, res, next) => {
-    const { account_id } = req.query;
-
+router.get('/:uid', async (req, res, next) => {
+    const { uid } = req.params;
     try {
-        const response = await accountsController.getAccounts(req.query, account_id);
+        const response = await accountsController.getSingleAccount(uid);
         res.status(response.status).send(response.body);
     } catch (error) {
         console.log(error);

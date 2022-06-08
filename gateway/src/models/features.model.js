@@ -1,7 +1,7 @@
 const FeaturesModel = (sequelize, { DataTypes }) => {
   const Features = sequelize.define('features', {
     // UNIQUE NEAR account ID
-    uid: {
+    subject_id: {
       type: DataTypes.STRING(100),
       primaryKey: true,
       unique: true,
@@ -53,18 +53,10 @@ const FeaturesModel = (sequelize, { DataTypes }) => {
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: false, // NO Timestamps here
     underscored: true
   });
 
-
-
-
-  /*
-  Accounts.associate = (models) => {
-
-  };
-*/
   return Features;
 };
 

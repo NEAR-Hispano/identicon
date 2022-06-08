@@ -22,12 +22,16 @@ const AccountsModel = require('./accounts.model.js');
 const FeaturesModel = require('./features.model.js');
 const VerificationsModel = require('./verifications.model.js');
 const TransactionsModel = require('./transactions.model.js');
+const SubjectsModel = require('./subjects.model.js');
+const SessionsModel = require('./sessions.model.js');
 
 const models = {
   AccountsModel: AccountsModel(sequelize, Sequelize),
   FeaturesModel: FeaturesModel(sequelize, Sequelize),
   VerificationsModel: VerificationsModel(sequelize, Sequelize),
-  TransactionsModel: TransactionsModel(sequelize, Sequelize)
+  TransactionsModel: TransactionsModel(sequelize, Sequelize),
+  SubjectsModel: SubjectsModel(sequelize, Sequelize),
+  SessionsModel: SessionsModel(sequelize, Sequelize)
 }; 
 
 // db relations

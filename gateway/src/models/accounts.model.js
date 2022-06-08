@@ -15,9 +15,9 @@ const AccountsModel = (sequelize, { DataTypes }) => {
       type: DataTypes.ENUM('A', 'I', 'D'),
       allowNull: true,
     },
-    // RQ: Requester, VL: Validator, APP: Application
+    // RQ: Requester, VL: Validator, XA: External App
     type: {
-      type: DataTypes.ENUM('RQ', 'VL', 'APP'),
+      type: DataTypes.ENUM('RQ', 'VL', 'XA'),
       allowNull: true,
     },
     // Account email
@@ -51,14 +51,6 @@ const AccountsModel = (sequelize, { DataTypes }) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-    // Encripted JSON personal info
-    personal_info: {
-      type: DataTypes.BLOB,
-      allowNull: true,
-      validate: {
-        notEmpty: true,
-      }
-    },
     // Subject ID, example: ar_dni_12345678, may be empty
     subject_id: {
       type: DataTypes.STRING(100),
@@ -74,22 +66,14 @@ const AccountsModel = (sequelize, { DataTypes }) => {
       validate: {
         notEmpty: true,
       }
-    }
+    },
   },
   {
     freezeTableName: true,
-    //timestamps: true,
+    // timestamps: default(true) adds created_at, updated_at
     underscored: true
   });
 
-
-
-
-  /*
-  Accounts.associate = (models) => {
-
-  };
-*/
   return Accounts;
 };
 

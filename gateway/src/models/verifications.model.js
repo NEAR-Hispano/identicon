@@ -51,13 +51,9 @@ const VerificationsModel = (sequelize, { DataTypes }) => {
   },
   {
     freezeTableName: true,
-    //timestamps: true,
     underscored: true
+    // timestamps: default(true) adds created_at, updated_at
   });
-
-
-
-
 
   Verifications.associate = (models) => {
     Verifications.belongsTo(models.AccountsModel);

@@ -53,18 +53,10 @@ const TransactionsModel = (sequelize, { DataTypes }) => {
   },
   {
     freezeTableName: true,
-    //timestamps: true,
+    // timestamps: default(true) adds created_at, updated_at
     underscored: true
   });
 
-
-
-
-  /*
-  Accounts.associate = (models) => {
-
-  };
-*/
   return Transactions;
 };
 

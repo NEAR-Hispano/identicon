@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 // Check for mandatory environment variables
 const required = [
   'NODE_ENV',
