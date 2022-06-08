@@ -75,10 +75,10 @@ async function createImplicitAccount() {
    * created account and its public and private keys.
    * 
    * @example:
-   *  [account, error] = await createImplictAccount();
+   *  [account, receipt] = await createImplictAccount();
    * 
    * @return: 
-   * - `[{id, public_key, private_key}]` if success
+   * - `[{id, public_key, private_key}, receipt]` if success
    * - `[null, error]` otherwise
    */
   try {
@@ -102,15 +102,16 @@ async function createImplicitAccount() {
     // see: https://docs.near.org/docs/api/naj-quick-reference#connection
     const near = await connect(config);
     const account = await near.account(MASTER_ACCOUNT_ID);
-    await account.createAccount(
+    const receipt = await account.createAccount(
       accountId, // new account name
       publicKey, // public key for new account
       INITIAL_BALANCE // initial balance for new account in yoctoNEAR
     );
+    console.log('receipt=', receipt);
 
     return [
       {id: accountId, public_key: publicKey, private_key: privateKey}, 
-      null // No errors
+      receipt // No errors
     ];   
   }
   catch (error) {
