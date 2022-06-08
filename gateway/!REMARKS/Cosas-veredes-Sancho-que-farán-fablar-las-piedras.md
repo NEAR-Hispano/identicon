@@ -1,6 +1,15 @@
 
 # @MAZ - 07-JUN-2022
 
+> CORREGIDO: SE DEBE SETEAR CORRECTAMENTE `jest.config.js`:
+> ~~~
+>  module.exports = {
+>   testEnvironment: 'node',
+>   collectCoverage: true,
+>   testTimeout: 60000
+> };
+> ~~~
+
 Por algun MUY extraño motivo esto no funciona usando JEST:
 ~~~sh
 npm run test create-near-account
