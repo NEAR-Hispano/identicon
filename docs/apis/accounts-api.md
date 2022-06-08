@@ -3,9 +3,11 @@
 
 Manages the Account info.
 
-### GET `/accounts/current`
+### GET `/accounts/:uid`
 
-Returns all info (including the private personal info) of the currently logged account. Server will use the `AUTH_KEY` from the `Authorization` header to extract the current `account uid` and will decrypt the personal info that it will return.
+Returns all info (including the private personal info) of the currently logged account. Server will use the `AUTH_KEY` from the `Authorization` header to verify the current logged user has permissions to see this info and will decrypt the personal info that it will return.
+
+**NOTE**: For now ONLY the current logged user can access it's own info, so ":uid === logged account". 
 
 **Request**: 
 ~~~
@@ -29,7 +31,7 @@ body: {
   email
   phone
   verified
-  subject_id
+  subject_id // `${countryCode}_${docType}_${docNumber}`, ex: AR_DNI_1234567890
   linked_account_uid
   created_utc
   updated_utc
@@ -56,7 +58,7 @@ body: {
 
 Update all info (including the private personal info) of the given account. Server will use the `AUTH_KEY` from the `Authorization` header to check if the current `account uid` has permissions to change this account data. 
 
-:eyes: Currently, we expect the only case will be an account updating its own info, so "uid === logged account". 
+:eyes: Currently, we expect the only case will be an account updating its own info, so ":uid === logged account". 
 
 **Request**: 
 ~~~
