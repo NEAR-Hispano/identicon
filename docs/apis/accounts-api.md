@@ -101,7 +101,7 @@ headers:
 
 **Errors:**
 - `403 Forbidden`:  Invalid AUTH_KEY or it may be due to the user not having the necessary permissions for this action.
-- `404 Not Found`: The requested account_uid could not be found.
+- `404 Not Found`: The requested account :uid could not be found.
 - `409 Conflict`: The request could not be processed because of conflict in the current state of the resource, a malformed body, or invalid data.
 
 ### DELETE `/accounts/{uid}`
@@ -128,4 +128,65 @@ headers:
 - `403 Forbidden`:  Invalid AUTH_KEY or it may be due to the user not having the necessary permissions for this action.
 - `404 Not Found`: The requested account_uid could not be found.
 
-### GET `/accounts/{uid}/verifications?states=[]`
+
+
+### GET `/accounts/{uid}/assigned?states=[] &after=`
+
+Get all verifications assigned to this Validator account, filtered by state. It includes both pending and done verifications.  
+
+**Note** that part of this ino is in the `Transactions` table and part in the BC, we dont't have all of it in the GW.
+
+Currently only the Validators can access this data, so "logged uid == :uid and logged type == Validator". 
+
+**Request**: 
+~~~
+headers:
+  Authorization: "Bearer AUTH_KEY"
+  Content-Type: application/json
+  Accept: application/json
+query:
+  states: // an array of one or more state codes from ['PN', 'ST', 'FI']
+  after: // only get verifications requested after this date
+~~~
+
+**Response**: 
+~~~
+headers:
+  Status: 200 Ok. 
+  Content-Type: application/json
+  Accept: application/json
+body: 
+  [ 
+    // an array of cero or more Verification items
+    {
+      request_uid
+      account_uid // the Requester account uid
+      type 
+      subject_id 
+      state // `PN`: Pending, `ST`: Started, `FI`: Finished |
+      result // `AP`, `RX`, `NP`, `WND`, `CX` |
+      created_utc
+      updated_utc
+      must_start_utc
+      must_end_utc
+      personal_info: { // The Validator needs ALL the Subject personal info
+        full_name
+        birthday // ISODate format, ex: '1956-05-12'
+        age
+        sex // 'M', 'F', 'U'
+        country // ex 'mx', 'ar', 've', 'bo', cl', 'uy', ..
+        region // region/state/province code 
+        comune // city code 
+        address // free format full address data, understandable by Maps 
+        coordinates // GPS coords
+        languages // list of prefered language codes, ex 'es', 'en' 'po' ...
+        health // free format description of health status if it applies
+      }
+    }
+  ]
+~~~
+
+**Errors:**
+- `403 Forbidden`:  Invalid AUTH_KEY or it may be due to the user not having the necessary permissions for this action.
+- `404 Not Found`: The requested account :uid could not be found.
+- `409 Conflict`: The request could not be processed because of conflict in the current state of the resource, a malformed body, or invalid data.

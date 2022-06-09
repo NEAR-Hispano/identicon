@@ -16,32 +16,53 @@ Clients may be of two types:
 
 Endpoints follow the established convention for representing **resources**. Available resources are:
 
-- **[sessions](./sessions-api.md)**: Onboarding and login handshakes.
+**[Sessions](./sessions-api.md)**: Onboarding and login handshakes:
 
-- **[accounts](./accounts-api.md)**: All NEAR accounts managed by the GW.
+- POST /sessions/signups
+- POST /sessions/recoveries
+- POST /sessions/logins
 
-- **[verifications](./verifications-api.md)**: Verification requests and its associated data.
+**[Accounts](./accounts-api.md)**: All NEAR accounts managed by the GW:
 
-- **[tasks]()**: Validator tasks and its results binded to a certain `request_uid` and/or `account_uid`
+- GET  /accounts/:uid
+- PUT  /accounts/:uid
+- DELETE  /accounts/:uid
 
-- **[files]()**: File attachments (such as photos and videos) encripted and uploaded to IPFS, which may be linked to an `account_uid` or `request_uid`.
+**[Verifications](./verifications-api.md)**: Verification requests and its associated data, including File attachments (such as photos and videos) encripted and uploaded to IPFS, which may be linked to an `account_uid` or `request_uid`:
+
+- POST /verifications
+- GET  /verifications ?requester_uid &states
+- GET  /verifications/:uid
+- PUT /verifications/:uid
+- POST /verifications/:uid/files
+- POST /verifications/:uid/results
+- GET  /verifications/:uid/credentials
+
+**[Tasks](./tasks-api.md)**: Validator tasks (represented by transactions performed in the BC) and its results binded to a certain `request_uid` and `account_uid` and `transaction_uid`:
+
+- GET  /transactions/:uid
+- GET  /transactions ?actor_uid &action
 
 ### Request
 
 **Headers**
+
 - `Authorization`: When authorization is required,  calls need to set this to `Bearer $AUTH_KEY` or `Bearer $API_KEY`.
 - `Content-Type`: `application/json` .
 - `Accept`: `application/json`.
 
 **Body**
+
 - All methods must send a JSON encoded body.
 
 ### Response
 
 **Headers**
+
 - `Content-Type`: `application/json`. But this may change in some special cases (downloading files).
 
 **Body**
+
 - All methods return a JSON encoded body. The only exception are GET methods which return file contents, in which case the Contenty-Type will be set by the server.
 
 ### Error codes
