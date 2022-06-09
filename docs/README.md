@@ -52,6 +52,13 @@ La UI y las terceras partes que utilizen el servicio, usarán:
 EL GW en sí mismo (y las Apps que necesiten acceso directo a la BC) pueden usar:
 - La [API del Contrato](./apis/contracts-api.md)
 
+**User Interface**
+
+Flujos de interacción para cada actor y sus endpoints:
+
+- [Solicitantes](./images/Requester_UI_Flow.png)
+- [Validadores](./images/Validator_UI_Flow.png)
+
 **Minutas**
 
 Mantenemos documentadas en nuestras [Minutas de reunión](./meetings.md) las decisiones de diseño y de desarrollo (y su justificación) que tomamos a lo largo del proyecto.

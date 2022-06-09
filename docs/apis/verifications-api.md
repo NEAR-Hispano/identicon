@@ -3,14 +3,17 @@
 ### POST `/verifications`
 
 The authorized logged in account requests a new verification for certain Subject.
-
 This will encrypt the subject info and send the request to the BC.
+Preconditions:
+- Requires a logged and authorized user. 
+- The user must be either a Requester or External, never a Validator.
+
 
 ### GET `/verifications ?requester_uid= &states=`
 
 Get all verifications requested by this account, filtered by state. 
 
-Conditions:
+Preconditions:
 - Requires a logged and authorized user. 
 - The user must be either a Requester or External, never a Validator.
 - Currently only the requester can access this data, so "requester_uid = logged uid" 
