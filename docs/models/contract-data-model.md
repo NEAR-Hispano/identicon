@@ -1,7 +1,7 @@
 
 # Blockchain data model
 
-:hand:  This is preliminar work in progress. Some definitions below may change.  It is based on the [first (naive) implementation](../../contracts/README.md#Structures) of the VerificationContract but updated.
+:hand:  This is preliminar work in progress. Some definitions below may change.  It is based on the [first (naive) implementation](../../contracts/README.md#Structures) of the VerificationContract but updated.
 
 The descriptions here follow the RUST conventions and datatypes usage, but in an informal way. The formal definitions will be found in the code in [contracts/src/definitions.rs](../../contracts/src/definitions.rs).
 
@@ -13,10 +13,11 @@ The descriptions here follow the RUST conventions and datatypes usage, but in an
 
 |Custom|RUST Type|Description|
 |--|--|--|
-| SubjectId | String | The Subject government identification as a string formed using `{country}_{type}_{number}`, ex: `ar_dni_12488353` |
+| SubjectId | String | The Subject government identification as an all uppercase string formed using `{country}_{type}_{number}`, ex: `AR_DNI_12488353` |
 |RequesterId|AccountId| The NEAR AccountId of who made the request, ex: `juanmescher.near` or `5GDZ...ekUj`|
 |ValidatorId|AccountId| A NEAR AccountId, ex: `juanmescher.near` or `5GDZ...ekUj`|
 |ContentId|String| The IPFS Content ID of a given photo, video or file. |
+|RequestId|String| The request UUID, given by the App or GW. |
 |ISODateTime|String| A DateTime in ISO-8601 format: `AAAA-MM-DD hh:mm:ss`|
 |ISODate|String| A Date in partial ISO-8601 format: `AAAA-MM-DD`|
 |TimeWindow|struct| The Time Window in which the verification must be performed<br />`{ starts: ISODateTime,  ends: ISODateTime }`|
@@ -35,49 +36,62 @@ Enumerates the  different verification services variants:
 | PoOwnership (asset) | Not implemented, reserved for future use.                    |
 | PoService (asset)   | Not implemented, reserved for future use.                    |
 
+**enum ValidationType**
+
+Enumerates the different validation task types which may be performed by a validator.
+
+| Case        | Description                                                  |
+| ----------- | ------------------------------------------------------------ |
+| Remote | Remote validation performed using a video chat or similar.|
+| Onsite | Onsite validation performed visiting the subject location.|
+| Review | Revision done by and auditor reviewing work performed by other validators.|
+
 **enum VerificationState**
 
-Enumerates the different states in which a given request may be. Some requests may require a *why: String* to describe the reason for the given state change.
+Enumerates the different states in which a given request may be. Some requests may require a *why: String* to describe the reason for the given state change.
 
-| Case                 | Description                                                  |
-| -------------------- | ------------------------------------------------------------ |
-| Pending              | Started but waiting for the validator results. Code ` P`     |
-| Approved             | Verification result is approved.  Code ` AP`                 |
-| Rejected (why)       | Verification result is Rejected.  Code ` RX`                 |
-| NotPossible (why)    | It is not possible to do the verification, due to some reason which exceeds the Validator possibilites, such as inaccesible area, weather, etc. Code `NP` |
-| WillNotDo (why)      | Validator will not do the verification, for some personal reason, but it requires a cause and explanation. Too many of this refusals may eliminate the Validator from the validators pool. Code `WND` |
-| Canceled (why)       | Verification was canceled by Requestor. Code `CX`            |
+| Case        | Description                                                  |
+| ----------- | ------------------------------------------------------------ |
+| Pending     | Started but waiting for the validator results. Code ` P`     |
+| Approved    | Verification result is approved.  Code ` AP`                 |
+| Rejected    | Verification result is Rejected.  Code ` RX`                 |
+| NotPossible | It is not possible to do the verification, due to some reason which exceeds the Validator possibilites, such as inaccesible area, weather, etc. Code `NP` |
+| WillNotDo   | Validator will not do the verification, for some personal reason, but it requires a cause and explanation. Too many of this refusals may eliminate the Validator from the validators pool. Code `WND` |
+| Canceled    | Verification was canceled by Requestor. Code `CX`            |
 
-**struct VerificationResult**
+**struct ValidationTask**
 
-This struct describes the result reported by a given validator. When the validator has not yet performed the validation, it just describes the assigned task.
+This struct describes the state and result reported by a given validator. When the validator has not yet performed the validation, it just describes the assigned task.
 
 | Property     | Type              | Description                                                  |
 | ------------ | ----------------- | ------------------------------------------------------------ |
 | validator_id | ValidatorId       | The validator account assigned to perform this validation.   |
+| type | ValidationType | RESERVED for future use. |
 | result       | VerificationState | The result state. It may be in differente states, depending on the validator actions. |
 | timestamp    | ISODateTime       | The timestamp when the validation was performed, or an empty timestamp otherwise. |
 | contents | Vec | An array of ContentIDs (photos and videos) attesting the work done. |
+| remarks | String | Notes and remarks regarding the validation result |
 
-**struct VerificationCertificate NFT**
+**struct VerificationCredential NFT**
 
-:warning: **URGENT** :warning: MUST define this as soon as possible.
+:warning: **URGENT** :warning: MUST define this as soon as possible.
 
 **struct VerificationRequest**
 
 This fully describes a given request for verification. Requests may be of different types, but we currently we will only deal with the PoLife and PoIdentity cases. 
 
-| Property      | Type                    | Description                                                  |
-| ------------- | ----------------------- | ------------------------------------------------------------ |
-| request_uid   | RequestId               | The current UUID of this request, as given by the caller API or dApp. |
-| is_type       | VerificationType        | The verification service required, which may include additional info for some types. |
-| requester_uid | AccountId               | This is the account who requested the verification and will pay for it, and is NOT the same as the subject to be verified. |
-| subject_id    | SubjectId               | This is the subject to be verified, which is ALLWAYS a real human being. Ccats, dogs and other pets may be considered in the future- |
-| info          | RequestInfo             | Relevant request information, but fully **encripted**.       |
-| when          | TimeWindow              | The time window in which this verification MUST be performed. |
-| state         | VerificationState       | The verification state of the whole request, as a result of the individual verifications. If any of the individual verifications is Rejected, then the whole verification is Rejected. |
-| results       | Vec                     | The array [MIN_VALIDATORS..MAX_VALIDATORS] of individual validator VerificationsResults. |
-| certificate   | VerificationCertificate | The final certificate emitted by the verification process.   |
+| Property      | Type                   | Description                                                  |
+| ------------- | ---------------------- | ------------------------------------------------------------ |
+| request_uid   | RequestId              | The current UUID of this request, as given by the caller API or dApp. |
+| is_type       | VerificationType       | The verification service required, which may include additional info for some types. |
+| requester_uid | AccountId              | This is the account who requested the verification and will pay for it, and is NOT the same as the subject to be verified. |
+| subject_id    | SubjectId              | This is the subject to be verified, which is ALLWAYS a real human being. Ccats, dogs and other pets may be considered in the future- |
+| info          | RequestInfo            | Relevant request information, but fully **encripted**.       |
+| when          | TimeWindow             | The time window in which this verification MUST be performed. |
+| state         | VerificationState      | The verification state of the whole request, as a result of the individual verifications. If any of the individual verifications is Rejected, then the whole verification is Rejected. |
+| validations   | Vec                    | The array [MIN_VALIDATORS..MAX_VALIDATORS] of individual validators ValidationTask. |
+| certificate   | VerificationCredential | The final certificate emitted by the verification process.   |
+| payed         | bool                   | The validators were paid.                                    |
 
 **struct Spending**
 
