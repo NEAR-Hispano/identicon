@@ -87,7 +87,9 @@ body:
     address // free format full address data, understandable by Maps 
     coordinates // GPS coords
     languages // list of prefered language codes, ex 'es', 'en' 'po' ...
+    preferred // preferred way to contact `WHATSAPP`,`TELEGRAM`,`ONSITE`.
     health // free format description of health status if it applies
+    extras // extra (future) info (such as preferences/other) as JSON obj
   }
 ~~~
 
@@ -106,7 +108,7 @@ headers:
 
 ### DELETE `/accounts/{uid}`
 
-This wil change the state of the given account to `D (Deleted)`. The account will NOT be physically deleted from the DB. Server will use the `AUTH_KEY` from the `Authorization` header to check if the current `account uid` has permissions to change this account state. 
+This will change the state of the given account to `D (Deleted)`. The account will NOT be physically deleted from the DB. Server will use the `AUTH_KEY` from the `Authorization` header to check if the current `account uid` has permissions to change this account state. 
 
 **Request**: 
 ~~~
@@ -127,8 +129,6 @@ headers:
 **Errors:**
 - `403 Forbidden`:  Invalid AUTH_KEY or it may be due to the user not having the necessary permissions for this action.
 - `404 Not Found`: The requested account_uid could not be found.
-
-
 
 ### GET `/accounts/{uid}/assigned?states=[] &after=`
 
