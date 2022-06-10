@@ -26,5 +26,16 @@ router.post('/login', async (req, res, next) => {
     }
     next();
 });
+router.post('/recovery', async (req, res, next) => {
+    const { email, phone } = req.body;
+    try {
+        const response = await controller.recovery(req.body);
+        res.status(response.status).send(response.body);
+    } catch (error) {
+        console.log(error);
+        res.status(error?.statusCode ? error.statusCode : 500).send(error, error.stack);
+    }
+    next();
+});
 
 module.exports = router;
