@@ -1,7 +1,5 @@
 const {SessionsModel} = require('../models/');
 const crypto = require('crypto');
-const { copyFileSync } = require('fs');
-
 class SessionsService {
   constructor() { }
 
