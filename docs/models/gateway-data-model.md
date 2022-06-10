@@ -47,11 +47,13 @@ The `personal_info` JSON:
 |full_name| text | Full person name, may be empty|
 |birthday|text| |
 |age| integer | autocalculated age using birthday |
+| sex | text | 'M', 'F', 'U'
 |country | text | Country code|
 | region | text | Region code (province, state, ...) |
 | comune | text | Region subdivisions code (county, Municipio, comuna, etc) code |
-| idioms | text | Comma separated list of lang codes |
 | address | text | Full address information, expressed as a string which can be used by Maps APIs to find location |
+| coordinates | text | GPS Coordinates as obtained from Maps API.|
+| languages | text | Comma separated list of lang codes |
 | email | text | Contact email |
 | phone | text | Contact email |
 | preferred | text | Preferred way to contact this Subject: `WHATSAPP`,`TELEGRAM`,`ONSITE`. |
@@ -81,7 +83,7 @@ Requested verifications, which can be in different states. This is mainly used a
 | account_uid | text | Account uid which made the request |
 | type | text | Request type: `ProofOfLife`, ... |
 | subject_id | text | Subject ID, example: `ar_dni_12345678`, may be empty |
-| state | text | `PN`: Pending, `ST`: Started, `FI`: Finished |
+| state | text | `UN`: Unassigned, `PN`: Pending, `ST`: Started, `FI`: Finished |
 | result | text | `AP`, `RX`, `NP`, `WND`, `CX` |
 | created_utc | text | Created UTC time stamp in ISO-8601 format |
 | updated_utc | text | Last update UTC time stamp in ISO-8601 format |
