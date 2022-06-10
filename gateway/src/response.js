@@ -45,6 +45,17 @@ class ForbiddenError extends Response {
   }
 }
 
+class ConflictError extends Response {
+  constructor(msg = null) {
+    if (!msg) {
+      msg = 'Conflict';
+    }
+    super(409, { 
+      code: '409',
+      msg:  msg});
+  }
+}
+
 class UnauthorizedError extends Response {
   constructor(msg = null) {
     if (!msg) {
@@ -95,5 +106,6 @@ module.exports = {
   CustomError,
   ForbiddenError,
   NotFoundError,
-  UnauthorizedError
+  UnauthorizedError,
+  ConflictError
 };
