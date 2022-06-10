@@ -1,5 +1,6 @@
-import SessionsModel from '../models/';
-import crypto from 'crypto';
+const {SessionsModel} = require('../models/');
+const crypto = require('crypto');
+const { copyFileSync } = require('fs');
 
 class SessionsService {
   constructor() { }
@@ -12,24 +13,46 @@ class SessionsService {
   }
 
   static async createSession(contact, type) {
-    const session = await SessionsModel.findAll({
+    const session = await SessionsModel.findOne({
       where: { contact: contact }
     });
-    let entity;
-    const passCode = crypto.randomInt(6);
-    if (session) {
+    let sessionKey;
+    const passcode = crypto.randomInt(0,999999).toString();
+    console.info('pass code ', passcode)
+    const passCodeHash = crypto.createHash('sha256').update(passcode).digest('base64');
+    console.info('session', session)
+    if (session !== null) {
+      console.info('contact exists', session)
       // contact exists on session, update passcode
-      entity = SessionsModel.update({passCode: passCode}, {where: {key: session.key}})
+      const result = await SessionsModel.update({passcode: passCodeHash}, {where: {key: session.key}})
+      console.log('update result', result)
+      sessionKey = session.key
     } else {
       // new session
-      entity = SessionsModel.create({
+      console.info('new contact')
+      const entity = await SessionsModel.create({
         key: crypto.randomUUID(),
         contact: contact,
-        passCode: passCode,
+        passcode: passCodeHash,
         type: type
       })
+      sessionKey = entity.key
     }
-    return entity.key
+    const entity = await SessionsModel.findOne()
+    return sessionKey;
+  }
+
+  static async deleteSession(session_key) {
+    await SessionsModel.destroy({
+      where: { key: session_key}
+    });
+  }
+
+  static async verifyPasscode(session_passcode, passcode) {
+    const passcodeHash = crypto.createHash('sha256').update(passcode).digest('base64');
+    console.info('session passcode', session_passcode);
+    console.info('passcode to verify', passcodeHash)
+    return session_passcode === passcodeHash;
   }
 }
 

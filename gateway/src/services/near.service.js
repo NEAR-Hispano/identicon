@@ -14,17 +14,16 @@ Implicit accounts work similarly to Bitcoin/Ethereum accounts.
 @created: JUN-03-2022, @mazito
 */
 const nearAPI = require("near-api-js");
-const Uuid = require('uuid');
+const Uuid = require("uuid");
 const { KeyPair, utils, connect, keyStores } = nearAPI;
 
-const 
-  NETWORK_ID = process.env.NETWORK_ID,
-  MASTER_ACCOUNT_ID = process.env.MASTER_ACCOUNT_ID
-  MASTER_PRIVATE_KEY = process.env.MASTER_PRIVATE_KEY,
-  INITIAL_BALANCE = "2000000000000000000000";
-                    //"1810000000000000000000"
+const NETWORK_ID = process.env.NETWORK_ID,
+  MASTER_ACCOUNT_ID = process.env.MASTER_ACCOUNT_ID;
+(MASTER_PRIVATE_KEY = process.env.MASTER_PRIVATE_KEY),
+  (INITIAL_BALANCE = "2000000000000000000000");
+//"1810000000000000000000"
 const Config = {
-  "testnet": {
+  testnet: {
     networkId: "testnet",
     keyStore: null,
     nodeUrl: "https://rpc.testnet.near.org",
@@ -32,16 +31,15 @@ const Config = {
     helperUrl: "https://helper.testnet.near.org",
     explorerUrl: "https://explorer.testnet.near.org",
   },
-  "mainnet": {
-      networkId: "mainnet",
-      keyStore: null,
-      nodeUrl: "https://rpc.mainnet.near.org",
-      walletUrl: "https://wallet.mainnet.near.org",
-      helperUrl: "https://helper.mainnet.near.org",
-      explorerUrl: "https://explorer.mainnet.near.org",
-  }
+  mainnet: {
+    networkId: "mainnet",
+    keyStore: null,
+    nodeUrl: "https://rpc.mainnet.near.org",
+    walletUrl: "https://wallet.mainnet.near.org",
+    helperUrl: "https://helper.mainnet.near.org",
+    explorerUrl: "https://explorer.mainnet.near.org",
+  },
 };
-
 
 async function getConfig(accountId, privateKey) {
   /**
@@ -49,7 +47,7 @@ async function getConfig(accountId, privateKey) {
    * This enables this account for signing transactions.
    */
   const config = Config[NETWORK_ID];
-  console.log(`getConfig '${NETWORK_ID}' '${accountId}' '${privateKey}'`)
+  console.log(`getConfig '${NETWORK_ID}' '${accountId}' '${privateKey}'`);
 
   // see: https://docs.near.org/docs/api/naj-quick-reference#key-store
   // creates keyStore from a private key string
@@ -60,24 +58,23 @@ async function getConfig(accountId, privateKey) {
   // creates a public / private key pair using the provided private key
   const keyPair = KeyPair.fromString(privateKey);
   //const keyPair = new nearAPI.utils.key_pair.KeyPairEd25519(privateKey);
-  
+
   // adds the keyPair you created to keyStore
-  await keyStore.setKey(NETWORK_ID, accountId, keyPair);  
+  await keyStore.setKey(NETWORK_ID, accountId, keyPair);
   config.keyStore = keyStore;
 
   return config;
 }
 
-
 async function createImplicitAccount() {
   /**
    * Creates an implict account, using the MasterAccount, and returns the
    * created account and its public and private keys.
-   * 
+   *
    * @example:
    *  [account, receipt] = await createImplictAccount();
-   * 
-   * @return: 
+   *
+   * @return:
    * - `[{id, public_key, private_key}, receipt]` if success
    * - `[null, error]` otherwise
    */
@@ -87,16 +84,18 @@ async function createImplicitAccount() {
 
     // create the KeyPair for the implicit account
     // see: https://github.com/near/near-cli/blob/master/commands/generate-key.js
-    const keyPair = KeyPair.fromRandom('ed25519');
+    const keyPair = KeyPair.fromRandom("ed25519");
     const publicKey = keyPair.publicKey.toString();
     const privateKey = keyPair.secretKey.toString();
 
     // create the new accountId using UUIDs, because the implicit way:
     // does not seem to work for us ???
     // ??? const accountId = utils.PublicKey.fromString(publicKey).data.hexSlice();
-    const uid = Uuid.v4().replace(new RegExp('-', 'g'), '');
-    const accountId = `${uid}.${MASTER_ACCOUNT_ID}`; 
-    console.log(`createImplicitAccount id='${accountId}' initial=${INITIAL_BALANCE}`);  
+    const uid = Uuid.v4().replace(new RegExp("-", "g"), "");
+    const accountId = `${uid}.${MASTER_ACCOUNT_ID}`;
+    console.info(
+      `createImplicitAccount id='${accountId}' initial=${INITIAL_BALANCE}`
+    );
 
     // create new account using funds from the master account used to create it
     // see: https://docs.near.org/docs/api/naj-quick-reference#connection
@@ -107,19 +106,22 @@ async function createImplicitAccount() {
       publicKey, // public key for new account
       INITIAL_BALANCE // initial balance for new account in yoctoNEAR
     );
-    console.log('receipt=', receipt);
+    console.info("receipt=", receipt);
 
-    return [
-      {id: accountId, public_key: publicKey, private_key: privateKey}, 
-      receipt // No errors
-    ];   
-  }
-  catch (error) {
-    return [null, error]
+    return {
+      account: {
+        id: accountId,
+        public_key: publicKey,
+        private_key: privateKey,
+      },
+      receipt, // No errors
+    };
+  } catch (error) {
+    return [null, error];
   }
 }
-
 
 module.exports = {
-  getConfig, createImplicitAccount
-}
+  getConfig,
+  createImplicitAccount,
+};
