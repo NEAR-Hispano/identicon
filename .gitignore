@@ -26,5 +26,6 @@ Cargo.lock
 /gateway/*.zip
 /gateway/temp/*
 
-## DB
+#DB
+/db/*.sqlite
 /gateway/db/*.sqlite

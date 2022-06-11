@@ -8,7 +8,7 @@ describe('Create NEAR implicit account', () => {
   })
 
   it('should create a new account with no error', async () => {
-    const [account, receipt] = await nearService.createImplicitAccount();
+    const {account, receipt} = await nearService.createImplicitAccount();
     expect(account !== null && receipt !== null).toBe(true);
   })
 })
