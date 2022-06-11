@@ -15,7 +15,8 @@ class SessionsController {
   constructor() {}
 
   static async getSession(session_key) {
-    const response = await SessionsService.getSession(session_key);
+    const response = await SessionsService.getSessionByKey(session_key);
+    console.info('response get session', response)
     if (response) {
       return new Success(response);
     } else {
@@ -35,9 +36,9 @@ class SessionsController {
         return new ConflictError("User is already registered");
       }
 
-      const session_key = await SessionsService.createSession(contact, type);
+      const session = await SessionsService.createSession(contact, type);
       const response = {
-        session: session_key,
+        session: session.key,
         requires_passcode: true,
         requires_password: false,
       };
@@ -53,7 +54,7 @@ class SessionsController {
       return new MissingParams("Passcode & Session Key required");
     }
     try {
-      const session = await SessionsService.getSession(session_key);
+      const session = await SessionsService.getSessionByKey(session_key);
       if (!session)  {
           return new ConflictError('Session not found')
       }
@@ -64,7 +65,7 @@ class SessionsController {
       let account = await AccountsService.getAccountByContact(
         session.contact
       );
-      //
+      
       if (!account) {
         const nearAccount = await createImplicitAccount();
         account = await AccountsService.createAccount(session, nearAccount)
@@ -89,6 +90,43 @@ class SessionsController {
       console.info({ error_message: err });
       return new GenericError(err);
     }
+  }
+
+  static async recovery(params) {
+    const {email, phone} = params;
+    if (email && phone) {
+      return new MissingParams("Either mail or phone is required not both");
+    }
+
+    if (!email && !phone) {
+      return new MissingParams("Mail or phone is required");
+    }
+    const contact = email || phone;
+    try {
+      const account = await AccountsService.getAccountByContact(contact);
+      if (!account) {
+        return new NotFoundError("User not exists");
+      }
+
+      let session = await SessionsService.getSessionByContact(contact);
+      if (session) {
+        session = await SessionsService.updatePasscode(session);
+      } else {
+        session = await SessionsService.createSession(contact, account.type);
+      }
+
+      const response = {
+        session: session.key,
+        requires_passcode: true,
+        requires_password: false,
+      };
+      return new Success(response);
+    } catch (err) {
+      console.info({ error_message: err });
+      return new GenericError(err);
+    }
+
+
   }
 }
 
