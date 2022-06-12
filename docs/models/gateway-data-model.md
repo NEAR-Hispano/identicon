@@ -96,21 +96,22 @@ Requested verifications, which can be in different states. This is mainly used a
 | must_end_utc | text | Must end verification before UTC time stamp in ISO-8601 format |
 
 
+#### Table `Tasks` ####
 
-#### Table `Transactions` ####
-
-BC transactions linked to some particular request. Note that all transaction info is stored in the BC, here we just maintain a copy of some minimal info.
+Tasks and its BC transactions linked to some particular tasks.  Note that all transaction info is stored in the BC, here we just maintain a copy of some minimal info.
 
 |Column name|Datatype|Description|
 |--|--|--|
-| `uid` | text | UNIQUE auto assigned UUID |
+| `id` | text | UNIQUE auto assigned ID |
 | request_uid | text | Request UUID |
-| action | text | Transaction action: `RQ`; request, `VL`: validation, `CL`: conclusion |
-| actor_uid | text | Actor account uid which participated in this transaction |
-| tx_uid | text | Transaction UID in the BC |
+| validator_uid | text | Validator account_uid |
+| state | text | The state of the task: `Pending`, `Draft`, `Completed` |
+| type | text | Validation type: `Remote`, `Onsite`, `Review`|
+| draft | text | JSON obj with draft info temporarily stored here. |
+| tx_uid | text | Final transaction UID in the BC |
 | tx_log | text | JSON additional information from TX log |
 | created_utc | text | Created UTC time stamp in ISO-8601 format |
-
+| updated_utc | text | Updated UTC time stamp in ISO-8601 format |
 
 
 #### Table `Sessions` ####
