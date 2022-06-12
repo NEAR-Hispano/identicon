@@ -2,8 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const accountsController = require('../controllers/accounts.controller');
+const AuthMiddleware = require('../middlewares/auth.middleware');
 
-router.get('/:uid', async (req, res, next) => {
+router.get('/:uid', AuthMiddleware, async (req, res, next) => {
     const { uid } = req.params;
     try {
         const response = await accountsController.getSingleAccount(uid);
@@ -14,5 +15,6 @@ router.get('/:uid', async (req, res, next) => {
     }
     next();
 });
+
 
 module.exports = router;

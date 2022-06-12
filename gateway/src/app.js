@@ -37,7 +37,7 @@ morgan(app, {
 });
 
 app.use('/v1/health', utilsRoutes);
-app.use('/v1/accounts'/*, AuthMiddleware*/, accountsRoutes);
+app.use('/v1/accounts', accountsRoutes);
 app.use('/v1/sessions', sessionRoutes);
 
 sequelize.sync({ 
