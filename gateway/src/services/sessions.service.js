@@ -1,4 +1,4 @@
-const { SessionsModel } = require("../models/");
+  const { SessionsModel } = require("../models/");
 const EmailService = require("./email.service");
 const crypto = require("crypto");
 class SessionsService {
@@ -49,8 +49,8 @@ class SessionsService {
     EmailService.sendEmail({
       email: contact,
       content: `Your passcode is <strong>${passcode}</strong>`,
-      text: 'Signup passcode',
-      subject: "Signup passcode",
+      text: 'Session passcode',
+      subject: "Session passcode",
     });
     return await SessionsModel.findOne({ where: { key: sessionKey } });
   }
@@ -86,8 +86,8 @@ class SessionsService {
     EmailService.sendEmail({
       email: session.contact,
       content: `Your passcode is <strong>${passcode}</strong>`,
-      text: 'Recovery  passcode',
-      subject: "Recovery passcode",
+      text: 'Session  passcode',
+      subject: "Session passcode",
     });
     return await SessionsModel.findOne({ where: { key: session.key } });
   }

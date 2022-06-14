@@ -76,7 +76,7 @@ class SessionsController {
           email: account.email,
           phone: account.phone,
           verified: account.verified,
-          user_type: account.user_type,
+          user_type: account.user_type
         },
         near_account_data: {
           //TBD if we want to return near account data, eg account id
