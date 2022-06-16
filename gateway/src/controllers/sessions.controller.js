@@ -10,13 +10,11 @@ const AccountsService = require("../services/accounts.service");
 const SessionsService = require("../services/sessions.service");
 const { createImplicitAccount } = require("../services/near.service");
 const AuthService = require("../services/auth.service");
-const Uuid = require('uuid');
 class SessionsController {
   constructor() {}
 
   static async getSession(session_key) {
     const response = await SessionsService.getSessionByKey(session_key);
-    console.info('response get session', response)
     if (response) {
       return new Success(response);
     } else {

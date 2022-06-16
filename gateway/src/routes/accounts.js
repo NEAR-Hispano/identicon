@@ -10,7 +10,18 @@ router.get('/:uid', AuthMiddleware, async (req, res, next) => {
         const response = await accountsController.getSingleAccount(uid);
         res.status(response.status).send(response.body);
     } catch (error) {
-        console.log(error);
+        res.status(error?.statusCode ? error.statusCode : 500).send(error, error.stack);
+    }
+    next();
+});
+
+router.put('/:id', AuthMiddleware, async (req, res, next) => {
+    const { id } = req.params;
+    const account = req.body;
+    try {
+        const response = await accountsController.updateAccount(id, account);
+        res.status(response.status).send(response.body);
+    } catch (error) {
         res.status(error?.statusCode ? error.statusCode : 500).send(error, error.stack);
     }
     next();
