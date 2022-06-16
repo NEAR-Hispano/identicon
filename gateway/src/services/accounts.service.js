@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
-const { AccountsModel } = require("../models");
-const uuid = require("uuid");
-const crypto = require("crypto")
+const { AccountsModel, SubjectsModel } = require("../models");
+const uuid = require('uuid');
+const crypto = require("crypto");
 class AccountsService {
   constructor() {}
 
@@ -11,22 +11,22 @@ class AccountsService {
       private_key: near_account.private_key,
     };
     const keyHash = crypto
-    .createHash("sha256")
-    .update(JSON.stringify(keys))
-    .digest("base64");
+      .createHash("sha256")
+      .update(JSON.stringify(keys))
+      .digest("base64");
     const account = await AccountsModel.create({
       uid: uuid.v4(),
       type: session.type,
       email: session.contact,
       phone: session.contact, // ToDo. manage email/phone store
-      subject_id: "", // TODO verify why is requied
+      subject_id: uuid.v4(), // Todo: create unique subject_id (did) based on identicon docs
       linked_account_uid: near_account.account.id,
-      keys: keyHash
+      keys: keyHash,
     });
     return account;
   }
 
-  static async getSingleAccount(uid) {
+  static async getAccountById(uid) {
     const result = await AccountsModel.findAll({
       where: { uid: uid },
     });
@@ -47,6 +47,17 @@ class AccountsService {
       order: [["id", "ASC"]],
     });
     return result;
+  }
+
+  static async updateAccount(id, accountUpdate) {
+    const account = await AccountsModel.findOne({where: {uid: id}})
+    // Need to use JSONB to manage updates to update subject.personal_info instead of a JSON field. 
+    await SubjectsModel.upsert({
+      verified: account.verified,
+      subject_id: account.subject_id,
+      personal_info: JSON.stringify(accountUpdate.personal_info)
+    });
+    return await AccountsModel.update(account, { where: { uid: id } });
   }
 }
 
