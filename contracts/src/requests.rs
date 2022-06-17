@@ -1,116 +1,95 @@
+use crate::definitions::*;
 use near_sdk::near_bindgen;
 use near_sdk::{env, log};
+use near_sdk::AccountId;
 use serde_json::json;
-
-use crate::definitions::*;
 
 #[near_bindgen]
 impl VerificationContract {
-    // Registers the new request in the blockchain and assigns validators to verify it,
-    // is called by *Requester*
+    // Registers the new request in the blockchain, but does not yet
+    // assigns validators to verify it.
     pub fn request_verification(
         &mut self,
-        requestor_id: RequestorId,
+        uid: RequestId,
         is_type: VerificationType,
         subject_id: SubjectId,
-        subject_info: SubjectInfo,
-    ) {
-        // log #0 as JSON for TheGraph
-        env::log_str(
-            &json!({
-                "type": VerificationType::ProofOfLife,
-                "requestor_id": requestor_id.to_string(),
-                "subject_id": subject_id.to_string(),
-                "state": VerificationState::Pending
-            })
-            .to_string(),
-        );
-
+        payload: String,
+    ) -> VerificationRequest {
         log!(
-            "\nrequest_verification: Called method request_verification({:?} {:?} {:?})",
-            requestor_id,
+            "request_verification: Called with ({:?}, {:?}, {:?}, {:?}, {:?})",
+            env::predecessor_account_id(),
+            uid,
             is_type,
-            subject_id
+            subject_id,
+            payload
         );
 
-        // check if subject_id already exists in verifications
+        // check if 'uid' already exists
+        assert!(
+            !self.verifications.keys_as_vector().iter().any(|e| e == uid),
+            "request_verification: Verification already exists for UID"
+        );
+
+        // check if 'subject_id' has pending varifications
         assert!(
             !self
-                .verifications
+                .subjects
                 .keys_as_vector()
                 .iter()
                 .any(|e| e == subject_id),
-            "request_verification: Verification already exists for subject_id"
+            "request_verification: Pending verification for subject_id"
         );
 
-        let mut request = VerificationRequest {
-            is_type: is_type,
-            requestor_id: requestor_id.to_string(),
-            subject_id: subject_id.to_string(),
-            subject_info: subject_info,
-            when: TimeWindow {
-                starts: "2022-03-28 00:00:00".to_string(),
-                ends: "2022-03-31 15:00:00".to_string(),
-            },
-            state: VerificationState::Pending,
-            results: Vec::new(),
+        // calculate when we can process this request according to the type
+        let mut timing = TimeWindow {
+            starts: "2022-03-28 00:00:00".to_string(),
+            ends: "2022-03-31 15:00:00".to_string(),
         };
 
-        // randomly assign the validators
-        let selected_validators: Vec<ValidatorId> = self.assign_validators(subject_id.to_string());
-        log!(
-            "request_verification: Assign selected validators {:?}",
-            selected_validators
-        );
+        let caller_account_id = env::predecessor_account_id();
 
-        for validator in selected_validators.iter() {
-            // add to the request results Vec
-            request.results.push(VerificationResult {
-                validator_id: validator.to_string(),
-                result: VerificationState::Pending,
-                timestamp: "".to_string(),
-            });
+        let mut request = VerificationRequest {
+            uid: uid.clone(),
+            is_type: is_type.clone(),
+            requestor_id: caller_account_id.clone(),
+            subject_id: subject_id.clone(),
+            info: payload.to_string(),
+            when: timing.clone(),
+            state: VerificationState::Pending,
+            validations: Vec::new(),
+            payed: false,
+        };
 
-            self.add_to_assignments(validator.to_string(), subject_id.to_string());
+        let expense = Spending {
+          from: "2022-06-16".to_string(),
+          to: "2022-06-16".to_string(),
+          free: self.params.allowed_monthly_requests.clone(),
+          consumed: 0,
+        };
+
+        if self.has_allowance(&caller_account_id) {
+          self.spendings.insert(&caller_account_id, &expense);
         }
 
         // add this request to the verifications to do
-        self.verifications.insert(&subject_id.to_string(), &request);
-        log!(
-            "request_verification: Added to verifications list {:?}",
-            &request
-        );
-
-        // return the verification state
-        request.state;
+        self.verifications.insert(&uid, &request);
+        self.subjects.insert(&subject_id, &uid);
+        log!("request_verification: Added {:?}", &request);
+        
+        // return the full Verification obj
+        request.clone()
     }
 
-    /* Private */
 
-    /// Adds this subject to the validator assignments
-    fn add_to_assignments(&mut self, validator_id: ValidatorId, subject_id: SubjectId) {
-        let existent = self.assignments.get(&validator_id.to_string());
-        let mut assigned = if existent.is_some() {
-            existent.unwrap()
-        } else {
-            Vec::new()
-        };
-        assigned.push(subject_id.to_string());
-        self.assignments
-            .insert(&validator_id.to_string(), &assigned);
-        log!(
-            "request_verification: Assigned subject {:?} to validator {:?}",
-            subject_id,
-            validator_id
-        );
-    }
-
-    // When the request is filled, we must select a number of validators at random from the validators pool, and assign them to the request
-    fn assign_validators(&self, subject_id: SubjectId) -> Vec<ValidatorId> {
-        //Vec::new()
-        let val1: ValidatorId = self.validators[1].to_string();
-        let val2: ValidatorId = self.validators[2].to_string();
-        let val3: ValidatorId = self.validators[3].to_string();
-        vec![val1, val2, val3]
+    // Checks if we have enought allowed requests for this account
+    fn has_allowance(
+      &mut self, 
+      account_id: &AccountId
+    ) -> bool {
+      let expenses = self.spendings.get(&account_id);
+      match expenses {
+        None => return true,
+        Some(expense) => return { expense.free > expense.consumed }
+      }
     }
 }

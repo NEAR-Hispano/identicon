@@ -2,8 +2,8 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::UnorderedMap;
 use near_sdk::near_bindgen;
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::PanicOnDefault;
 use near_sdk::AccountId;
+use near_sdk::PanicOnDefault;
 
 // The Subject government identification as a string formed
 // using 'type'+'number'+'country', ex: 'dni:12488353:ar'
@@ -38,7 +38,7 @@ pub struct TimeWindow {
 type RequestInfo = String;
 
 // The different verification services
-#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug)]
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub enum VerificationType {
     /// Validates that the Subject is alive, and lives in the indicated Location.
@@ -70,15 +70,15 @@ pub enum VerificationState {
 
     /// It is not possible to do the verification, due to some reason which exceeds
     /// the Validator possibilites, such as inaccesible area, weather, etc
-    NotPossible, // code: NP
+    NotPossible(String), // code: NP
 
     /// Validator will not do the verification, for some personal reason,
     /// but it requires a cause and explanation. Too many of this refusals
     /// may eliminate the Validator from the validators pool.
-    WillNotDo, // code: WND
+    WillNotDo(String), // code: WND
 
     /// Verification was canceled by Requestor
-    Canceled, // code: CX
+    Canceled(String), // code: CX
 }
 
 // The different validation task types which may perform a validator.
@@ -99,27 +99,27 @@ pub enum ValidationType {
 // When he/she has not yet performed the validation it describes the assigned task.
 #[derive(BorshDeserialize, BorshSerialize, Debug, Clone)]
 pub struct ValidationTask {
-  //	The validator account assigned to perform this validation.
-  validator_id: ValidatorId, 
+    //	The validator account assigned to perform this validation.
+    validator_id: ValidatorId,
 
-  is_type: ValidationType, //	RESERVED for future use.
+    is_type: ValidationType, //	RESERVED for future use.
 
-  // The result state. It may be in differente states, depending on the validator actions.
-  result: VerificationState, 
+    // The result state. It may be in differente states, depending on the validator actions.
+    result: VerificationState,
 
-  // The timestamp when the validation was performed, or an empty timestamp otherwise.
-  timestamp: ISODateTime, 
+    // The timestamp when the validation was performed, or an empty timestamp otherwise.
+    timestamp: ISODateTime,
 
-  // An array of ContentIDs (photos and videos) attesting the work done.
-  contents: Vec<FileId>, 
+    // An array of ContentIDs (photos and videos) attesting the work done.
+    contents: Vec<FileId>,
 
-  // Notes and remarks regarding the validation result
-  remarks: String, 
+    // Notes and remarks regarding the validation result
+    remarks: String,
 }
 
-#[derive(BorshDeserialize, BorshSerialize, Debug)]
+#[derive(BorshDeserialize, BorshSerialize, Debug, Clone)]
 pub struct VerificationRequest {
-    pub request_uid: RequestId,
+    pub uid: RequestId,
 
     // the verification service required, which may include additional info
     // for some types such as ProofOfOwnership(asset) or ProofOfService(service).
@@ -144,7 +144,7 @@ pub struct VerificationRequest {
     pub validations: Vec<ValidationTask>,
 
     // validators where payed
-    payed: bool,
+    pub payed: bool,
 }
 
 // This struct describes the spending allowed and used in a given time period
@@ -167,23 +167,22 @@ pub struct Spending {
 }
 
 // A set of params modulating how the Contract must work
-#[derive(BorshDeserialize, BorshSerialize, Debug)]
+#[derive(BorshDeserialize, BorshSerialize, Debug, Clone)]
 pub struct Parameters {
-  // min validators required to verify a given request
-  pub min_validators_needed: u8,// = 2,
+    // min validators required to verify a given request
+    pub min_validators_needed: u8, // = 2,
 
-  // the max reviewers needed: may vary randomly between 0 and this param
-  pub max_reviewers_needed: u8, // = 1,
+    // the max reviewers needed: may vary randomly between 0 and this param
+    pub max_reviewers_needed: u8, // = 1,
 
-  // fee to be paid to validator when task is completed, in USD (stable coin)
-  pub remote_validation_fee: f32, // = 1.0,
-  pub onsite_validation_fee: f32, // = 1.0,
-  pub review_validation_fee: f32, // = 1.0,
+    // fee to be paid to validator when task is completed, in USD (stable coin)
+    pub remote_validation_fee: f32, // = 1.0,
+    pub onsite_validation_fee: f32, // = 1.0,
+    pub review_validation_fee: f32, // = 1.0,
 
-  // allowed requests per month according to requester type
-  pub allowed_monthly_requests: u16, // = 2,
+    // allowed requests per month according to requester type
+    pub allowed_monthly_requests: u16, // = 2,
 }
-
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault, Debug)]
@@ -210,7 +209,7 @@ pub struct VerificationContract {
     // free and used requests quota of this particular account.
     pub spendings: UnorderedMap<AccountId, Spending>,
 
-    // the set of params modulating contract behaviour, may be changed 
+    // the set of params modulating contract behaviour, may be changed
     // by and IdenticonDAO request.
     pub params: Parameters,
 }

@@ -1,6 +1,6 @@
 use crate::definitions::*;
 //use near_sdk::serde_json;
-//use near_sdk::{env, log, Gas, Promise, PromiseResult};
+use near_sdk::{env, log, Gas, Promise, PromiseResult};
 
 /*
  * the rest of this file sets up unit tests
@@ -32,24 +32,24 @@ mod tests {
         let context = get_context(requestor);
         testing_env!(context.build());
 
-        let mut contract = VerificationContract::new();
+        let request_uid = "1234".to_string();
+        let subject_id = "AR_DNI_12488353".to_string();
+        let payload = "Some simulated encrypted payload".to_string();
 
-//         let request_uid = "1234".to_string();
-//         let subject_id = "AR_DNI_12488353".to_string();
-//         let payload = "Some simulated encrypted pauload".to_string();
-// 
-//         let state: VerificationState = contract.request_verification(
-//           request_uid.to_string(),
-//           VerificationType::ProofOfLife,
-//           subject_id.to_string(),
-//           payload.to_string(),
-//         );
-//         
-//         let rq = contract.verifications.get(&request_uid.to_string()).unwrap();
-//         assert_eq!(rq.requestor_id, env::predecessor_account_id());
-//         assert_eq!(rq.subject_id, subject_id);
-//         assert_eq!(rq.validations.len(), 0);
-//         assert_eq!(contract.verifications.len(), 1);
-//         assert_eq!(contract.assignments.len(), 0);
+        let mut contract = VerificationContract::new();
+        let requested: VerificationRequest = contract.request_verification(
+            request_uid.clone(),
+            VerificationType::ProofOfLife,
+            subject_id.clone(),
+            payload.clone(),
+        );
+
+        let rq = contract.verifications.get(&request_uid.to_string()).unwrap();
+        assert_eq!(rq.requestor_id, env::predecessor_account_id());
+        assert_eq!(rq.subject_id, subject_id);
+        assert_eq!(rq.uid, request_uid);
+        assert_eq!(rq.validations.len(), 0);
+        assert_eq!(contract.verifications.len(), 1);
+        assert_eq!(contract.assignments.len(), 0);
     }
 }
