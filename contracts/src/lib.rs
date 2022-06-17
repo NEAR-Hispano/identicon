@@ -4,6 +4,7 @@ use near_sdk::{env, near_bindgen};
 
 mod definitions;
 use definitions::*;
+mod errors;
 
 mod requests;
 // mod payments;

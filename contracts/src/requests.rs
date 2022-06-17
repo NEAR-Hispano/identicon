@@ -1,4 +1,5 @@
 use crate::definitions::*;
+use crate::errors::*;
 use near_sdk::near_bindgen;
 use near_sdk::AccountId;
 use near_sdk::{env, log};
@@ -14,7 +15,7 @@ impl VerificationContract {
         is_type: VerificationType,
         subject_id: SubjectId,
         payload: String,
-    ) -> VerificationRequest {
+    ) -> ReturnStatus<VerificationRequest> {
         log!(
             "request_verification: Called with ({:?}, {:?}, {:?}, {:?}, {:?})",
             env::predecessor_account_id(),
@@ -45,7 +46,9 @@ impl VerificationContract {
 
         // verify if we have available requests and set state accordingly
         let spending = self.spendings.get(&caller_account_id);
-        let state: VerificationState = self.get_state_from_allowance(&spending);
+        if !self.has_allowance(&spending) {
+          return ReturnStatus::WillNotDo(AVAILABLE_REQUESTS_CONSUMED.to_string())
+        }
 
         // build the request using existent state
         let request = VerificationRequest {
@@ -55,16 +58,10 @@ impl VerificationContract {
             subject_id: subject_id.clone(),
             info: payload.to_string(),
             when: timing.clone(),
-            state: state.clone(),
+            state: VerificationState::Pending,
             validations: Vec::new(),
             payed: false,
         };
-
-        // if WillNotDo just return empty VerificationRequest
-        match state {
-            VerificationState::WillNotDo(_) => return request.clone(),
-            _ => {}
-        }
 
         // now we can update Contract state
         self.verifications.insert(&uid, &request);
@@ -73,24 +70,18 @@ impl VerificationContract {
         log!("request_verification: Added {:?}", &request);
 
         // return the full Verification obj
-        request.clone()
+        ReturnStatus::Done(request.clone())
     }
 
-    fn get_state_from_allowance(
+    fn has_allowance(
         // Check if we have enought allowed requests for this account
-        // and return the VerificationState accordingly
+        // and return true if we do, false otherwise
         &mut self,
         spending: &Option<Spending>,
-    ) -> VerificationState {
+    ) -> bool {
         match spending {
-            Some(available) => {
-                if available.free <= available.consumed {
-                    return VerificationState::WillNotDo("NO HAY MAS".to_string());
-                } else {
-                    return VerificationState::Pending;
-                }
-            }
-            None => return VerificationState::Pending,
+            Some(available) => return available.free <= available.consumed,
+            None => return true,
         }
     }
 

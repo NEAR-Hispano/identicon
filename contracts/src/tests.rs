@@ -1,5 +1,6 @@
 use crate::definitions::*;
-use near_sdk::env;
+use crate::errors::*;
+use near_sdk::{env, log};
 //use near_sdk::serde_json;
 //use near_sdk::{log, Gas, Promise, PromiseResult};
 
@@ -38,17 +39,22 @@ mod tests {
         let payload = "Some simulated encrypted payload".to_string();
 
         let mut contract = VerificationContract::new();
-        let requested: VerificationRequest = contract.request_verification(
+        let ret = contract.request_verification(
             request_uid.clone(),
             VerificationType::ProofOfLife,
             subject_id.clone(),
             payload.clone(),
         );
 
+        match ret {
+          ReturnStatus::Done(rq) => log!("test_request_verification: ReturnResult::Done {:?}", rq),
+          ReturnStatus::WillNotDo(err) => log!("test_request_verification: ReturnResult::WillNotDo {:}", err)
+        }
+
         let rq = contract
-            .verifications
-            .get(&request_uid.to_string())
-            .unwrap();
+                  .verifications
+                  .get(&request_uid.to_string())
+                  .unwrap();
         assert_eq!(rq.requestor_id, env::predecessor_account_id());
         assert_eq!(rq.subject_id, subject_id);
         assert_eq!(rq.uid, request_uid);
