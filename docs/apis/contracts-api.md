@@ -14,17 +14,17 @@ request_verification(
   is_type: VerificationType 
   subject_id: SubjectId, 
   payload: RequestInfo
-) -> VerificationRequest
+) -> ReturnStatus<VerificationRequest>
 ~~~
 
-Returns the registered request, with the `VerificationState` and the `TimeWindow` in which the request must be resolved. In case the request was not allowed, the `state` response `WillNotDo` contains the reason.
+If success returns the registered `VerificationRequest` completed. In case the request was not allowed, response `WillNotDo` contains the reason.
 
 ### cancel_verification
 ~~~rust
 cancel_verification(
   request_uid, 
   cause
-) -> Result
+) -> ReturnStatus<String>
 ~~~
 
 ---
