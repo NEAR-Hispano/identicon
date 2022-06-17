@@ -14,10 +14,10 @@ request_verification(
   is_type: VerificationType 
   subject_id: SubjectId, 
   payload: RequestInfo
-) -> [VerificationState, TimeWindow]
+) -> VerificationRequest
 ~~~
 
-Returns: `VerificationState` of the registered request, and the `TimeWindow` in which the request must be resolved. In case the request was not allowed, the `state` response contains the reason.
+Returns the registered request, with the `VerificationState` and the `TimeWindow` in which the request must be resolved. In case the request was not allowed, the `state` response `WillNotDo` contains the reason.
 
 ### cancel_verification
 ~~~rust
