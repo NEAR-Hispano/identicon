@@ -1,6 +1,5 @@
 use crate::definitions::*;
-use crate::errors::*;
-use near_sdk::{env, log};
+use near_sdk::{env};
 //use near_sdk::serde_json;
 //use near_sdk::{log, Gas, Promise, PromiseResult};
 
@@ -45,11 +44,6 @@ mod tests {
             subject_id.clone(),
             payload.clone(),
         );
-
-        match ret {
-          ReturnStatus::Done(rq) => log!("test_request_verification: ReturnResult::Done {:?}", rq),
-          ReturnStatus::WillNotDo(err) => log!("test_request_verification: ReturnResult::WillNotDo {:}", err)
-        }
 
         let rq = contract
                   .verifications

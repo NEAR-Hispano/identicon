@@ -1,5 +1,4 @@
 use crate::definitions::*;
-use crate::errors::*;
 use near_sdk::near_bindgen;
 use near_sdk::AccountId;
 use near_sdk::{env, log};
@@ -15,7 +14,7 @@ impl VerificationContract {
         is_type: VerificationType,
         subject_id: SubjectId,
         payload: String,
-    ) -> ReturnStatus<VerificationRequest> {
+    ) -> VerificationRequest {
         log!(
             "request_verification: Called with ({:?}, {:?}, {:?}, {:?}, {:?})",
             env::predecessor_account_id(),
@@ -37,18 +36,21 @@ impl VerificationContract {
             "request_verification: Pending verification for subject_id"
         );
 
+        // MUST use the signer account, see: 
         let caller_account_id = env::predecessor_account_id();
+
+        // check if we have available requests 
+        let spending = self.spendings.get(&caller_account_id);
+        assert!(
+          self.has_allowance(&spending),
+          "request_verification: All available requests have been used."
+        );
+
         let timing = TimeWindow {
             // calculate when we can process this request according to the type
             starts: "2022-03-28 00:00:00".to_string(),
             ends: "2022-03-31 15:00:00".to_string(),
         };
-
-        // verify if we have available requests and set state accordingly
-        let spending = self.spendings.get(&caller_account_id);
-        if !self.has_allowance(&spending) {
-          return ReturnStatus::WillNotDo(AVAILABLE_REQUESTS_CONSUMED.to_string())
-        }
 
         // build the request using existent state
         let request = VerificationRequest {
@@ -70,7 +72,7 @@ impl VerificationContract {
         log!("request_verification: Added {:?}", &request);
 
         // return the full Verification obj
-        ReturnStatus::Done(request.clone())
+        request.clone()
     }
 
     fn has_allowance(
