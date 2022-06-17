@@ -1,6 +1,7 @@
 use crate::definitions::*;
+use near_sdk::env;
 //use near_sdk::serde_json;
-use near_sdk::{env, log, Gas, Promise, PromiseResult};
+//use near_sdk::{log, Gas, Promise, PromiseResult};
 
 /*
  * the rest of this file sets up unit tests
@@ -44,7 +45,10 @@ mod tests {
             payload.clone(),
         );
 
-        let rq = contract.verifications.get(&request_uid.to_string()).unwrap();
+        let rq = contract
+            .verifications
+            .get(&request_uid.to_string())
+            .unwrap();
         assert_eq!(rq.requestor_id, env::predecessor_account_id());
         assert_eq!(rq.subject_id, subject_id);
         assert_eq!(rq.uid, request_uid);
