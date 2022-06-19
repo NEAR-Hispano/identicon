@@ -38,7 +38,7 @@ impl VerificationContract {
         );
 
         // MUST use the signer_account_id, see: 
-        let caller_account_id = env::predecessor_account_id();
+        let caller_account_id = env::signer_account_id();
 
         // check if we have available requests 
         let spending = self.spendings.get(&caller_account_id);
@@ -125,9 +125,9 @@ mod tests {
     // part of writing unit tests is setting up a mock context
     // provide a `predecessor` here, it'll modify the default context
     #[allow(dead_code)]
-    fn get_context(predecessor: AccountId) -> VMContextBuilder {
+    fn get_context(signer: AccountId) -> VMContextBuilder {
         let mut builder = VMContextBuilder::new();
-        builder.predecessor_account_id(predecessor);
+        builder.signer_account_id(signer);
         builder
     }
 
@@ -150,7 +150,7 @@ mod tests {
             payload.clone(),
         );
         let rq = contract.verifications.get(&request_uid.to_string()).unwrap();
-        assert_eq!(rq.requestor_id, env::predecessor_account_id());
+        assert_eq!(rq.requestor_id, env::signer_account_id());
         assert_eq!(rq.subject_id, subject_id);
         assert_eq!(rq.uid, ret.uid);
         assert_eq!(rq.validations.len(), 0);
