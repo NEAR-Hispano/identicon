@@ -2,15 +2,14 @@ use near_sdk::collections::UnorderedMap;
 use near_sdk::log;
 use near_sdk::{env, near_bindgen};
 
-mod definitions;
+pub mod definitions;
 use definitions::*;
 mod errors;
 
-mod requests;
+pub mod requests;
 // mod payments;
 // mod upgrades;
 // mod validators;
-mod tests;
 
 
 #[near_bindgen]

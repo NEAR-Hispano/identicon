@@ -37,7 +37,7 @@ impl VerificationContract {
             "{}", SUBJECT_HAS_PENDING_VERIFICATION
         );
 
-        // MUST use the signer account, see: 
+        // MUST use the signer_account_id, see: 
         let caller_account_id = env::predecessor_account_id();
 
         // check if we have available requests 
@@ -83,7 +83,10 @@ impl VerificationContract {
         spending: &Option<Spending>,
     ) -> bool {
         match spending {
-            Some(available) => return available.free <= available.consumed,
+            Some(available) => {
+              log!("has_allowance: Available free={} used={}", available.free, available.consumed); 
+              return available.free > available.consumed
+            },
             None => return true,
         }
     }
@@ -109,5 +112,147 @@ impl VerificationContract {
             },
         };
         self.spendings.insert(account_id, &renewed);
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use near_sdk::test_utils::VMContextBuilder;
+    use near_sdk::{testing_env, AccountId};
+
+    // part of writing unit tests is setting up a mock context
+    // provide a `predecessor` here, it'll modify the default context
+    #[allow(dead_code)]
+    fn get_context(predecessor: AccountId) -> VMContextBuilder {
+        let mut builder = VMContextBuilder::new();
+        builder.predecessor_account_id(predecessor);
+        builder
+    }
+
+    #[test]
+    fn unit_test_insert_first() {
+        // Set up the testing context and unit test environment
+        let requestor = AccountId::new_unchecked("maz.testnet".to_string());
+        let context = get_context(requestor);
+        testing_env!(context.build());
+        let mut contract = VerificationContract::new();
+        
+        //log!("\nFirst request inserted => OK");
+        let request_uid = "1234".to_string();
+        let subject_id = "AR_DNI_12488353".to_string();
+        let payload = "Some simulated encrypted payload".to_string();
+        let ret = contract.request_verification(
+            request_uid.clone(),
+            VerificationType::ProofOfLife,
+            subject_id.clone(),
+            payload.clone(),
+        );
+        let rq = contract.verifications.get(&request_uid.to_string()).unwrap();
+        assert_eq!(rq.requestor_id, env::predecessor_account_id());
+        assert_eq!(rq.subject_id, subject_id);
+        assert_eq!(rq.uid, ret.uid);
+        assert_eq!(rq.validations.len(), 0);
+        assert_eq!(contract.verifications.len(), 1);
+        assert_eq!(contract.assignments.len(), 0);
+    }
+
+    #[test]
+    #[should_panic]
+    fn unit_test_duplicate_uid() {
+        // Set up the testing context and unit test environment
+        let requestor = AccountId::new_unchecked("maz.testnet".to_string());
+        let context = get_context(requestor);
+        testing_env!(context.build());
+        let mut contract = VerificationContract::new();
+        
+        //log!("\nSecond request has duplicate UID => PANIC");
+        let request_uid = "1234".to_string();
+        let subject_id = "AR_DNI_12488353".to_string();
+        let payload = "Some simulated encrypted payload".to_string();
+        let ret = contract.request_verification(
+            request_uid.clone(),
+            VerificationType::ProofOfLife,
+            subject_id.clone(),
+            payload.clone(),
+        );
+
+        let request_uid = "1234".to_string();
+        let ret = contract.request_verification(
+          request_uid.clone(),
+          VerificationType::ProofOfLife,
+          subject_id.clone(),
+          payload.clone(),
+        );
+    }
+
+    #[test]
+    #[should_panic]
+    fn unit_test_subject_pending() {
+        // Set up the testing context and unit test environment
+        let requestor = AccountId::new_unchecked("maz.testnet".to_string());
+        let context = get_context(requestor);
+        testing_env!(context.build());
+        let mut contract = VerificationContract::new();
+        
+        //log!("\nSecond request has subject Pending => PANIC");
+        let request_uid = "1234".to_string();
+        let subject_id = "AR_DNI_12488353".to_string();
+        let payload = "Some simulated encrypted payload".to_string();
+        let ret = contract.request_verification(
+            request_uid.clone(),
+            VerificationType::ProofOfLife,
+            subject_id.clone(),
+            payload.clone(),
+        );
+
+        let request_uid = "123456".to_string();
+        let subject_id = "AR_DNI_12488353".to_string();
+        let ret = contract.request_verification(
+          request_uid.clone(),
+          VerificationType::ProofOfLife,
+          subject_id.clone(),
+          payload.clone(),
+        );
+    }
+
+    #[test]
+    #[should_panic]
+    fn unit_test_all_consumed() {
+        // Set up the testing context and unit test environment
+        let requestor = AccountId::new_unchecked("maz.testnet".to_string());
+        let context = get_context(requestor);
+        testing_env!(context.build());
+        let mut contract = VerificationContract::new();
+        
+        //log!("\nThird request has all consumed => PANIC");
+        let request_uid = "1234".to_string();
+        let subject_id = "AR_DNI_12488353".to_string();
+        let payload = "Some simulated encrypted payload".to_string();
+        let ret = contract.request_verification(
+            request_uid.clone(),
+            VerificationType::ProofOfLife,
+            subject_id.clone(),
+            payload.clone(),
+        );
+
+        let request_uid = "12345".to_string();
+        let subject_id = "AR_DNI_124883536".to_string();
+        let ret = contract.request_verification(
+          request_uid.clone(),
+          VerificationType::ProofOfLife,
+          subject_id.clone(),
+          payload.clone(),
+        );
+
+        let request_uid = "123456".to_string();
+        let subject_id = "AR_DNI_1248835367".to_string();
+        let ret = contract.request_verification(
+          request_uid.clone(),
+          VerificationType::ProofOfLife,
+          subject_id.clone(),
+          payload.clone(),
+        );
     }
 }
