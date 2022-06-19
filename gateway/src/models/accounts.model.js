@@ -54,7 +54,7 @@ const AccountsModel = (sequelize, { DataTypes }) => {
     // Subject ID, example: ar_dni_12345678, may be empty
     subject_id: {
       type: DataTypes.STRING(100),
-      allowNull: false,
+      allowNull: true,
       validate: {
         notEmpty: false,
       }

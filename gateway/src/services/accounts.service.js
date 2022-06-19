@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const { AccountsModel, SubjectsModel } = require("../models");
-const uuid = require('uuid');
+const uuid = require("uuid");
 const crypto = require("crypto");
 class AccountsService {
   constructor() {}
@@ -19,7 +19,6 @@ class AccountsService {
       type: session.type,
       email: session.contact,
       phone: session.contact, // ToDo. manage email/phone store
-      subject_id: uuid.v4(), // Todo: create unique subject_id (did) based on identicon docs
       linked_account_uid: near_account.account.id,
       keys: keyHash,
     });
@@ -49,15 +48,24 @@ class AccountsService {
     return result;
   }
 
-  static async updateAccount(id, accountUpdate) {
-    const account = await AccountsModel.findOne({where: {uid: id}})
-    // Need to use JSONB to manage updates to update subject.personal_info instead of a JSON field. 
+  static async updateAccount(id, account, accountUpdate) {
+    let subjectId = account.subject_id;
+    if (!subject_id) {
+      subjectId = uuid.v4(); // Todo: create unique subject_id (did) based on identicon docs AR_DNI_xxxxxxxxxx
+    }
     await SubjectsModel.upsert({
       verified: account.verified,
-      subject_id: account.subject_id,
-      personal_info: JSON.stringify(accountUpdate.personal_info)
+      subject_id: subjectId,
+      personal_info: JSON.stringify(accountUpdate.personal_info),
     });
-    return await AccountsModel.update(account, { where: { uid: id } });
+    return await AccountsModel.update(
+      { ...account, subject_id: subjectId },
+      { where: { uid: id } }
+    );
+  }
+  
+  static async deleteAccount(id) {
+    return await AccountsModel.update({ state: 'D'}, { where: { uid: id}})
   }
 }
 
