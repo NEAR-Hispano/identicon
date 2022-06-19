@@ -1,4 +1,5 @@
 use crate::definitions::*;
+use crate::errors::*;
 use near_sdk::near_bindgen;
 use near_sdk::AccountId;
 use near_sdk::{env, log};
@@ -43,7 +44,7 @@ impl VerificationContract {
         let spending = self.spendings.get(&caller_account_id);
         assert!(
           self.has_allowance(&spending),
-          "request_verification: All available requests have been used."
+          "Err {}", AVAILABLE_REQUESTS_CONSUMED
         );
 
         let timing = TimeWindow {

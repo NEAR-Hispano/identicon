@@ -45,13 +45,10 @@ mod tests {
             payload.clone(),
         );
 
-        let rq = contract
-                  .verifications
-                  .get(&request_uid.to_string())
-                  .unwrap();
+        let rq = contract.verifications.get(&request_uid.to_string()).unwrap();
         assert_eq!(rq.requestor_id, env::predecessor_account_id());
         assert_eq!(rq.subject_id, subject_id);
-        assert_eq!(rq.uid, request_uid);
+        assert_eq!(rq.uid, ret.uid);
         assert_eq!(rq.validations.len(), 0);
         assert_eq!(contract.verifications.len(), 1);
         assert_eq!(contract.assignments.len(), 0);
