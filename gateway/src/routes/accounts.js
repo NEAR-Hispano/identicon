@@ -27,5 +27,17 @@ router.put('/:id', AuthMiddleware, async (req, res, next) => {
     next();
 });
 
+router.delete('/:id', AuthMiddleware, async (req, res, next) => {
+    const { id } = req.params;
+    const account = req.body;
+    try {
+        const response = await accountsController.deleteAccount(id);
+        res.status(response.status).send(response.body);
+    } catch (error) {
+        res.status(error?.statusCode ? error.statusCode : 500).send(error, error.stack);
+    }
+    next();
+});
+
 
 module.exports = router;

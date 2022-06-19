@@ -33,7 +33,19 @@ class AccountsController {
       if (!id) return new MissingParams("Account Id is required");
       const account = await accountsService.getAccountById(id);
       if (!account) return new NotFoundError("Account not found");
-      const response = await accountsService.updateAccount(id, accountUpdate);
+      const response = await accountsService.updateAccount(id, account, accountUpdate);
+      return new Success({ id: response });
+    } catch (err) {
+      return new GenericError(err);
+    }
+  }
+
+  static async deleteAccount(id) {
+    try {
+      if (!id) return new MissingParams("Account Id is required");
+      const account = await accountsService.getAccountById(id);
+      if (!account) return new NotFoundError("Account not found");
+      const response = await accountsService.deleteAccount(id);
       return new Success({ id: response });
     } catch (err) {
       return new GenericError(err);
