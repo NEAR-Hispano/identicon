@@ -28,13 +28,13 @@ impl VerificationContract {
         // check if 'uid' already exists
         assert!(
             !self.verifications.keys_as_vector().iter().any(|e| e == uid),
-            "request_verification: Verification already exists for UID"
+            "{}", REQUEST_UID_ALREADY_EXIST
         );
 
         // check if 'subject_id' has pending varifications
         assert!(
             !self.subjects.keys_as_vector().iter().any(|e| e == subject_id),
-            "request_verification: Pending verification for subject_id"
+            "{}", SUBJECT_HAS_PENDING_VERIFICATION
         );
 
         // MUST use the signer account, see: 
@@ -44,7 +44,7 @@ impl VerificationContract {
         let spending = self.spendings.get(&caller_account_id);
         assert!(
           self.has_allowance(&spending),
-          "Err {}", AVAILABLE_REQUESTS_CONSUMED
+          "{}", AVAILABLE_REQUESTS_CONSUMED
         );
 
         let timing = TimeWindow {
