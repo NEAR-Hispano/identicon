@@ -6,77 +6,92 @@ use near_sdk::near_bindgen;
 #[near_bindgen]
 impl VerificationContract {
 
-  // The account registers itself as a validator. indicating what types 
-  // of work he/she can perform.
-  pub fn register_as_validator(
-    &mut self, 
-    can_do: Vec<ValidationType>
-  ) {
-    // MUST use the signer_account_id, see: 
-    let validator_id = env::signer_account_id();
+    // The account registers itself as a validator. indicating what types 
+    // of work he/she can perform.
+    pub fn register_as_validator(
+        &mut self, 
+        can_do: Vec<ValidationType>
+    ) {
+        // MUST use the signer_account_id, see: 
+        let validator_id = env::signer_account_id();
 
-    log!(
-      "\nregister_as_validator: Called with ({:?}, {:?})",
-      validator_id, can_do
-    );
+        log!("\nregister_as_validator: Called with ({:?}, {:?})",
+            validator_id, can_do);
 
-    // check if 'id' already exists in Vec, we must traverse the full array
-    assert!(
-        !self.validators.iter().any(|e| e.id == validator_id),
-        "{}", ERR_VALIDATOR_ALREADY_REGISTERED
-    );
+        // check if 'id' already exists in Vec, we must traverse the full array
+        assert!(!self.validators.iter().any(|e| e.id == validator_id),
+            "{}", ERR_VALIDATOR_ALREADY_REGISTERED);
 
-    self.validators.push(Validator {
-      id: validator_id.clone(),
-      can_do: can_do.clone(),
-      status: "Active".to_string(),
-      reputation: 0,
-    })
-  }
+        self.validators.push(Validator {
+        id: validator_id.clone(),
+        can_do: can_do.clone(),
+        status: "Active".to_string(),
+        reputation: 1,
+        })
+    }
 
-  // Report the result of the verification. If the verification was not possible,
-  // or the validator will not do it then  the validator must include a
-  // descriptive cause.
-  /* Called by *Validators* */
-  pub fn report_validation_result(
-    &mut self,
-    request_uid: RequestId,
-    result: VerificationState,
-    contents: Vec<FileId>,
-    remarks: String,
-  ) {
-    log!(
-        "\nreport_verification_result: Called method ({:?} {:?} {:?} {:?})",
-        request_uid, result, contents, remarks
-    );
 
-//     // check if subject_id exists in verifications
-//     assert!(
-//         self.verifications
-//             .keys_as_vector()
-//             .iter()
-//             .any(|e| e == subject_id),
-//         "report_verification_result: Request not found for subject_id"
-//     );
-// 
-//     let mut requested = self.verifications.get(&subject_id).unwrap();
-//     let mut changed: Vec<VerificationResult> = Vec::new();
-//     for before in requested.results.iter() {
-//         if before.validator_id == validator_id {
-//             changed.push(VerificationResult {
-//                 validator_id: validator_id.to_string(),
-//                 result: stated.clone(),
-//                 timestamp: "2022-03-31 16:00:00".to_string(),
-//             });
-//         } else {
-//             changed.push(before.clone());
-//         }
-//     }
-// 
-//     // and update the full request state
-//     requested.results = changed.clone();
-//     self.verifications.insert(&subject_id, &requested);
-  }
+    /// Sometimes a validator may want to remove itself from the validator pool.
+    pub fn unregister_as_validator(
+        &mut self
+    ) {
+        // MUST use the signer_account_id, see: 
+        let signer_id = env::signer_account_id();
+        log!("\nunregister_as_validator: Called with ({:?})",
+        signer_id);
+
+        // check if 'id' already exists in Vec, we must traverse the full array
+        assert!(self.validators.iter().any(|e| e.id == signer_id),
+            "{}", ERR_VALIDATOR_DOES_NOT_EXIST);
+
+        // retains all others, but remove this validator fom the list 
+        self.validators.retain(|e| e.id != signer_id); 
+    }    
+
+
+    // Report the result of the verification. If the verification was not possible,
+    // or the validator will not do it then  the validator must include a
+    // descriptive cause.
+    /* Called by *Validators* */
+    pub fn report_validation_result(
+        &mut self,
+        request_uid: RequestId,
+        result: VerificationState,
+        contents: Vec<FileId>,
+        remarks: String,
+    ) {
+        log!(
+            "\nreport_verification_result: Called method ({:?} {:?} {:?} {:?})",
+            request_uid, result, contents, remarks
+        );
+
+    //     // check if subject_id exists in verifications
+    //     assert!(
+    //         self.verifications
+    //             .keys_as_vector()
+    //             .iter()
+    //             .any(|e| e == subject_id),
+    //         "report_verification_result: Request not found for subject_id"
+    //     );
+    // 
+    //     let mut requested = self.verifications.get(&subject_id).unwrap();
+    //     let mut changed: Vec<VerificationResult> = Vec::new();
+    //     for before in requested.results.iter() {
+    //         if before.validator_id == validator_id {
+    //             changed.push(VerificationResult {
+    //                 validator_id: validator_id.to_string(),
+    //                 result: stated.clone(),
+    //                 timestamp: "2022-03-31 16:00:00".to_string(),
+    //             });
+    //         } else {
+    //             changed.push(before.clone());
+    //         }
+    //     }
+    // 
+    //     // and update the full request state
+    //     requested.results = changed.clone();
+    //     self.verifications.insert(&subject_id, &requested);
+    }
 }
 
 
@@ -106,7 +121,6 @@ mod tests {
     fn test_register_validator() {
         setup_test("maz1.testnet");
         let mut contract = VerificationContract::new();
-        
         let can_do = vec![ValidationType::Remote, ValidationType::Review];
         contract.register_as_validator(can_do.clone());
         assert_eq!(contract.validators.len(), 1);
@@ -117,11 +131,28 @@ mod tests {
     fn test_duplicate_validator() {
         setup_test("maz1.testnet");
         let mut contract = VerificationContract::new();
-        
         let can_do = vec![ValidationType::Remote, ValidationType::Review];
         contract.register_as_validator(can_do.clone());
-
         // Second call MUST fail because already registered
         contract.register_as_validator(can_do.clone());
+    }
+
+    #[test]
+    fn test_unregister_validator() {
+        setup_test("maz1.testnet");
+        let mut contract = VerificationContract::new();
+        let can_do = vec![ValidationType::Remote, ValidationType::Review];
+        contract.register_as_validator(can_do.clone());
+        assert_eq!(contract.validators.len(), 1);
+        contract.unregister_as_validator();
+        assert_eq!(contract.validators.len(), 0);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_unregister_nonexistent() {
+        setup_test("maz1.testnet");
+        let mut contract = VerificationContract::new();
+        contract.unregister_as_validator();
     }
 }
