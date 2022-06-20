@@ -7,9 +7,9 @@ use definitions::*;
 mod errors;
 
 pub mod requests;
+pub mod validators;
 // mod payments;
 // mod upgrades;
-// mod validators;
 
 
 #[near_bindgen]

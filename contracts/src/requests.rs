@@ -17,7 +17,7 @@ impl VerificationContract {
         payload: String,
     ) -> VerificationRequest {
         log!(
-            "request_verification: Called with ({:?}, {:?}, {:?}, {:?}, {:?})",
+            "\nrequest_verification: Called with ({:?}, {:?}, {:?}, {:?}, {:?})",
             env::predecessor_account_id(),
             uid,
             is_type,
@@ -31,7 +31,7 @@ impl VerificationContract {
             "{}", REQUEST_UID_ALREADY_EXIST
         );
 
-        // check if 'subject_id' has pending varifications
+        // check if 'subject_id' has pending verifications
         assert!(
             !self.subjects.keys_as_vector().iter().any(|e| e == subject_id),
             "{}", SUBJECT_HAS_PENDING_VERIFICATION
@@ -132,7 +132,7 @@ mod tests {
     }
 
     #[test]
-    fn unit_test_insert_first() {
+    fn test_insert_request() {
         // Set up the testing context and unit test environment
         let requestor = AccountId::new_unchecked("maz.testnet".to_string());
         let context = get_context(requestor);
@@ -160,7 +160,7 @@ mod tests {
 
     #[test]
     #[should_panic]
-    fn unit_test_duplicate_uid() {
+    fn test_duplicate_request_uid() {
         // Set up the testing context and unit test environment
         let requestor = AccountId::new_unchecked("maz.testnet".to_string());
         let context = get_context(requestor);
@@ -189,7 +189,7 @@ mod tests {
 
     #[test]
     #[should_panic]
-    fn unit_test_subject_pending() {
+    fn test_subject_request_pending() {
         // Set up the testing context and unit test environment
         let requestor = AccountId::new_unchecked("maz.testnet".to_string());
         let context = get_context(requestor);
@@ -219,7 +219,7 @@ mod tests {
 
     #[test]
     #[should_panic]
-    fn unit_test_all_consumed() {
+    fn test_all_requests_consumed() {
         // Set up the testing context and unit test environment
         let requestor = AccountId::new_unchecked("maz.testnet".to_string());
         let context = get_context(requestor);

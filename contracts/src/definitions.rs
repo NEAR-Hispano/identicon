@@ -13,7 +13,7 @@ pub type SubjectId = String;
 pub type RequestorId = String;
 
 // A NEAR account ID, ex: 'validator1.identicon.near'
-pub type ValidatorId = String;
+pub type ValidatorId = AccountId;
 
 // The request UUID, given by the App or GW.
 pub type RequestId = String;
@@ -93,6 +93,19 @@ pub enum ValidationType {
 
     /// Revision done by and auditor reviewing work performed by other validators.
     Review,
+}
+
+// Describes a given Validator person
+#[derive(BorshDeserialize, BorshSerialize, Debug, Clone)]
+pub struct Validator {
+  pub id: ValidatorId,
+
+  // The different types of validation this Validator can perform
+  pub can_do: Vec<ValidationType>,
+
+  // reserved for future use
+  pub status: String, 
+  pub reputation: u8,
 }
 
 // This struct describes the state and result reported by a given validator.
@@ -203,7 +216,7 @@ pub struct VerificationContract {
     pub assignments: UnorderedMap<ValidatorId, Vec<RequestId>>,
 
     // the Pool of validators, as an array of ValidatorIds
-    pub validators: Vec<ValidatorId>,
+    pub validators: Vec<Validator>,
 
     // the spending as an iterable Map keyed by AccountId. The value is the
     // free and used requests quota of this particular account.
