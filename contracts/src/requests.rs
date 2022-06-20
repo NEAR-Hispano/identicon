@@ -7,45 +7,33 @@ use near_sdk::{env, log};
 
 #[near_bindgen]
 impl VerificationContract {
+
+    /// Registers the new request in the blockchain, but does not yet
+    /// assign the validators to verify it.
     pub fn request_verification(
-        // Registers the new request in the blockchain, but does not yet
-        // assign the validators to verify it.
         &mut self,
         uid: RequestId,
         is_type: VerificationType,
         subject_id: SubjectId,
         payload: String,
     ) -> VerificationRequest {
-        log!(
-            "\nrequest_verification: Called with ({:?}, {:?}, {:?}, {:?}, {:?})",
-            env::predecessor_account_id(),
-            uid,
-            is_type,
-            subject_id,
-            payload
-        );
-
-        // check if 'uid' already exists
-        assert!(
-            !self.verifications.keys_as_vector().iter().any(|e| e == uid),
-            "{}", REQUEST_UID_ALREADY_EXIST
-        );
-
-        // check if 'subject_id' has pending verifications
-        assert!(
-            !self.subjects.keys_as_vector().iter().any(|e| e == subject_id),
-            "{}", SUBJECT_HAS_PENDING_VERIFICATION
-        );
-
         // MUST use the signer_account_id, see: 
         let caller_account_id = env::signer_account_id();
+        log!("\nrequest_verification: Called with ({:?}, {:?}, {:?}, {:?}, {:?})",
+            caller_account_id,  uid, is_type, subject_id, payload);
+
+        // check if 'uid' already exists
+        assert!(self.verifications.get(&uid).is_none(),
+            "{}", REQUEST_UID_ALREADY_EXIST);
+
+        // check if 'subject_id' has pending verifications
+        assert!(self.subjects.get(&subject_id).is_none(),
+            "{}", SUBJECT_HAS_PENDING_VERIFICATION);
 
         // check if we have available requests 
         let spending = self.spendings.get(&caller_account_id);
-        assert!(
-          self.has_allowance(&spending),
-          "{}", AVAILABLE_REQUESTS_CONSUMED
-        );
+        assert!(self.has_allowance(&spending), 
+            "{}", AVAILABLE_REQUESTS_CONSUMED);
 
         let timing = TimeWindow {
             // calculate when we can process this request according to the type
@@ -76,9 +64,35 @@ impl VerificationContract {
         request.clone()
     }
 
+
+    /// Cancels an existent verification
+    fn cancel_verification(
+        &mut self,
+        uid: RequestId,
+        cause: String
+    ) {
+        // MUST use the signer_account_id, see: 
+        let signer_id = env::signer_account_id();
+        log!("\ncancel_verification: Called with ({:?}, {:?}, {:?})",
+            signer_id, uid, cause);
+
+        // remove it and check if 'uid' already existed
+        let removed = self.verifications.remove(&uid);
+        assert!(removed.is_some(), 
+            "{}", ERR_REQUEST_UID_DOES_NOT_EXIST);
+
+        // we must also cleanup all pending assignments
+        let rq = removed.unwrap();
+        for task in rq.validations.iter() {
+            println!("Got {:?}", task);
+            self.remove_task_from_assignments(uid.clone(), &task);
+        }
+    }
+      
+      
+    // Check if we have enought allowed requests for this account
+    // and return true if we do, false otherwise
     fn has_allowance(
-        // Check if we have enought allowed requests for this account
-        // and return true if we do, false otherwise
         &mut self,
         spending: &Option<Spending>,
     ) -> bool {
@@ -91,8 +105,8 @@ impl VerificationContract {
         }
     }
 
+    // Update the consumed and available allowance of this account
     fn update_allowance(
-        // Update the consumed and available allowance of this account
         &mut self,
         account_id: &AccountId,
         allowance: &Option<Spending>,
@@ -113,6 +127,25 @@ impl VerificationContract {
         };
         self.spendings.insert(account_id, &renewed);
     }
+
+    // Removes this task from the list of validator assignments
+    fn remove_task_from_assignments(
+        &mut self,
+        request_uid: RequestId,
+        task: &ValidationTask
+    ) {
+        let validator_id = &task.validator_id;
+        let assigned = self.assignments.get(&validator_id).unwrap();
+        let remaining: Vec<RequestId> = Vec::new();
+        log!("assigned={:?}", assigned);
+        for assigned_uid in assigned.iter() {
+            log!("assigned_uid={:?}", assigned_uid);
+            // if request_uid != assigned_uid {
+            //     remaining.push(assigned_uid)
+            // }
+        } 
+        self.assignments.insert(&validator_id, &remaining);
+    }
 }
 
 
@@ -131,12 +164,16 @@ mod tests {
         builder
     }
 
+    fn setup_test(signer: &str) {
+        // Set up the testing context and unit test environment
+        let signer = AccountId::new_unchecked(signer.to_string());
+        let context = get_context(signer);
+        testing_env!(context.build());
+    }
+
     #[test]
     fn test_insert_request() {
-        // Set up the testing context and unit test environment
-        let requestor = AccountId::new_unchecked("maz.testnet".to_string());
-        let context = get_context(requestor);
-        testing_env!(context.build());
+        setup_test("maz.testnet");
         let mut contract = VerificationContract::new();
         
         //log!("\nFirst request inserted => OK");
@@ -156,6 +193,27 @@ mod tests {
         assert_eq!(rq.validations.len(), 0);
         assert_eq!(contract.verifications.len(), 1);
         assert_eq!(contract.assignments.len(), 0);
+    }
+
+    #[test]
+    fn test_cancel_request() {
+        setup_test("maz.testnet");
+        let mut contract = VerificationContract::new();
+        let request_uid = "1234".to_string();
+        let subject_id = "AR_DNI_12488353".to_string();
+        let payload = "Some simulated encrypted payload".to_string();
+        // insert it first
+        let ret = contract.request_verification(
+            request_uid.clone(),
+            VerificationType::ProofOfLife,
+            subject_id.clone(),
+            payload.clone(),
+        );
+        // now remove it
+        contract.cancel_verification(
+            request_uid.clone(), "Just testing".to_string()
+        );
+        assert_eq!(contract.verifications.len(), 0);
     }
 
     #[test]
