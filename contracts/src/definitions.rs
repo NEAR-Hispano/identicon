@@ -108,27 +108,29 @@ pub struct Validator {
   pub reputation: u8,
 }
 
+
 // This struct describes the state and result reported by a given validator.
 // When he/she has not yet performed the validation it describes the assigned task.
 #[derive(BorshDeserialize, BorshSerialize, Debug, Clone)]
 pub struct ValidationTask {
     //	The validator account assigned to perform this validation.
-    validator_id: ValidatorId,
+    pub validator_id: ValidatorId,
 
-    is_type: ValidationType, //	RESERVED for future use.
+    pub is_type: ValidationType, //	RESERVED for future use.
 
     // The result state. It may be in differente states, depending on the validator actions.
-    result: VerificationState,
+    pub result: VerificationState,
 
     // The timestamp when the validation was performed, or an empty timestamp otherwise.
-    timestamp: ISODateTime,
+    pub timestamp: ISODateTime,
 
     // An array of ContentIDs (photos and videos) attesting the work done.
-    contents: Vec<FileId>,
-
+    pub contents: Vec<FileId>,
+    
     // Notes and remarks regarding the validation result
-    remarks: String,
+    pub remarks: String,
 }
+
 
 #[derive(BorshDeserialize, BorshSerialize, Debug, Clone)]
 pub struct VerificationRequest {
