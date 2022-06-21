@@ -49,6 +49,33 @@ impl VerificationContract {
     }    
 
 
+    /// Called by a given validator to get all of its assigned tasks.
+    fn get_assigned_validations(
+        &mut self
+    ) -> Vec<VerificationRequest> {
+        // MUST use the signer_account_id, see: 
+        let signer_id = env::signer_account_id();
+        log!("\nget_assigned_validations: Called with ({:?})",
+            signer_id);
+
+        // check if 'id' already exists in Vec, we must traverse the full array
+        assert!(self.validators.iter().any(|e| e.id == signer_id),
+            "{}", ERR_VALIDATOR_DOES_NOT_EXIST);
+
+        let assigns = self.assignments.get(&signer_id);
+        assert!(assigns.is_some(), 
+            "{}", ERR_NO_TASKS_ASSIGNED_TO_VALIDATOR);
+
+        let assigned: Vec<RequestId> = assigns.unwrap();
+        let mut results: Vec<VerificationRequest> = Vec::new();
+        for request_id in assigned {
+            let rq = self.filtered_request(request_id, signer_id.clone());
+            results.push(rq);
+        }
+        results
+    }   
+
+
     // Report the result of the verification. If the verification was not possible,
     // or the validator will not do it then  the validator must include a
     // descriptive cause.
@@ -91,6 +118,18 @@ impl VerificationContract {
     //     // and update the full request state
     //     requested.results = changed.clone();
     //     self.verifications.insert(&subject_id, &requested);
+    }
+
+    // Filters the request leaving only this validator tasks
+    fn filtered_request(
+        &mut self,
+        request_id: RequestId,
+        validator_id: ValidatorId
+    ) ->  VerificationRequest {
+        let mut rq: VerificationRequest = self.verifications.get(&request_id)
+            .expect(ERR_REQUEST_UID_DOES_NOT_EXIST);
+        rq.validations.retain(|t| t.validator_id == validator_id);
+        rq
     }
 }
 
