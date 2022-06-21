@@ -111,7 +111,8 @@ pub struct Validator {
 
 // This struct describes the state and result reported by a given validator.
 // When he/she has not yet performed the validation it describes the assigned task.
-#[derive(BorshDeserialize, BorshSerialize, Debug, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug, Clone)]
+#[serde(crate = "near_sdk::serde")]
 pub struct ValidationTask {
     //	The validator account assigned to perform this validation.
     pub validator_id: ValidatorId,
@@ -132,7 +133,8 @@ pub struct ValidationTask {
 }
 
 
-#[derive(BorshDeserialize, BorshSerialize, Debug, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Debug, Clone)]
+#[serde(crate = "near_sdk::serde")]
 pub struct VerificationRequest {
     pub uid: RequestId,
 
