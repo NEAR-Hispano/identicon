@@ -16,7 +16,7 @@ export CONTRACT=$2.$PARENT
 # because init can not be called twice on the same contract, and we
 # need to cleanup all the data.
 # uncomment this line when needed
-#near delete $CONTRACT $PARENT
+near delete $CONTRACT $PARENT
 
 near create-account $CONTRACT --initialBalance 25 --masterAccount $PARENT
 near deploy $CONTRACT --wasmFile res/identicon.wasm
