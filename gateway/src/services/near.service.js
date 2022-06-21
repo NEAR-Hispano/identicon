@@ -19,9 +19,10 @@ const { KeyPair, utils, connect, keyStores } = nearAPI;
 
 const NETWORK_ID = process.env.NETWORK_ID,
   MASTER_ACCOUNT_ID = process.env.MASTER_ACCOUNT_ID;
-(MASTER_PRIVATE_KEY = process.env.MASTER_PRIVATE_KEY),
-  (INITIAL_BALANCE = "2000000000000000000000");
-//"1810000000000000000000"
+  MASTER_PRIVATE_KEY = process.env.MASTER_PRIVATE_KEY,
+  INITIAL_BALANCE = "2000000000000000000000";
+  //"1810000000000000000000"
+
 const Config = {
   testnet: {
     networkId: "testnet",
@@ -121,7 +122,44 @@ async function createImplicitAccount() {
   }
 }
 
+
+async function callContract(method, params) {
+    /**
+     * Call a contract method
+     */
+    try {
+        const config = await getConfig(MASTER_ACCOUNT_ID, MASTER_PRIVATE_KEY);
+        const near = await connect(config);
+        const master = await near.account(MASTER_ACCOUNT_ID);
+        const signer = await near.account("maz.testnet");
+    
+        const contract = new nearAPI.Contract(
+            master, // the account object that is connecting
+            "c1.identicon.testnet", // name of contract you're connecting to
+            {
+              viewMethods: [], // view methods do not change state but usually return a value
+              changeMethods: [method], // change methods modify state
+              sender: signer, // account object to initialize and sign transactions.
+            }
+        );
+    
+        let ret = await contract[method](params,
+            "300000000000000", // attached GAS (optional)
+            //"1000000000000000000000000" // attached deposit in yoctoNEAR (optional)
+        );
+    
+        //console.log("Returned", ret);
+        return [true, ret]; 
+    }
+    catch (error) {
+        console.log(`callContract(${method}, ${JSON.stringify(params)}): ${error}`);
+        return [null, error];
+    }
+}
+
+
 module.exports = {
   getConfig,
   createImplicitAccount,
+  callContract
 };

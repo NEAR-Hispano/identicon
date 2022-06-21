@@ -29,9 +29,9 @@ mod tests {
     fn moq_request_data() -> VerificationRequest {
         let request = VerificationRequest {
             is_type: VerificationType::ProofOfLife,
-            requestor_id: "identicon.testnet".to_string(),
+            requesto_uid: "identicon.testnet".to_string(),
             subject_id: "subject01".to_string(),
-            subject_info: moq_subject_info(),
+            info: moq_subject_info(),
             when: moq_time_window(),
             state: VerificationState::Pending,
             results: vec![
@@ -325,13 +325,12 @@ mod tests {
         let card_id = "Qmc3kQzgwWof7mLG7PPPb1vx6DYDqv9YrW1nWBGhHRqiWW".to_string();
 
         let mut contract = VerificationContract::new();
-        contract.bind_card_file(
-          subject_id.to_string(), 
-          card_id.to_string());
+        contract.bind_card_file(subject_id.to_string(), card_id.to_string());
 
-        log!("\ntest_bind_card_file: subject_id={:?} card_id={:?}", 
-          subject_id, card_id
+        log!(
+            "\ntest_bind_card_file: subject_id={:?} card_id={:?}",
+            subject_id,
+            card_id
         );
     }
-
 }
