@@ -7,24 +7,34 @@
 
 ### request_verification
 
+Status (deployed :ok:)
+
 Registers the new request in the blockchain, but does not yet assigns validators to verify it. 
 ~~~rust
 request_verification(
   uid: RequestId,
   is_type: VerificationType 
   subject_id: SubjectId, 
-  payload: RequestInfo
-) -> ReturnStatus<VerificationRequest>
+  payload: String
+) -> VerificationRequest
 ~~~
 
-If success returns the registered `VerificationRequest` completed. In case the request was not allowed, response `WillNotDo` contains the reason.
+If success returns the registered `VerificationRequest` completed. 
+
+In case the request was not allowed, the contract will panic with one of the error codes:
+- ERR_REQUEST_UID_ALREADY_EXISTS
+- ERR_SUBJECT_HAS_PENDING_VERIFICATION
+- ERR_AVAILABLE_REQUESTS_CONSUMED)
 
 ### cancel_verification
+
+Status (deployed :ok:)
+
 ~~~rust
 cancel_verification(
-  request_uid, 
-  cause
-) -> ReturnStatus<String>
+  uid: RequestId, 
+  cause: String
+) 
 ~~~
 
 ---
@@ -32,22 +42,30 @@ cancel_verification(
 
 ### register_as_validator
 
+Status (deployed :ok:)
+
 The account registers itself as a validator. indicating what types of work he/she can perform.
 ~~~ 
 register_as_validator(
   can_do: Vec<ValidattionType>
-) -> Result 
+) 
 ~~~
 
+On failure may return:
+
+-  ERR_VALIDATOR_ALREADY_REGISTERED
+
 ### get_assigned_validations
+
+Status (deployed :ok:)
 
 Called by a given validator to get all of its assigned tasks.
 ~~~rust
 get_assigned_validations(
-) -> Vec<AssignedValidation>
+) -> Vec<VerificationRequest>
 ~~~
 
-Returns: A `Vec` of  `AssignedValidation` objs each containing `{request_uid, type, result, must_start, must_end}`
+Returns: A `Vec` of  `VerificationRequest` objs each containing the info of each reuest assigned to this validator.
 
 ### report_validation_result
 
@@ -65,10 +83,11 @@ Every time we receive a verification result we must also evaluate if all validat
 
 ### unregister_as_validator
 
+Status (deployed :ok:)
+
 Sometimes a validator may want to remove itself from the validator pool.
 ~~~rust
-unregister_as_validator(
-) -> Result
+unregister_as_validator() 
 ~~~
 
 ---
@@ -77,17 +96,18 @@ unregister_as_validator(
 ### assign_validators
 
 Assigns the validators to this request. 
+
+Status (deployed :ok:)
+
 ~~~rust
-assign_validator(
-  request_uid: RequestId,
-  validators_set: Vec<ValidatorId>
-) -> Vec<ValidatorId>
+assign_validators(
+	uid: RequestId,
+  validators_set: Vec<String>
+) 
 ~~~
 
 Preconditions:
-- The request_uid must be a pending request.
-
-Returns: The list of validators assigned to this request, or an empty Vec.
+- The request `uid` must be an existent pending request.
 
 ### pay_validators
 
