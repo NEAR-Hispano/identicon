@@ -24,16 +24,16 @@ impl VerificationContract {
 
         // check if 'uid' already exists
         assert!(self.verifications.get(&uid).is_none(),
-            "{}", REQUEST_UID_ALREADY_EXIST);
+            "{}", ERR_REQUEST_UID_ALREADY_EXIST);
 
         // check if 'subject_id' has pending verifications
         assert!(self.subjects.get(&subject_id).is_none(),
-            "{}", SUBJECT_HAS_PENDING_VERIFICATION);
+            "{}", ERR_SUBJECT_HAS_PENDING_VERIFICATION);
 
         // check if we have available requests 
         let spending = self.spendings.get(&caller_account_id);
         assert!(self.has_allowance(&spending), 
-            "{}", AVAILABLE_REQUESTS_CONSUMED);
+            "{}", ERR_AVAILABLE_REQUESTS_CONSUMED);
 
         let timing = TimeWindow {
             // calculate when we can process this request according to the type
