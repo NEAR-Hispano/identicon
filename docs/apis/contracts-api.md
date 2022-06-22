@@ -76,7 +76,7 @@ report_validation_result(
   result: VerificationState, 
   contents: Vec<ContentID>, 
   remarks: String
-) -> VerificationState
+) 
 ~~~
 
 Every time we receive a verification result we must also evaluate if all validations have been done, and which is the final result for the request. While the verifications are still in course the request state is Pending.
