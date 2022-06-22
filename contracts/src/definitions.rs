@@ -70,15 +70,15 @@ pub enum VerificationState {
 
     /// It is not possible to do the verification, due to some reason which exceeds
     /// the Validator possibilites, such as inaccesible area, weather, etc
-    NotPossible(String), // code: NP
+    NotPossible, // code: NP
 
     /// Validator will not do the verification, for some personal reason,
     /// but it requires a cause and explanation. Too many of this refusals
     /// may eliminate the Validator from the validators pool.
-    WillNotDo(String), // code: WND
+    WillNotDo, // code: WND
 
     /// Verification was canceled by Requestor
-    Canceled(String), // code: CX
+    Canceled, // code: CX
 }
 
 // The different validation task types which may perform a validator.
@@ -188,6 +188,9 @@ pub struct Spending {
 pub struct Parameters {
     // min validators required to verify a given request
     pub min_validators_needed: u8, // = 2,
+
+    // min similar results required to get consensus 
+    pub min_consensus_needed: u8,
 
     // the max reviewers needed: may vary randomly between 0 and this param
     pub max_reviewers_needed: u8, // = 1,

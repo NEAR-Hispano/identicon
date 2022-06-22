@@ -89,7 +89,31 @@ impl VerificationContract {
         }
     }
       
-      
+
+    /// Returns a given Verification request
+    fn get_verification(
+        &mut self,
+        uid: RequestId
+    ) -> VerificationRequest {
+        // MUST use the signer_account_id, see: 
+        let signer_id = env::signer_account_id();
+        log!("\nget_verification: Called with ({:?}, {:?}",
+            signer_id, uid);
+
+        // check if 'uid' exists
+        let requested = self.verifications.get(&uid);
+        assert!(requested.is_some(), 
+            "{}", ERR_REQUEST_UID_DOES_NOT_EXIST);
+            
+        // Check WHO can access this request
+        let requested = requested.unwrap(); 
+        assert!(requested.requestor_id == signer_id || signer_id.to_string() == "identicon.testnet".to_string(),
+            "{}", ERR_ONLY_OWNER_OR_MASTER_CAN_CALL_THIS);
+
+        requested
+    }
+
+    
     // Check if we have enought allowed requests for this account
     // and return true if we do, false otherwise
     fn has_allowance(
