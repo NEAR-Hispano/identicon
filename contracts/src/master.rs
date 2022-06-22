@@ -31,7 +31,9 @@ impl VerificationContract {
 
         // Select random validators from validators vec
         let selected: Vec<ValidatorId> = self.select_random(
-            &validators_set, self.params.min_validators_needed as usize);
+            &validators_set, 
+            self.params.min_validators_needed as usize
+        );
         assert!(selected.len() == self.params.min_validators_needed as usize,
             "{}", "Failed assigning MIN validators");
 
@@ -66,6 +68,7 @@ impl VerificationContract {
                 }
             }
         }
+        log!("Finally selected={:?}", ret);
         ret
     }
 
