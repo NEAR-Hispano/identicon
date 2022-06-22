@@ -27,11 +27,12 @@ impl VerificationContract {
       validators: Vec::new(),
       params: Parameters {
           min_validators_needed: 2,
+          min_consensus_needed: 2,
           max_reviewers_needed: 1,
           remote_validation_fee: 1.0,
           onsite_validation_fee: 1.0,
           review_validation_fee: 1.0,
-          allowed_monthly_requests: 100,
+          allowed_monthly_requests: 2,
       },
     }
   }
