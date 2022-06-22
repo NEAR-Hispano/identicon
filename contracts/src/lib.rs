@@ -9,6 +9,7 @@ mod errors;
 pub mod requests;
 pub mod validators;
 pub mod master;
+pub mod utils;
 // mod payments;
 // mod upgrades;
 

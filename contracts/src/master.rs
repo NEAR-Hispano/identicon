@@ -1,8 +1,8 @@
 use crate::definitions::*;
 use crate::errors::*;
+use crate::utils::{cheap_random_gen};
 use near_sdk::near_bindgen;
 use near_sdk::{env, log};
-//use rand::{thread_rng, Rng};
 
 #[near_bindgen]
 impl VerificationContract {
@@ -50,10 +50,10 @@ impl VerificationContract {
     ) -> Vec<ValidatorId> {
         // create a vector of randomly selected items from the_set
         let mut v: Vec<String> = Vec::new();
-        //let mut rng = thread_rng();
         for j in 0..number {
-            //let index: usize = rng.gen_range(0..the_set.len());
-            let index = j+1;
+            let index: usize = cheap_random_gen(0, the_set.len()-1);
+            log!("Selecting {:?} {:?} {:?}", j, index, the_set[index].to_string());
+            // let index = j+1; // for moqing up
             v.push(the_set[index].to_string());
         }    
         log!("Random selected={:?}", v);
