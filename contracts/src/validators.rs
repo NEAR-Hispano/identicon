@@ -247,16 +247,23 @@ mod tests {
         setup_test("maz1.testnet");
         let can_do = vec![ValidationType::Remote, ValidationType::Review];
         contract.register_as_validator(can_do.clone());
-        assert_eq!(contract.validators.len(), 1);
+        setup_test("maz2.testnet");
+        let can_do = vec![ValidationType::Remote, ValidationType::Review];
+        contract.register_as_validator(can_do.clone());
+        setup_test("maz3.testnet");
+        let can_do = vec![ValidationType::Remote, ValidationType::Review];
+        contract.register_as_validator(can_do.clone());
+        assert_eq!(contract.validators.len(), 3);
         // assign validators
         setup_test("identicon.testnet");
         contract.assign_validators(
             request_uid.clone(),
             vec!["maz1.testnet".to_string(),"maz1.testnet".to_string(),
             "maz1.testnet".to_string(),"maz1.testnet".to_string(),
-            "maz1.testnet".to_string(),"maz1.testnet".to_string(),
-            "maz1.testnet".to_string(),"maz1.testnet".to_string(),
-            "maz1.testnet".to_string(),"maz1.testnet".to_string()]
+            "maz1.testnet".to_string(),"maz2.testnet".to_string(),
+            "maz2.testnet".to_string(),"maz2.testnet".to_string(),
+            "maz2.testnet".to_string(),"maz2.testnet".to_string(),
+            "maz3.testnet".to_string(),"maz3.testnet".to_string()]
         );
         // NOW report
         setup_test("maz1.testnet");

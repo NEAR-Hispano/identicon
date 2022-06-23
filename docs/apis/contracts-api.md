@@ -76,10 +76,21 @@ report_validation_result(
   result: VerificationState, 
   contents: Vec<ContentID>, 
   remarks: String
-) -> VerificationState
+) 
 ~~~
 
 Every time we receive a verification result we must also evaluate if all validations have been done, and which is the final result for the request. While the verifications are still in course the request state is Pending.
+
+### evaluate_results
+
+Every time we receive a verification result we must evaluate if all verifications have been done, and which is the final result for the request. While the verifications are still in course the request state is Pending.
+**Is a private method**.
+~~~
+evaluate_results(
+  &self, 
+  request: &VerificationRequest
+) -> VerificationState
+~~~
 
 ### unregister_as_validator
 
@@ -122,17 +133,6 @@ pay_validators(
 NOTE: This may be triggered by an external CRON (such as CRONCAT) or by a cron process in the GW.
 
 ---
-**Private methods**: Used by the other methods.
-
-### evaluate_results
-
-Every time we receive a verification result we must evaluate if all verifications have been done, and which is the final result for the request. While the verifications are still in course the request state is Pending.
-~~~
-evaluate_results(
-  &self, 
-  results: Vec<ValidationTask>
-) -> VerificationState
-~~~
 
 ## FALTA
 

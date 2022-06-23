@@ -34,7 +34,7 @@ impl VerificationContract {
             &validators_set, 
             self.params.min_validators_needed as usize
         );
-        assert!(selected.len() == self.params.min_validators_needed as usize,
+        assert!(selected.len() >= self.params.min_validators_needed as usize,
             "{}", "Failed assigning MIN validators");
 
         // Finally update state
@@ -46,20 +46,28 @@ impl VerificationContract {
     fn select_random(
         &mut self, 
         the_set: &Vec<String>,
-        number: usize
+        min: usize
     ) -> Vec<ValidatorId> {
+        // randonly add one additional validator to the min validators
+        let number = if cheap_random_gen(0, 10) == 5 { min+1 } else { min };
+
         // create a vector of randomly selected items from the_set
         let mut v: Vec<String> = Vec::new();
         for j in 0..number {
-            let index: usize = cheap_random_gen(0, the_set.len()-1);
-            log!("Selecting {:?} {:?} {:?}", j, index, the_set[index].to_string());
-            // let index = j+1; // for moqing up
-            v.push(the_set[index].to_string());
+            loop {
+                let index: usize = cheap_random_gen(0, the_set.len()-1);
+                // avoid repeating an already added validator
+                if !v.contains(&the_set[index].to_string()) {
+                    v.push(the_set[index].to_string());
+                    break;
+                }
+            }
         }    
         log!("Random selected={:?}", v);
 
         // now filter them so we can assure they are all included 
-        // in the registred validators array
+        // in the registred validators array. This also avoids assigning 
+        // the same validator more than once.
         let mut ret: Vec<ValidatorId> = Vec::new();
         for validator in self.validators.iter() {
             for j in 0..number {
@@ -69,6 +77,7 @@ impl VerificationContract {
             }
         }
         log!("Finally selected={:?}", ret);
+
         ret
     }
 
