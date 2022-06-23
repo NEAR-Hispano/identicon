@@ -16,11 +16,14 @@ Implicit accounts work similarly to Bitcoin/Ethereum accounts.
 const nearAPI = require("near-api-js");
 const Uuid = require("uuid");
 const { KeyPair, utils, connect, keyStores } = nearAPI;
+const {viewMethods, changeMethods} = require('./contractMethods');
 
 const NETWORK_ID = process.env.NETWORK_ID,
   MASTER_ACCOUNT_ID = process.env.MASTER_ACCOUNT_ID;
 (MASTER_PRIVATE_KEY = process.env.MASTER_PRIVATE_KEY),
-  (INITIAL_BALANCE = "2000000000000000000000");
+  (INITIAL_BALANCE = "2000000000000000000000"),
+  GAS = "200000000000000";
+const CONTRACT_ID = process.env.CONTRACT_ID;
 //"1810000000000000000000"
 const Config = {
   testnet: {
@@ -40,6 +43,15 @@ const Config = {
     explorerUrl: "https://explorer.mainnet.near.org",
   },
 };
+
+async function getContract() {
+  const near = await connect(config);
+  const account = await near.account(MASTER_ACCOUNT_ID);
+  return new Contract(account, CONTRACT_ID, {
+    viewMethods: Object.values(viewMethods),
+    changeMethods: Object.values(changeMethods),
+  });
+}
 
 async function getConfig(accountId, privateKey) {
   /**
@@ -121,7 +133,22 @@ async function createImplicitAccount() {
   }
 }
 
+/*
+ Create a verification request
+*/
+async function requestVerification(request_uid, type, subject_id, personal_info) {
+  const contract = await getContract();
+  const args = {
+    request_uid: request_uid,
+    type: type,
+    subject_id: subject_id,
+    personal_info: personal_info
+  };
+  return (contract)[changeMethods.requestVerification](args, GAS);
+}
+
 module.exports = {
   getConfig,
   createImplicitAccount,
+  requestVerification
 };
