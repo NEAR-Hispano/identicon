@@ -15,8 +15,9 @@ const port = config.general.port;
 
 // Routes
 const utilsRoutes = require('./routes/utils');
-const accountsRoutes = require('./routes/accounts');
-const sessionRoutes = require('./routes/sessions');
+const accountsRoutes = require('./routes/accounts.route');
+const sessionRoutes = require('./routes/sessions.route');
+const verificationsRoutes = require('./routes/verifications.route');
 
 process.env.uuid = uuidv4();
 
@@ -39,9 +40,10 @@ morgan(app, {
 app.use('/v1/health', utilsRoutes);
 app.use('/v1/accounts', accountsRoutes);
 app.use('/v1/sessions', sessionRoutes);
+app.use('v1/verifications', verificationsRoutes);
 
 sequelize.sync({ 
-  // force: true
+  // force: true,
   alter: true 
 }).then(() => {
   console.log('Sequelize drop and re-sync db completed');

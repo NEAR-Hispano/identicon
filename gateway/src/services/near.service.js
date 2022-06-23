@@ -16,6 +16,7 @@ Implicit accounts work similarly to Bitcoin/Ethereum accounts.
 const nearAPI = require("near-api-js");
 const Uuid = require("uuid");
 const { KeyPair, utils, connect, keyStores } = nearAPI;
+const {viewMethods, changeMethods} = require('./contractMethods');
 
 const 
   NETWORK_ID = process.env.NETWORK_ID,
@@ -43,6 +44,15 @@ const Config = {
     explorerUrl: "https://explorer.mainnet.near.org",
   },
 };
+
+async function getContract() {
+  const near = await connect(config);
+  const account = await near.account(MASTER_ACCOUNT_ID);
+  return new Contract(account, CONTRACT_ID, {
+    viewMethods: Object.values(viewMethods),
+    changeMethods: Object.values(changeMethods),
+  });
+}
 
 async function getConfig(accountId, privateKey) {
   /**
@@ -124,6 +134,19 @@ async function createImplicitAccount() {
   }
 }
 
+/*
+ Create a verification request
+*/
+async function requestVerification(request_uid, type, subject_id, personal_info) {
+  const contract = await getContract();
+  const args = {
+    request_uid: request_uid,
+    type: type,
+    subject_id: subject_id,
+    personal_info: personal_info
+  };
+  return (contract)[changeMethods.requestVerification](args, ATTACHED_GAS);
+}
 
 async function callContract(method, args, signerId, privateKey) {
     /**
@@ -157,15 +180,9 @@ async function callContract(method, args, signerId, privateKey) {
             CONTRACT_ID, // name of contract we're connecting to
             {
               // view methods do not change state but usually return a value
-              viewMethods: [ 
-                'get_assigned_validations'
-              ], 
+              viewMethods: viewMethods, 
               // change methods modify state
-              changeMethods: [ 
-                'request_verification', 'cancel_verification', 
-                'register_as_validator', 'unregister_as_validator',
-                'assign_validators'
-              ],
+              changeMethods: changeMethods,
               sender: signer, // account object to initialize and sign transactions.
             }
         );
@@ -189,5 +206,6 @@ async function callContract(method, args, signerId, privateKey) {
 module.exports = {
   getConfig,
   createImplicitAccount,
+  requestVerification,
   callContract
 };
