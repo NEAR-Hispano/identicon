@@ -49,8 +49,9 @@ class AccountsService {
   }
 
   static async updateAccount(id, account, accountUpdate) {
-    let subjectId = account.subject_id;
-    if (!subject_id) {
+    console.info("updateAccount", id, account, accountUpdate);
+    let subjectId = accountUpdate.subject_id || account.subject_id;
+    if (!subjectId) {
       subjectId = uuid.v4(); // Todo: create unique subject_id (did) based on identicon docs AR_DNI_xxxxxxxxxx
     }
     await SubjectsModel.upsert({
