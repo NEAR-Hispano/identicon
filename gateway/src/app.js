@@ -43,8 +43,8 @@ app.use('/v1/sessions', sessionRoutes);
 app.use('v1/verifications', verificationsRoutes);
 
 sequelize.sync({ 
-  // force: true,
-  alter: true 
+   force: true,
+  //alter: true 
 }).then(() => {
   console.log('Sequelize drop and re-sync db completed');
   app.listen(port, () => {

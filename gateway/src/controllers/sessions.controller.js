@@ -82,6 +82,10 @@ class SessionsController {
         }
       };
       const token = AuthService.generateAccessToken(payload);
+      console.log('')
+      // axios.defaults.headers.common[
+      //   "Authorization"
+      // ] = `Bearer ${session.token}`;
       SessionsService.deleteSession(session_key)
       return new Success({ id: account.uid, token });
     } catch (err) {
