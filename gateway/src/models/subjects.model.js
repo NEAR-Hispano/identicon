@@ -30,6 +30,10 @@ const SubjectsModel = (sequelize, { DataTypes }) => {
     underscored: true
   });
 
+  // Subjects.associate = (models) => {
+  //   Subjects.belongsTo(models.AccountsModel, {foreignKey: 'uid'});
+  // };
+
   return Subjects;
 };
 
