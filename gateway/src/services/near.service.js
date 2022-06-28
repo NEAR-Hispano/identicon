@@ -101,9 +101,9 @@ async function createImplicitAccount() {
     const publicKey = keyPair.publicKey.toString();
     const privateKey = keyPair.secretKey.toString();
 
-    // create the new accountId using UUIDs, because the implicit way:
-    // does not seem to work for us ???
-    // ??? const accountId = utils.PublicKey.fromString(publicKey).data.hexSlice();
+    // create the new accountId using UUIDs, because the implicit account
+    // NEEDS that we transfer tokens to it to activate the account
+   // const accountId = utils.PublicKey.fromString(publicKey).data.hexSlice();
     const uid = Uuid.v4().replace(new RegExp("-", "g"), "");
     const accountId = `${uid}.${MASTER_ACCOUNT_ID}`;
     console.info(
