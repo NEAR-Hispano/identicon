@@ -12,7 +12,6 @@ Cargo.lock
 /res/
 /neardev/
 
-
 ## Gateway Folder ( nodejs project )
 /gateway/.DS_Store
 /gateway/.vscode
@@ -29,3 +28,6 @@ Cargo.lock
 #DB
 /db/*.sqlite
 /gateway/db/*.sqlite
+
+# IDE
+/.vscode/*
