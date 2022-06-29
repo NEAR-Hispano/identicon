@@ -14,24 +14,26 @@ import NextHead from "next/head";
 import "../styles/nprogress.css";
 import Header from "./components/Header";
 import Fonts from "./components/Fonts";
-
+import { InitAxiosInterceptor } from "../utils/interceptor";
+import { useStore} from "../stores/authSession";
+import createContext from 'zustand/context'
 const isProduction = process.env.NODE_ENV === "production";
 function App({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient();
   const router = useRouter();
 
-
+  InitAxiosInterceptor(useStore())
   return (
     <ChakraProvider theme={theme}>
       <Fonts />
-      <QueryClientProvider client={queryClient}>
-        <NextHead>
-          <meta charSet="UTF-8" />
-          <title>  Identicon - Main app.</title>
-        </NextHead>
-        <Header />
-        <Component {...pageProps} />
-      </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+          <NextHead>
+            <meta charSet="UTF-8" />
+            <title> Identicon - Main app.</title>
+          </NextHead>
+          <Header />
+          <Component {...pageProps} />
+        </QueryClientProvider>
     </ChakraProvider>
   );
 }
