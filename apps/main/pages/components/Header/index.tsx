@@ -29,7 +29,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon, ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { colors, primaryColor } from "../../../constants/colors";
-import { useStore as useBalance } from "../../../stores/authSession";
+import { useStore as useAuth } from "../../../stores/authSession";
 import { useRouter } from "next/router";
 import { formatToLocaleNear } from "../../../lib/util";
 import { useLogin, useRecovery, useSignUp } from "../../../hooks/sessions";
@@ -45,6 +45,7 @@ const Header: React.FC<ButtonProps> = (props) => {
   const [accountData, setAccountData] = useState<any>()
   const [isSignedIn, setisSignedIn] = useState(false);
   const { signUp, isSigningUp, isSignUpSuccess, signUpData } = useSignUp();
+  const {session, deleteSession} = useAuth();
   const { login, isLogginIn, isLoginSuccess, loginData } = useLogin();
   const { recovery, isRecovering, isRecoverySuccess, recoveryData } =
     useRecovery();
@@ -68,20 +69,6 @@ const Header: React.FC<ButtonProps> = (props) => {
   } = useDisclosure();
   const router = useRouter();
   const toast = useToast();
-  const [signInUser, setSignInUser] = useState({
-    verified: true,
-    subject_id: "ar_dni_12345678",
-    personalInfo: {
-      address: "123 calle falsa",
-      full_name: "Maria Guillermina Holdich",
-      age: 50,
-      sex: "female",
-      birthday: "1956-05-12",
-      country: "Argentina",
-      region: "Buenos Aires",
-      comune: "8000",
-    },
-  });
   useEffect(() => {
     if (isSignUpSuccess || isRecoverySuccess) {
       toast({
@@ -102,9 +89,16 @@ const Header: React.FC<ButtonProps> = (props) => {
     }
   }, [isSignUpSuccess, isRecoverySuccess]);
 
-  const logout = async () => {};
+  useEffect(()=> {
+    if (session && session.id != '') 
+      setisSignedIn(true)
+  }, [session])
 
-  const onClickLogin = async () => {};
+  const logout = async () => {
+    deleteSession();
+    setisSignedIn(false)
+  };
+
 
   return (
     <>
@@ -176,7 +170,7 @@ const Header: React.FC<ButtonProps> = (props) => {
                       <MenuItem onClick={()=> router.push("/personal-info")} >Mis datos personales</MenuItem>
                       <MenuItem>Preferencias</MenuItem>
                       <MenuDivider />
-                      <MenuItem>Salir</MenuItem>
+                      <MenuItem onClick={logout}>Salir </MenuItem>
                     </MenuList>
                   </Menu>
                 </Flex>
