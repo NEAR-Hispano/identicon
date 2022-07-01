@@ -17,7 +17,7 @@ const SubjectsModel = (sequelize, { DataTypes }) => {
     },
     // Encripted JSON personal info
     personal_info: {
-      type: DataTypes.BLOB,
+      type: DataTypes.TEXT,
       allowNull: true,
       validate: {
         notEmpty: true,

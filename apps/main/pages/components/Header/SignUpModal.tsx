@@ -15,18 +15,20 @@ import {
   Flex,
   Center,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import signUpSchemaValidation from "../../../validation/signUpSchemaValidation";
 import { OTPData } from "../../../models/accounts";
+import { useSignUp } from "../../../hooks/sessions";
 
 const SignUpModal = (props: {
-  onSignUp: any;
+  onSuccess: any;
   isOpen: boolean;
   onOpen: any;
   onClose: any;
 }) => {
-  const { onSignUp, isOpen, onOpen, onClose } = props;
-
+  const { onSuccess, isOpen, onOpen, onClose } = props;
+  const { signUp, isSigningUp, isSignUpSuccess, signUpData, isSignUpError, signUpError } =
+    useSignUp();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const initialValuesSignUp: OTPData = {
@@ -40,11 +42,16 @@ const SignUpModal = (props: {
     validateOnBlur: true,
     validateOnChange: true,
     onSubmit: async (values: any) => {
-      console.log("calling submit");
-      const result = await onSignUp(values);
-      console.log("sign up result:", result);
+      signUp(values);
     },
   });
+
+  useEffect(()=> {
+    if (isSignUpSuccess) {
+      onSuccess(signUpData);
+    }
+  }, [isSignUpSuccess])
+ 
 
   return (
     <Modal
@@ -72,6 +79,11 @@ const SignUpModal = (props: {
                 onChange={form.handleChange}
               />
             </Center>
+            {!!form.values.email &&
+              !!form.touched.email &&
+              !!form.errors.email && (
+                <p className="error-text"> {form.errors.email}</p>
+              )}
           </FormControl>
         </ModalBody>
 

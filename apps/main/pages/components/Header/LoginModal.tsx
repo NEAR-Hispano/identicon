@@ -15,18 +15,25 @@ import {
   Flex,
   Center,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import signUpSchemaValidation from "../../../validation/signUpSchemaValidation";
 import { OTPData } from "../../../models/accounts";
+import { useLogin, useRecovery } from "../../../hooks/sessions";
 
 const LoginModal = (props: {
-  onLogin: any;
+  onSuccess: any;
   isOpen: boolean;
   onOpen: any;
   onClose: any;
 }) => {
-  const { onLogin, isOpen, onOpen, onClose } = props;
-
+  const { onSuccess, isOpen, onOpen, onClose } = props;
+  const {
+    recovery,
+    isRecovering,
+    isRecoverySuccess,
+    recoveryData,
+    isRecoveryError,
+  } = useRecovery();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const initialValuesSignUp: OTPData = {
@@ -40,11 +47,15 @@ const LoginModal = (props: {
     validateOnBlur: true,
     validateOnChange: true,
     onSubmit: async (values: any) => {
-      console.log("calling login");
-      const result = await onLogin(values);
-      console.log("login result:", result);
+      recovery(values);
     },
   });
+
+  useEffect(() => {
+    if (isRecoverySuccess) {
+      onSuccess(recoveryData);
+    }
+  }, [isRecoverySuccess]);
 
   return (
     <Modal
@@ -72,6 +83,11 @@ const LoginModal = (props: {
                 onChange={form.handleChange}
               />
             </Center>
+            {!!form.values.email &&
+              !!form.touched.email &&
+              !!form.errors.email && (
+                <p className="error-text"> {form.errors.email}</p>
+              )}
           </FormControl>
         </ModalBody>
 
