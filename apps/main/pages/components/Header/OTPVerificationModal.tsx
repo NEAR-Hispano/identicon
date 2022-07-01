@@ -17,21 +17,22 @@ import {
   PinInput,
   PinInputField,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import signUpSchemaValidation from "../../../validation/signUpSchemaValidation";
 import { OTPData } from "../../../models/accounts";
 import { useStore } from "../../../stores/authSession";
 import { useRouter } from 'next/router'
+import { useLogin } from "../../../hooks/sessions";
 const OtpModal = (props: {
   data: any;
   setisSignedIn: any;
   setSignInAccountId: any;
-  onLogin: any;
   isOpen: boolean;
   onOpen: any;
   onClose: any;
 }) => {
-  const { data, setisSignedIn, setSignInAccountId, onLogin, isOpen, onOpen, onClose } = props;
+  const { data, setisSignedIn, setSignInAccountId, isOpen, onOpen, onClose } = props;
+  const { login, isLogginIn, isLoginSuccess, loginData, isLoginError } = useLogin();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const [value, setValue] = useState("");
@@ -43,18 +44,25 @@ const OtpModal = (props: {
   };
 
   const handleComplete = async (value: string) => {
-    console.log("session_key", data.session);
-    const result = await onLogin({
+    // console.log("session_key", data.session);
+    const result = await login({
       session_key: data.session,
       passcode: value,
     });
     console.log("login result", result);
-    setSession(result)
-    setisSignedIn(true)
-    setSignInAccountId(result.id)
-    onClose();
-    router.push('/dashboard')
+  
   };
+
+  useEffect(() => {
+    if (isLoginSuccess) {
+      console.log('login data', loginData)
+      setSession(loginData)
+      setisSignedIn(true)
+      setSignInAccountId(loginData.id)
+      onClose();
+      router.push('/dashboard')
+    }
+  }, [isLoginSuccess]);
 
   return (
     <Modal

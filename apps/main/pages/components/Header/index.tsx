@@ -42,13 +42,9 @@ import AccountInfo from "./AccountInfo";
 
 const Header: React.FC<ButtonProps> = (props) => {
   const [signInAccountId, setSignInAccountId] = useState("");
-  const [accountData, setAccountData] = useState<any>()
+  const [accountData, setAccountData] = useState<any>();
   const [isSignedIn, setisSignedIn] = useState(false);
-  const { signUp, isSigningUp, isSignUpSuccess, signUpData } = useSignUp();
-  const {session, deleteSession} = useAuth();
-  const { login, isLogginIn, isLoginSuccess, loginData } = useLogin();
-  const { recovery, isRecovering, isRecoverySuccess, recoveryData } =
-    useRecovery();
+  const { session, deleteSession } = useAuth();
   const [otpVerificationData, setotpVerificationData] = useState({
     session: "",
   });
@@ -69,47 +65,50 @@ const Header: React.FC<ButtonProps> = (props) => {
   } = useDisclosure();
   const router = useRouter();
   const toast = useToast();
-  useEffect(() => {
-    if (isSignUpSuccess || isRecoverySuccess) {
-      toast({
-        title: "OTP was successfully sent",
-        status: "success",
-        duration: 9000,
-        position: "top-right",
-        isClosable: true,
-      });
-      onCloseSignUp();
-      onCloseLogin();
-      if (isSignUpSuccess) {
-        setotpVerificationData(signUpData);
-      } else {
-        setotpVerificationData(recoveryData);
-      }
-      onOpenOtp();
-    }
-  }, [isSignUpSuccess, isRecoverySuccess]);
+  const onSignUp = (data: any) => {
+    toast({
+      title: "OTP was successfully sent",
+      status: "success",
+      duration: 9000,
+      position: "top-right",
+      isClosable: true,
+    });
+    onCloseSignUp();
+    setotpVerificationData(data);
+    onOpenOtp();
+  };
+  const onLogin = (data: any) => {
+    toast({
+      title: "OTP was successfully sent",
+      status: "success",
+      duration: 9000,
+      position: "top-right",
+      isClosable: true,
+    });
+    onCloseLogin();
+    setotpVerificationData(data);
+    onOpenOtp();
+  };
 
-  useEffect(()=> {
-    if (session && session.id != '') 
-      setisSignedIn(true)
-  }, [session])
+  useEffect(() => {
+    if (session && session.id != "") setisSignedIn(true);
+  }, [session]);
 
   const logout = async () => {
     deleteSession();
-    setisSignedIn(false)
+    setisSignedIn(false);
   };
-
 
   return (
     <>
       <SignUpModal
-        onSignUp={signUp}
+        onSuccess={onSignUp}
         isOpen={isOpenSignUp}
         onClose={onCloseSignUp}
         onOpen={onOpenSignUp}
       />
       <LoginModal
-        onLogin={recovery}
+        onSuccess={onLogin}
         isOpen={isOpenLogin}
         onClose={onCloseLogin}
         onOpen={onOpenLogin}
@@ -118,7 +117,6 @@ const Header: React.FC<ButtonProps> = (props) => {
         data={otpVerificationData}
         setisSignedIn={setisSignedIn}
         setSignInAccountId={setSignInAccountId}
-        onLogin={login}
         isOpen={isOpenOtp}
         onClose={onCloseOtp}
         onOpen={onOpenOtp}
@@ -131,9 +129,7 @@ const Header: React.FC<ButtonProps> = (props) => {
                 <Box position="relative">
                   <Image src="identicon.png" boxSize={"72px"} />
                 </Box>
-                {isSignedIn && (
-                  <AccountInfo setAccountData={setAccountData} />
-                )}
+                {isSignedIn && <AccountInfo setAccountData={setAccountData} />}
               </HStack>
               {isSignedIn && (
                 <Flex alignItems={"center"}>
@@ -147,7 +143,7 @@ const Header: React.FC<ButtonProps> = (props) => {
                     py={5}
                     borderRadius="3xl"
                     leftIcon={<AddIcon />}
-                    disabled={accountData && !accountData.verified }
+                    disabled={accountData && !accountData.verified}
                   >
                     Solicitar una Fé de Vida
                   </Button>
@@ -167,7 +163,9 @@ const Header: React.FC<ButtonProps> = (props) => {
                       />
                     </MenuButton>
                     <MenuList>
-                      <MenuItem onClick={()=> router.push("/personal-info")} >Mis datos personales</MenuItem>
+                      <MenuItem onClick={() => router.push("/personal-info")}>
+                        Mis datos personales
+                      </MenuItem>
                       <MenuItem>Preferencias</MenuItem>
                       <MenuDivider />
                       <MenuItem onClick={logout}>Salir </MenuItem>
