@@ -121,13 +121,19 @@ const Header: React.FC<ButtonProps> = (props) => {
         onClose={onCloseOtp}
         onOpen={onOpenOtp}
       />
-      <Box as="section" pb={{ base: "12", md: "12" }}>
+      <Box as="section" pb={{ base: "6", md: "6" }}>
         <Box as="nav" alignContent="flex-end">
-          <Container maxW="container.2xl" py={{ base: "3", lg: "4" }}>
+          <Container maxW="container.xl" pt={{ base: "3", lg: "4" }}>
             <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
               <HStack spacing={5} alignItems={"center"}>
                 <Box position="relative">
-                  <Image src="identicon.png" boxSize={"72px"} />
+                  <Flex alignItems={"center"}>
+                    <Image src="identicon.png" boxSize={"64px"} />
+                    <Box ml="md">
+                        <Text fontSize="2xl" color="indigo.600">Identicon</Text>
+                        <Text fontSize="sm" >Uniendo tu vida digital y real</Text>
+                    </Box>
+                  </Flex>
                 </Box>
                 {isSignedIn && <AccountInfo setAccountData={setAccountData} />}
               </HStack>
@@ -177,12 +183,12 @@ const Header: React.FC<ButtonProps> = (props) => {
                 <HStack h={16} alignItems={"center"} justifyContent="flex-end">
                   <Box>
                     <Button
-                      color="blue"
-                      borderColor="blue"
+                      borderRadius="xl"
+                      borderColor="gray.300"
                       variant="outline"
                       onClick={onOpenLogin}
                     >
-                      Log in
+                      Inicia tu sesión
                     </Button>
                   </Box>
                   <Spacer />
@@ -191,9 +197,10 @@ const Header: React.FC<ButtonProps> = (props) => {
                       color="blue"
                       borderColor="blue"
                       variant="outline"
+                      borderRadius="xl"
                       onClick={onOpenSignUp}
                     >
-                      Crear una cuenta
+                      Abre tu cuenta
                     </Button>
                   </Box>
                 </HStack>
