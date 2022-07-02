@@ -53,10 +53,10 @@ export const Hero = () => (
         <Stack spacing={{ base: '8', lg: '10' }}>
           <Stack spacing={{ base: '2', lg: '4' }}>
             <Heading size="xl" color={useColorModeValue('indigo.500', 'indigo.300')}>
-              La fé de vida
+              La fe de vida
             </Heading>
             <Heading size="md" fontWeight="normal">
-              para tí o tus familiares sin moverte de tu casa
+              para ti o tus familiares sin moverte de tu casa
             </Heading>
           </Stack>
           <HStack spacing="3">

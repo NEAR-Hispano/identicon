@@ -183,24 +183,23 @@ const Header: React.FC<ButtonProps> = (props) => {
                 <HStack h={16} alignItems={"center"} justifyContent="flex-end">
                   <Box>
                     <Button
+                      variant={"solid"}
+                      colorScheme={"indigo"}
+                      borderRadius="xl"
+                      onClick={onOpenSignUp}
+                    >
+                      Abre tu cuenta
+                    </Button>
+                  </Box>
+                  <Spacer />
+                  <Box>
+                    <Button
                       borderRadius="xl"
                       borderColor="gray.300"
                       variant="outline"
                       onClick={onOpenLogin}
                     >
                       Inicia tu sesión
-                    </Button>
-                  </Box>
-                  <Spacer />
-                  <Box>
-                    <Button
-                      color="blue"
-                      borderColor="blue"
-                      variant="outline"
-                      borderRadius="xl"
-                      onClick={onOpenSignUp}
-                    >
-                      Abre tu cuenta
                     </Button>
                   </Box>
                 </HStack>
