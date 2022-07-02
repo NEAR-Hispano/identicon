@@ -59,6 +59,12 @@ Flujos de interacción para cada actor y sus endpoints:
 - [Solicitantes](./images/Requester_UI_Flow.png)
 - [Validadores](./images/Validator_UI_Flow.png)
 
+Prototipado del frontend (incluyendo interacciones y variantes)
+
+- [Documento con sus páginas y componentes](./images/Identicon_Frontend.pdf)
+- [Moqup interactivo](https://app.moqups.com/9NAQoa5PLA7sR6JKRsmt2dp9faDyZ9im/view/page/a748567a3?ui=0)
+
+
 **Minutas**
 
 Mantenemos documentadas en nuestras [Minutas de reunión](./meetings.md) las decisiones de diseño y de desarrollo (y su justificación) que tomamos a lo largo del proyecto.
