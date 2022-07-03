@@ -10,13 +10,13 @@ const config = require('../config');
  * ~~~
  * req.authorized = {
  *    "account_data": {
- *       "id": "12b81ca1-3267-455c-8d93-6aa32b74bca3",
- *       "email": "mazito.v2+1@gmail.com",
- *       "phone": "mazito.v2+1@gmail.com",
+ *       "id": "12b8...ca3",
+ *       "email": "ma...@....com",
+ *       "phone": "",
  *       "verified": false
  *     },
  *     "near_account_data": {
- *       "account_id": "fdc094918d1b471caa1d67ed280e14ad.identicon.testnet"
+ *       "account_id": "fdc...14ad.identicon.testnet"
  *     },
  *     "iat": 1656799895,
  *     "exp": 1656886295
