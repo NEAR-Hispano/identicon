@@ -42,7 +42,7 @@ const AccountsModel = (sequelize, { DataTypes }) => {
       },
       // Encripted JSON account pub/priv keys
       keys: {
-        type: DataTypes.BLOB,
+        type: DataTypes.TEXT,
         allowNull: true,
         validate: {
           notEmpty: true,

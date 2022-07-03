@@ -1,28 +1,25 @@
 const { Op } = require("sequelize");
 const { AccountsModel, SubjectsModel } = require("../models");
 const uuid = require("uuid");
-const crypto = require("crypto");
+const { encryptIt } = require('../utils/cypher.utils');
 
 class AccountsService {
   constructor() {}
 
   static async createAccount(session, near_account) {
-    const keys = {
-      public_key: near_account.public_key,
-      private_key: near_account.private_key,
-    };
-    const keyHash = crypto
-      .createHash("sha256")
-      .update(JSON.stringify(keys))
-      .digest("base64");
+    const encryptedKeys = encryptIt({
+      public_key: near_account.account.public_key,
+      private_key: near_account.account.private_key,
+    });
+
     const account = await AccountsModel.create({
-      uid: uuid.v4(),
+      uid: near_account.account.id, // instead of uuid.v4() we use this!
       type: session.type,
       email: session.contact,
       phone: session.contact, // ToDo. manage email/phone store
-      linked_account_uid: near_account.account.id,
+      linked_account_uid: null, // this is used only for paying validators
       subject_id: uuid.v4(),
-      keys: keyHash,
+      keys: encryptedKeys,
     });
     return account;
   }
