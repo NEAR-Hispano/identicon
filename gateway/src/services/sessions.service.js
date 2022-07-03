@@ -1,6 +1,7 @@
-  const { SessionsModel } = require("../models/");
+const { SessionsModel } = require("../models/");
 const EmailService = require("./email.service");
 const crypto = require("crypto");
+
 class SessionsService {
   constructor() {}
 

@@ -2,12 +2,12 @@ require("dotenv").config();
 const request = require("supertest");
 const app = 'http://127.0.0.1:4000';
 
-const AUTH_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2RhdGEiOnsiaWQiOiIzNjg5ZGJhOC1kMTgxLTRkN2YtYmQzNi0xODM5OTljZTc4NjAiLCJlbWFpbCI6Im1heml0by52MisxQGdtYWlsLmNvbSIsInBob25lIjoibWF6aXRvLnYyKzFAZ21haWwuY29tIiwidmVyaWZpZWQiOmZhbHNlfSwibmVhcl9hY2NvdW50X2RhdGEiOnsiYWNjb3VudF9pZCI6IjA5YzAzMTU1MmM3OTQxM2E4NmMxYjI2MmE4ZGYwOWJiLmlkZW50aWNvbi50ZXN0bmV0In0sImlhdCI6MTY1NjgwOTM0NiwiZXhwIjoxNjU2ODk1NzQ2fQ.IBJehTWJbJ1dOtpdG_rqTisCmwA1Zeepafy0YApoQVk";
+const AUTH_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2RhdGEiOnsiaWQiOiJiZDRlZGJmYjlkMWU0ZDAyODdlYWVjZmQyMzUzNDEwMC5pZGVudGljb24udGVzdG5ldCIsImVtYWlsIjoibWF6aXRvLnYyKzJAZ21haWwuY29tIiwicGhvbmUiOiJtYXppdG8udjIrMkBnbWFpbC5jb20iLCJ2ZXJpZmllZCI6ZmFsc2V9LCJuZWFyX2FjY291bnRfZGF0YSI6eyJhY2NvdW50X2lkIjpudWxsfSwiaWF0IjoxNjU2ODg1OTE1LCJleHAiOjE2NTY5NzIzMTV9.MCzSsn2gubJf-ODiK7wmZ_tmz5CoW5KASkW6D9QYQ2I";
 
 describe('Test verifications endpoint', () => {
 
   const payload = {
-    subject_id: 'AR_DNI_1234567801',
+    subject_id: 'AR_DNI_1234567804',
     type: 'ProofOfLife',
     personal_info: {
       email: 'mazito.v2+1@gmail.com', 

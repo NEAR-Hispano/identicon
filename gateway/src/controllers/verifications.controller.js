@@ -1,14 +1,14 @@
-const { response } = require("express");
 const {
   Success,
   NotFoundError,
-  MissingParams,
-  GenericError,
   UnknownException,
-} = require("../response");
-const verificationsService = require("../services/verifications.service");
-const accountsService = require("../services/accounts.service");
-const subjectsService = require("../services/subjects.service");
+} = require('../response');
+const nearService = require('../services/near.service');
+const verificationsService = require('../services/verifications.service');
+const accountsService = require('../services/accounts.service');
+const subjectsService = require('../services/subjects.service');
+const uuid = require("uuid");
+
 
 class VerificationsController {
   constructor() {}
@@ -29,14 +29,25 @@ class VerificationsController {
     } 
     if (!subject || subject.error) return new UnknownException(subject.error);
 
-    const response = await verificationsService.createVerification(
-      subject_id, type, personal_info, // all subject info
-      account // account requesting this verification
-    );
-    if (response) {
+    const request_uid = uuid.v4();
+    const args = {
+      uid: request_uid,
+      subject_id: subject_id,
+      is_type: type,
+      payload: JSON.stringify(personal_info),
+    };
+    try {
+      // call the Contract
+      const result = await nearService.requestVerification(args, account);
+      // also store it in DB 
+      const response = await verificationsService.createVerification(
+        request_uid, subject_id, type, personal_info, // all subject info
+        account // account requesting this verification
+      );
       return new Success(response);
-    } else {
-      return new NotFoundError(response);
+    }
+    catch (error) {
+      return new NotFoundError(error);
     }
   }
 }

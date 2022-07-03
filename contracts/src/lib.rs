@@ -33,7 +33,7 @@ impl VerificationContract {
           remote_validation_fee: 1.0,
           onsite_validation_fee: 1.0,
           review_validation_fee: 1.0,
-          allowed_monthly_requests: 2,
+          allowed_monthly_requests: 20, // changed for testing
       },
     }
   }
