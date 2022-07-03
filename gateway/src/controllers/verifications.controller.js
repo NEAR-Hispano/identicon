@@ -1,6 +1,4 @@
-const {
-  response
-} = require("express");
+const { response } = require("express");
 const {
   Success,
   NotFoundError,
@@ -16,18 +14,13 @@ class VerificationsController {
   constructor() {}
 
   static async createVerification(payload, authorized) {
+    let {subject_id, type, personal_info} = payload;
+
     // check if the Account exists
     const account_uid = authorized.account_data.id;
     let account = await accountsService.getAccountById(account_uid);
     if (account.error) return new NotFoundError(account.error);
     account = account.dataValues;
-
-    // validate Payload here before inserting
-    let {subject_id, type, personal_info} = payload;
-    if (!subject_id) return new MissingParams('Missing Subject_id');
-    if (type !== 'ProofOfLife') return new MissingParams('Missing Verification Type');
-    if (!personal_info.phone) return new MissingParams('Missing Phone');
-    if (!personal_info.full_name) return new MissingParams('Missing Full name');
 
     // check Subject or create it
     let subject = await subjectsService.getSubjectById(subject_id);
