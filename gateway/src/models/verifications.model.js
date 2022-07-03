@@ -14,6 +14,14 @@ const VerificationsModel = (sequelize, { DataTypes }) => {
       type: DataTypes.ENUM('ProofOfLife', 'ProofOfIdentity', 'ProofOfExistence', 'ProofOfState', 'ProofOfOwnership', 'ProofOfService'),
       allowNull: true,
     },
+    // UNIQUE NEAR account ID
+    account_uid: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
     // Subject ID, example: ar_dni_12345678, may be empty
     subject_id: {
       type: DataTypes.STRING(100),
@@ -24,7 +32,7 @@ const VerificationsModel = (sequelize, { DataTypes }) => {
     },
     // PN: Pending, ST: Started, FI: Finished
     state: {
-      type: DataTypes.ENUM('PN', 'ST', 'FI'),
+      type: DataTypes.ENUM('UN', 'PN', 'ST', 'FI'),
       allowNull: true,
     },
     // AP, RX, NP, WND, CX

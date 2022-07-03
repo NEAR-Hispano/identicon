@@ -1,11 +1,23 @@
 const { VerificationsModel } = require("../models/");
-const EmailService = require("./email.service");
-const crypto = require("crypto");
+//const EmailService = require("./email.service");
+//const crypto = require("crypto");
+const uuid = require("uuid");
+
 class VerificationsService {
   constructor() {}
 
-  static async create(params) {
-    return await VerificationsModel.create({params});
+  static async createVerification(subject_id, is_type, personal_info, account) {
+    const verification = await VerificationsModel.create({
+      request_uid: uuid.v4(),
+      account_uid: account.uid,
+      subject_id: subject_id,
+      type: is_type,
+      state: 'UN',
+      result: null,
+      must_start_utc: '2022-01-01 00:00:00',
+      must_end_utc:  '2022-01-01 00:00:00',
+    });
+    return verification.dataValues;
   }
 
 }
