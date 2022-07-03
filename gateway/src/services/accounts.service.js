@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const { AccountsModel, SubjectsModel } = require("../models");
 const uuid = require("uuid");
 const crypto = require("crypto");
+
 class AccountsService {
   constructor() {}
 
@@ -29,22 +30,35 @@ class AccountsService {
   static async getAccountById(uid) {
     try {
       const account = await AccountsModel.findOne({
-        where: { uid: uid },
+        where: {
+          uid: uid
+        },
       });
       const subject = await SubjectsModel.findOne({
-          where: {subject_id: account.subject_id}
-
+        where: {
+          subject_id: account.subject_id
+        }
       });
-      return {...account, personal_info: subject? subject.personal_info: null}; 
+      return {
+        ...account,
+        personal_info: subject ? subject.personal_info : null
+      };
     } catch (e) {
       console.log("error: ", e);
+      return {
+        error: e
+      };
     }
   }
 
   static async getAccountByContact(contact) {
     const result = await AccountsModel.findOne({
       where: {
-        [Op.or]: [{ email: contact }, { phone: contact }],
+        [Op.or]: [{
+          email: contact
+        }, {
+          phone: contact
+        }],
       },
     });
     return result;
@@ -52,7 +66,9 @@ class AccountsService {
 
   static async getAccounts() {
     const result = await AccountsModel.findAll({
-      order: [["id", "ASC"]],
+      order: [
+        ["id", "ASC"]
+      ],
     });
     return result;
   }
@@ -74,14 +90,24 @@ class AccountsService {
       personal_info: JSON.stringify(accountUpdate.personal_info),
     });
 
-    return await AccountsModel.update(
-      { ...account, subject_id: subjectId },
-      { where: { uid: id } }
-    );
+    return await AccountsModel.update({
+      ...account,
+      subject_id: subjectId
+    }, {
+      where: {
+        uid: id
+      }
+    });
   }
 
   static async deleteAccount(id) {
-    return await AccountsModel.update({ state: "D" }, { where: { uid: id } });
+    return await AccountsModel.update({
+      state: "D"
+    }, {
+      where: {
+        uid: id
+      }
+    });
   }
 }
 

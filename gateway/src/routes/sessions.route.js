@@ -26,6 +26,7 @@ router.post('/login', async (req, res, next) => {
     }
     next();
 });
+
 router.post('/recovery', async (req, res, next) => {
     const { email, phone } = req.body;
     try {

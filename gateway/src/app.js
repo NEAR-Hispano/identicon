@@ -40,11 +40,11 @@ morgan(app, {
 app.use('/v1/health', utilsRoutes);
 app.use('/v1/accounts', accountsRoutes);
 app.use('/v1/sessions', sessionRoutes);
-app.use('v1/verifications', verificationsRoutes);
+app.use('/v1/verifications', verificationsRoutes);
 
 sequelize.sync({ 
-   force: true,
-  //alter: true 
+  // force: true,
+  // alter: true 
 }).then(() => {
   console.log('Sequelize drop and re-sync db completed');
   app.listen(port, () => {
