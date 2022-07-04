@@ -126,15 +126,31 @@ const Header: React.FC<ButtonProps> = (props) => {
           <Container maxW="container.xl" pt={{ base: "3", lg: "4" }}>
             <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
               <HStack spacing={5} alignItems={"center"}>
-                <Box position="relative">
-                  <Flex alignItems={"center"}>
-                    <Image src="identicon.png" boxSize={"64px"} />
-                    <Box ml="md">
-                        <Text fontSize="2xl" color="indigo.600">Identicon</Text>
-                        <Text fontSize="sm" >Uniendo tu vida digital y real</Text>
+                {/* <Box position="relative">
+                  <Image src="logo.png" boxSize={"72px"} />
+                </Box> */}
+                <Flex
+                  onClick={() => router.push(`/`)}
+                  cursor="pointer"
+                  alignItems="center"
+                >
+                  <HStack spacing={2} alignItems={"center"}>
+                    <Image
+                      objectFit="cover"
+                      src="logo.png"
+                      alt="logo"
+                      boxSize={"64px"}
+                    />
+
+                    <Box>
+                      <Text fontSize="2xl" color="indigo.600">
+                        Identicon
+                      </Text>
+                      <Text fontSize="sm">Uniendo tu vida digital y real</Text>
                     </Box>
-                  </Flex>
-                </Box>
+                  </HStack>
+                </Flex>
+
                 {isSignedIn && <AccountInfo setAccountData={setAccountData} />}
               </HStack>
               {isSignedIn && (
@@ -188,7 +204,7 @@ const Header: React.FC<ButtonProps> = (props) => {
                       borderRadius="xl"
                       onClick={onOpenSignUp}
                     >
-                      Abre tu cuenta
+                      Crear una cuenta
                     </Button>
                   </Box>
                   <Spacer />
@@ -199,7 +215,7 @@ const Header: React.FC<ButtonProps> = (props) => {
                       variant="outline"
                       onClick={onOpenLogin}
                     >
-                      Inicia tu sesión
+                      Inicia sesión
                     </Button>
                   </Box>
                 </HStack>
