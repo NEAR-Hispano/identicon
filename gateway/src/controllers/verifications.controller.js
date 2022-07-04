@@ -39,6 +39,7 @@ class VerificationsController {
     try {
       // call the Contract
       const result = await nearService.requestVerification(args, account);
+      console.log("\n\n",result,"\n\n");
       // also store it in DB 
       const response = await verificationsService.createVerification(
         request_uid, subject_id, type, personal_info, // all subject info
