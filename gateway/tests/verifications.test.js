@@ -7,7 +7,7 @@ const AUTH_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2RhdGEiOnsia
 describe('Test verifications endpoint', () => {
 
   const payload = {
-    subject_id: 'AR_DNI_1234567804',
+    subject_id: 'AR_DNI_1234567808',
     type: 'ProofOfLife',
     personal_info: {
       email: 'mazito.v2+1@gmail.com', 
