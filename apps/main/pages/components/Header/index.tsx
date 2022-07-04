@@ -121,14 +121,36 @@ const Header: React.FC<ButtonProps> = (props) => {
         onClose={onCloseOtp}
         onOpen={onOpenOtp}
       />
-      <Box as="section" pb={{ base: "12", md: "12" }}>
+      <Box as="section" pb={{ base: "6", md: "6" }}>
         <Box as="nav" alignContent="flex-end">
           <Container maxW="container.2xl" py={{ base: "3", lg: "4" }}>
             <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
               <HStack spacing={5} alignItems={"center"}>
-                <Box position="relative">
-                  <Image src="identicon.png" boxSize={"72px"} />
-                </Box>
+                {/* <Box position="relative">
+                  <Image src="logo.png" boxSize={"72px"} />
+                </Box> */}
+                <Flex
+                  onClick={() => router.push(`/`)}
+                  cursor="pointer"
+                  alignItems="center"
+                >
+                  <HStack spacing={2} alignItems={"center"}>
+                    <Image
+                      objectFit="cover"
+                      src="logo.png"
+                      alt="logo"
+                      boxSize={"64px"}
+                    />
+
+                    <Box>
+                      <Text fontSize="2xl" color="indigo.600">
+                        Identicon
+                      </Text>
+                      <Text fontSize="sm">Uniendo tu vida digital y real</Text>
+                    </Box>
+                  </HStack>
+                </Flex>
+
                 {isSignedIn && <AccountInfo setAccountData={setAccountData} />}
               </HStack>
               {isSignedIn && (
@@ -177,23 +199,23 @@ const Header: React.FC<ButtonProps> = (props) => {
                 <HStack h={16} alignItems={"center"} justifyContent="flex-end">
                   <Box>
                     <Button
-                      color="blue"
-                      borderColor="blue"
-                      variant="outline"
-                      onClick={onOpenLogin}
+                      variant={"solid"}
+                      colorScheme={"indigo"}
+                      borderRadius="xl"
+                      onClick={onOpenSignUp}
                     >
-                      Log in
+                      Crear una cuenta
                     </Button>
                   </Box>
                   <Spacer />
                   <Box>
                     <Button
-                      color="blue"
-                      borderColor="blue"
+                      borderRadius="xl"
+                      borderColor="gray.300"
                       variant="outline"
-                      onClick={onOpenSignUp}
+                      onClick={onOpenLogin}
                     >
-                      Crear una cuenta
+                      Inicia sesión
                     </Button>
                   </Box>
                 </HStack>

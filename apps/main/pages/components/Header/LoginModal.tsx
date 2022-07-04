@@ -14,6 +14,11 @@ import {
   ModalOverlay,
   Flex,
   Center,
+  Heading,
+  useBreakpointValue,
+  Stack,
+  HStack,
+  Text
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import signUpSchemaValidation from "../../../validation/signUpSchemaValidation";
@@ -66,40 +71,59 @@ const LoginModal = (props: {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Login</ModalHeader>
+        <ModalHeader>
+          {" "}
+          <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
+            <Heading size={useBreakpointValue({ base: "xs", md: "sm" })}>
+              Inicia sesión
+            </Heading>
+          </Stack>
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
-          <FormControl>
-            <FormLabel>Email</FormLabel>
-            <Center>
-              <Input
-                ref={initialRef}
-                id="email"
-                name="email"
-                placeholder="my@email.com"
-                value={form.values.email}
-                onPaste={form.handleChange}
-                onBlur={form.handleBlur}
-                onChange={form.handleChange}
-              />
-            </Center>
-            {!!form.values.email &&
-              !!form.touched.email &&
-              !!form.errors.email && (
-                <p className="error-text"> {form.errors.email}</p>
-              )}
-          </FormControl>
+          <Stack>
+            <FormControl>
+              <FormLabel>Email</FormLabel>
+              <Center>
+                <Input
+                  ref={initialRef}
+                  id="email"
+                  name="email"
+                  placeholder="my@email.com"
+                  value={form.values.email}
+                  onPaste={form.handleChange}
+                  onBlur={form.handleBlur}
+                  onChange={form.handleChange}
+                />
+              </Center>
+              {!!form.values.email &&
+                !!form.touched.email &&
+                !!form.errors.email && (
+                  <p className="error-text"> {form.errors.email}</p>
+                )}
+            </FormControl>
+          </Stack>
+          <HStack spacing="1" mt={4} justify="center">
+            <Text fontSize="md" color="muted">No tienes una cuenta?</Text>
+            <Button variant="link" colorScheme="blue">
+              Crea tu cuenta
+            </Button>
+          </HStack>
         </ModalBody>
 
         <ModalFooter>
-          <Button
-            colorScheme="blue"
-            mr={3}
-            onClick={(e: any) => form.handleSubmit(e)}
-          >
-            Enviar
-          </Button>
-          <Button onClick={onClose}>Cancelar</Button>
+          <Stack spacing="6">
+            <HStack spacing="6">
+              <Button onClick={onClose}>Cancelar</Button>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={(e: any) => form.handleSubmit(e)}
+              >
+                Continuar con el email
+              </Button>
+            </HStack>
+          </Stack>
         </ModalFooter>
       </ModalContent>
     </Modal>
