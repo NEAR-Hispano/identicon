@@ -41,7 +41,7 @@ router.post('/',
 /**
  * GET /verifications ? requester_uid= & states=
  */
-const getPreconditions = [
+ const getPreconditions = [
   check('requester_uid').exists().notEmpty().trim(),
   check('states').exists().notEmpty().isIn(['UN', 'PN', 'ST', 'FI']), 
 ];

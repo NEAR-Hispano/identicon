@@ -1,5 +1,5 @@
-const { Op } = require("sequelize");
-const { VerificationsModel } = require("../models/");
+const { Op } = require('sequelize');
+const { VerificationsModel, sequelize } = require('../models/');
 
 class VerificationsService {
   constructor() {}
@@ -28,16 +28,27 @@ class VerificationsService {
     requester_uid, 
     states
   ) {
-    const result = await VerificationsModel.findAll({
-      where: {
-        account_uid: requester_uid,
-        state: { [Op.in]: states }
-      },
-      order: [
-        ['created_at', 'ASC']
-      ],
+    const statesSet = states.map(t => `'${t}'`).join(',');
+    const sql = `
+      SELECT v.*, su.personal_info FROM verifications as v, subjects as su
+      WHERE 
+        v.account_uid ='${requester_uid}'  AND v.state in (${statesSet})
+        AND (v.subject_id = su.subject_id)
+    `;
+    const [results, _] = await sequelize.query(sql);
+    return results.map((t) => {
+      t.personal_info = JSON.parse(t.personal_info);
+      return t;
     });
-    return result;
+  }
+
+  static async getOneVerification(
+    uid
+  ) {
+    const verification = await VerificationsModel.findOne({
+      where: { uid: uid },
+    });
+    return verification;
   }
 }
 
