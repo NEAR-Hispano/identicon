@@ -5,10 +5,10 @@ const {
   ConflictError
 } = require('../response');
 const nearService = require('../services/near.service');
-const verificationsService = require('../services/verifications.service');
-const { getAccountOrError } = require('./controllers.helpers');
+const verifications = require('../services/verifications.service');
 const accountsService = require('../services/accounts.service');
-const subjectsService = require('../services/subjects.service');
+const subjects = require('../services/subjects.service');
+const { getAccountOrError } = require('./controllers.helpers');
 const uuid = require('uuid');
 
 class VerificationsController {
@@ -21,39 +21,41 @@ class VerificationsController {
     personal_info, 
     authorized_uid 
   }) {
-    // check if the Account exists
-    const account_uid = authorized_uid;
-    let account = await accountsService.getAccountById(account_uid);
-    if (account.error) return new NotFoundError(account.error);
-    account = account.dataValues;
-
-    // check Subject or create it
-    let subject = await subjectsService.getSubjectById(subject_id);
-    if (!subject) {
-      subject = await subjectsService.createSubject(subject_id, personal_info, account);
-    } 
-    if (!subject || subject.error) return new UnknownException(subject.error);
-
-    const request_uid = uuid.v4();
-    const args = {
-      uid: request_uid,
-      subject_id: subject_id,
-      is_type: type,
-      payload: JSON.stringify(personal_info),
-    };
     try {
+      const { account, err } = await getAccountOrError(authorized_uid);
+      if (err) 
+        return err;
+
+      // get Subject or create it
+      let subject = await subjects.getById(subject_id);
+      if (!subject)
+        subject = await subjects.create(subject_id, personal_info);
+      if (!subject || subject.error) 
+        return new UnknownException(subject.error);
+
       // call the Contract
-      const result = await nearService.requestVerification(args, account);
+      const request_uid = uuid.v4();
+      const result = await nearService.requestVerification(
+        {
+          uid: request_uid,
+          subject_id: subject_id,
+          is_type: type,
+          payload: JSON.stringify(personal_info),
+        },
+        account
+      );
       console.log('\n\n',result,'\n\n');
-      // also store it in DB 
-      const response = await verificationsService.createVerification(
-        request_uid, subject_id, type, personal_info, // all subject info
+
+      // also store it in DB for indexing
+      const response = await verifications.createVerification(
+        request_uid, subject_id, type, // all request verification info
         account // account requesting this verification
       );
+
       return new Success(response);
     }
     catch (error) {
-      return new NotFoundError(error);
+      return new UnknownException(error);
     }
   }
 
@@ -63,13 +65,15 @@ class VerificationsController {
     states, 
     authorized_uid 
   }) {
-    const { account, error } = await getAccountOrError(authorized_uid);
-    if (error) 
-      return error;
-    if (authorized_uid !== requester_uid) 
-      return new ConflictError(`Invalid requester_uid=${requester_uid}`);
     try {
-      const response = await verificationsService.getVerifications(
+      const { account, err } = await getAccountOrError(authorized_uid);
+      if (err) 
+        return err;
+
+      if (authorized_uid !== requester_uid) 
+        return new ConflictError(`Invalid requester_uid=${requester_uid}`);
+
+      const response = await verifications.getFilteredBy(
         requester_uid || account.uid, 
         states || []
       );
@@ -80,24 +84,63 @@ class VerificationsController {
     }
   }
 
+
   static async getOneVerification({ 
     uid, 
     authorized_uid 
   }) {
-    const { account, error } = await getAccountOrError(authorized_uid);
-    if (error) 
-      return error;
     try {
-      const response = await verificationsService.getOneVerification(uid);
-      if (!response)
+      const { account, err } = await getAccountOrError(authorized_uid);
+      if (err) 
+        return err;
+
+      const verification = await verifications.getByUidWithSubject(uid);
+      if (!verification)
         return new NotFoundError(`Not found the request with uid=${uid}`);
-      return new Success(response);
+
+      return new Success(verification);
     }
     catch (error) {
       return new UnknownException(error);
     }
   }
 
+
+  static async updateVerification({ 
+    uid,
+    subject_id, 
+    type, 
+    personal_info, 
+    authorized_uid 
+  }) {
+    try {
+      const { account, err } = await getAccountOrError(authorized_uid);
+      if (err) 
+        return err;
+  
+      let verification = await verifications.getByUid(uid);
+      if (!verification)
+        return new NotFoundError(`Not found the request with uid=${uid}`);
+    
+      // we must use check if the subject_id has changed.
+      // so we can update the other subject info and its id too     
+      await subjects.updateFields(verification.subject_id, {
+        subject_id: subject_id, 
+        personal_info: JSON.stringify(personal_info)
+      });
+  
+      // now we can update the Verification with the changed data
+      verification = await verifications.updateFields(uid, {
+        subject_id: subject_id, 
+        type: type
+      });
+
+      return new Success(verification);
+    }
+    catch (error) {
+      return new UnknownException(error);
+    }
+  }
 }
 
 module.exports = VerificationsController;
