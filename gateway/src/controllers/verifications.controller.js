@@ -79,6 +79,25 @@ class VerificationsController {
       return new UnknownException(error);
     }
   }
+
+  static async getOneVerification({ 
+    uid, 
+    authorized_uid 
+  }) {
+    const { account, error } = await getAccountOrError(authorized_uid);
+    if (error) 
+      return error;
+    try {
+      const response = await verificationsService.getOneVerification(uid);
+      if (!response)
+        return new NotFoundError(`Not found the request with uid=${uid}`);
+      return new Success(response);
+    }
+    catch (error) {
+      return new UnknownException(error);
+    }
+  }
+
 }
 
 module.exports = VerificationsController;

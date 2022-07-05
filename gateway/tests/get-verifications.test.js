@@ -64,9 +64,9 @@ describe('Test GET /verifications endpoint', () => {
       })
       .expect('Content-Type', /json/)
       .expect(200);
-    console.log(result.body);
+    //console.log(result.body);
   });
-/*
+
   it('fail GET /verifications/:uid: Invalid UID', async () => {
     await request(api)
       .get('/v1/verifications/1234')
@@ -88,5 +88,4 @@ describe('Test GET /verifications endpoint', () => {
       .expect(200);
     console.log(result.body);
   });
-*/  
 });

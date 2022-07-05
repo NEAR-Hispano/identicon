@@ -45,10 +45,17 @@ class VerificationsService {
   static async getOneVerification(
     uid
   ) {
-    const verification = await VerificationsModel.findOne({
-      where: { uid: uid },
-    });
-    return verification;
+    const sql = `
+      SELECT v.*, su.personal_info FROM verifications as v, subjects as su
+      WHERE 
+        v.request_uid ='${uid}' AND (v.subject_id = su.subject_id)
+    `;
+    const [results, _] = await sequelize.query(sql);
+    if (!results.length) 
+      return null; 
+    let one = results[0];
+    one.personal_info = JSON.parse(one.personal_info);
+    return one;
   }
 }
 

@@ -64,4 +64,28 @@ router.get('/',
   }
 );
 
+/**
+ * GET /verifications/:uid
+ */
+const getOnePreconditions = [
+  check('uid').exists().notEmpty().trim(),
+];
+
+router.get('/:uid', 
+  AuthMiddleware, 
+  ValidateParamsMiddleware(getOnePreconditions),
+  async (req, res, next) => {
+    try {
+      const response = await verificationsController.getOneVerification({
+        uid: req.params.uid,
+        authorized_uid: req.authorized.account_data.id
+      });
+      res.status(response.status).send(response.body);
+    } catch (error) {
+      res.status(error.statusCode ? error.statusCode : 500).send(error, error.stack);
+    }
+    next();
+  }
+);
+
 module.exports = router;
