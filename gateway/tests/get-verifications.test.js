@@ -67,7 +67,7 @@ describe('Test GET /verifications endpoint', () => {
     //console.log(result.body);
   });
 
-  it('fail GET /verifications/:uid: Invalid UID', async () => {
+  it('fail GET /verifications/:uid: Invalid uid', async () => {
     await request(api)
       .get('/v1/verifications/1234')
       .set({ 
