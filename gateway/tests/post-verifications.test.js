@@ -6,7 +6,7 @@ const { api, AUTH_KEY } = require('./test-setup');
 describe('Test POST /verifications endpoint', () => {
 
   const payload = {
-    subject_id: 'AR_DNI_1234567808',
+    subject_id: 'AR_DNI_1234567809',
     type: 'ProofOfLife',
     personal_info: {
       email: 'mazito.v2+1@gmail.com', 

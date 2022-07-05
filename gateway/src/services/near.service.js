@@ -106,12 +106,8 @@ async function createImplicitAccount() {
     // create new account using funds from the master account used to create it
     // see: https://docs.near.org/docs/api/naj-quick-reference#connection
     const near = await connect(config);
-    const account = await near.account(MASTER_ACCOUNT_ID);
-    const receipt = await account.createAccount(
-      accountId, // new account name
-      publicKey, // public key for new account
-      INITIAL_BALANCE // initial balance for new account in yoctoNEAR
-    );
+    const creator = await near.account(MASTER_ACCOUNT_ID);
+    const receipt = await near.createAccount(accountId, publicKey, INITIAL_BALANCE);
     console.info('receipt=', receipt);
 
     return {
@@ -123,6 +119,7 @@ async function createImplicitAccount() {
       receipt, // No errors
     };
   } catch (error) {
+    console.log("near.service createImplicitAccount Err=", error);
     return [null, error];
   }
 }

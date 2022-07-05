@@ -10,7 +10,7 @@ router.post('/signup', async (req, res, next) => {
         res.status(response.status).send(response.body);
     } catch (error) {
         console.log(error);
-        res.status(error?.statusCode ? error.statusCode : 500).send(error, error.stack);
+        res.status(error.statusCode ? error.statusCode : 500).send(error, error.stack);
     }
     next();
 });

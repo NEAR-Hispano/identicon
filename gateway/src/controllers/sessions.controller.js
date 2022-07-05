@@ -68,7 +68,7 @@ class SessionsController {
       
       if (!account) {
         const nearAccount = await createImplicitAccount();
-        account = await AccountsService.createAccount(session, nearAccount)
+        account = await AccountsService.createAccount(session, nearAccount);
       }
       const payload = {
         account_data: {
