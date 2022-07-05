@@ -123,7 +123,7 @@ const Header: React.FC<ButtonProps> = (props) => {
       />
       <Box as="section" pb={{ base: "6", md: "6" }}>
         <Box as="nav" alignContent="flex-end">
-          <Container maxW="container.2xl" py={{ base: "3", lg: "4" }}>
+          <Container maxW="container.2xl" pt={{ base: "3", lg: "4" }}>
             <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
               <HStack spacing={5} alignItems={"center"}>
                 {/* <Box position="relative">

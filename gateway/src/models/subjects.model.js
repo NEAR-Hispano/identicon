@@ -1,6 +1,6 @@
 const SubjectsModel = (sequelize, { DataTypes }) => {
   const Subjects = sequelize.define('subjects', {
-    // UNIQUE NEAR account ID
+    // UNIQUE ID, as 'AR_DNI_1234567890'
     subject_id: {
       type: DataTypes.STRING(100),
       primaryKey: true,

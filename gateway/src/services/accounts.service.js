@@ -1,27 +1,25 @@
 const { Op } = require("sequelize");
 const { AccountsModel, SubjectsModel } = require("../models");
 const uuid = require("uuid");
-const crypto = require("crypto");
+const { encryptIt } = require('../utils/cypher.utils');
+
 class AccountsService {
   constructor() {}
 
   static async createAccount(session, near_account) {
-    const keys = {
-      public_key: near_account.public_key,
-      private_key: near_account.private_key,
-    };
-    const keyHash = crypto
-      .createHash("sha256")
-      .update(JSON.stringify(keys))
-      .digest("base64");
+    const encryptedKeys = encryptIt({
+      public_key: near_account.account.public_key,
+      private_key: near_account.account.private_key,
+    });
+
     const account = await AccountsModel.create({
-      uid: uuid.v4(),
+      uid: near_account.account.id, // instead of uuid.v4() we use this!
       type: session.type,
       email: session.contact,
       phone: session.contact, // ToDo. manage email/phone store
-      linked_account_uid: near_account.account.id,
+      linked_account_uid: null, // this is used only for paying validators
       subject_id: uuid.v4(),
-      keys: keyHash,
+      keys: encryptedKeys,
     });
     return account;
   }
@@ -29,22 +27,35 @@ class AccountsService {
   static async getAccountById(uid) {
     try {
       const account = await AccountsModel.findOne({
-        where: { uid: uid },
+        where: {
+          uid: uid
+        },
       });
       const subject = await SubjectsModel.findOne({
-          where: {subject_id: account.subject_id}
-
+        where: {
+          subject_id: account.subject_id
+        }
       });
-      return {...account, personal_info: subject? subject.personal_info: null}; 
+      return {
+        ...account,
+        personal_info: subject ? subject.personal_info : null
+      };
     } catch (e) {
       console.log("error: ", e);
+      return {
+        error: e
+      };
     }
   }
 
   static async getAccountByContact(contact) {
     const result = await AccountsModel.findOne({
       where: {
-        [Op.or]: [{ email: contact }, { phone: contact }],
+        [Op.or]: [{
+          email: contact
+        }, {
+          phone: contact
+        }],
       },
     });
     return result;
@@ -52,7 +63,9 @@ class AccountsService {
 
   static async getAccounts() {
     const result = await AccountsModel.findAll({
-      order: [["id", "ASC"]],
+      order: [
+        ["id", "ASC"]
+      ],
     });
     return result;
   }
@@ -74,14 +87,24 @@ class AccountsService {
       personal_info: JSON.stringify(accountUpdate.personal_info),
     });
 
-    return await AccountsModel.update(
-      { ...account, subject_id: subjectId },
-      { where: { uid: id } }
-    );
+    return await AccountsModel.update({
+      ...account,
+      subject_id: subjectId
+    }, {
+      where: {
+        uid: id
+      }
+    });
   }
 
   static async deleteAccount(id) {
-    return await AccountsModel.update({ state: "D" }, { where: { uid: id } });
+    return await AccountsModel.update({
+      state: "D"
+    }, {
+      where: {
+        uid: id
+      }
+    });
   }
 }
 

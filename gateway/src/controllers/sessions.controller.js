@@ -10,6 +10,7 @@ const AccountsService = require("../services/accounts.service");
 const SessionsService = require("../services/sessions.service");
 const { createImplicitAccount } = require("../services/near.service");
 const AuthService = require("../services/auth.service");
+
 class SessionsController {
   constructor() {}
 
@@ -46,6 +47,7 @@ class SessionsController {
       return new GenericError(err);
     }
   }
+
   static async login(params) {
     const { session_key, passcode } = params;
     if (!session_key && !passcode) {
@@ -54,7 +56,7 @@ class SessionsController {
     try {
       const session = await SessionsService.getSessionByKey(session_key);
       if (!session)  {
-          return new ConflictError('Session not found')
+        return new ConflictError('Session not found')
       }
       const valid = await SessionsService.verifyPasscode(session.passcode, passcode);
       if (!valid) {
@@ -127,8 +129,6 @@ class SessionsController {
       console.info({ error_message: err });
       return new GenericError(err);
     }
-
-
   }
 }
 
