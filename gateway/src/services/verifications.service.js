@@ -7,8 +7,7 @@ class VerificationsService {
   static async createVerification(
     uid, 
     subject_id, 
-    is_type, 
-    personal_info, 
+    is_type,
     account
   ) {
     const verification = await VerificationsModel.create({
@@ -24,7 +23,17 @@ class VerificationsService {
     return verification.dataValues;
   }
 
-  static async getVerifications(
+  static async updateFields(
+    uid, 
+    fields
+  ) {
+    let verification = await this.getByUid(uid) ;
+    verification.set(fields);
+    await verification.save();
+    return verification;
+  }
+
+  static async getFilteredBy(
     requester_uid, 
     states
   ) {
@@ -42,7 +51,14 @@ class VerificationsService {
     });
   }
 
-  static async getOneVerification(
+  static async getByUid(uid) {
+    const subject = await VerificationsModel.findOne({
+      where: { request_uid: uid }
+    });
+    return subject;
+  }
+
+  static async getByUidWithSubject(
     uid
   ) {
     const sql = `
