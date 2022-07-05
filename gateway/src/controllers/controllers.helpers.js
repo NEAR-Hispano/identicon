@@ -1,11 +1,11 @@
 const { NotFoundError, UnknownException } = require('../response');
 const accountsService = require('../services/accounts.service');
 
-async function getAccountOrRaise(account_id) {
+async function getAccountOrError(account_id) {
   let account = await accountsService.getAccountById(account_id);
   if (account.error) 
-    throw new NotFoundError(account.error);
-  return account.dataValues;
+    return { error: new NotFoundError(account.error) };
+  return { account: account.dataValues };
 }
 
-module.exports = { getAccountOrRaise };
+module.exports = { getAccountOrError };

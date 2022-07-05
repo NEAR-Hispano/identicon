@@ -6,10 +6,10 @@ const {
 } = require('../response');
 const nearService = require('../services/near.service');
 const verificationsService = require('../services/verifications.service');
-const { getAccountOrRaise } = require('./verifications.helpers');
+const { getAccountOrError } = require('./controllers.helpers');
 const accountsService = require('../services/accounts.service');
 const subjectsService = require('../services/subjects.service');
-const uuid = require("uuid");
+const uuid = require('uuid');
 
 class VerificationsController {
   constructor() {}
@@ -44,7 +44,7 @@ class VerificationsController {
     try {
       // call the Contract
       const result = await nearService.requestVerification(args, account);
-      console.log("\n\n",result,"\n\n");
+      console.log('\n\n',result,'\n\n');
       // also store it in DB 
       const response = await verificationsService.createVerification(
         request_uid, subject_id, type, personal_info, // all subject info
@@ -63,7 +63,9 @@ class VerificationsController {
     states, 
     authorized_uid 
   }) {
-    const account = await getAccountOrRaise(authorized_uid);
+    const { account, error } = await getAccountOrError(authorized_uid);
+    if (error) 
+      return error;
     if (authorized_uid !== requester_uid) 
       return new ConflictError(`Invalid requester_uid=${requester_uid}`);
     try {
@@ -74,7 +76,7 @@ class VerificationsController {
       return new Success(response);
     }
     catch (error) {
-      return new NotFoundError(error);
+      return new UnknownException(error);
     }
   }
 }
