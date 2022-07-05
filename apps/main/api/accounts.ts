@@ -1,7 +1,6 @@
 
 import axios from "axios";
 import { AuthSessionData, UpdateAccountData } from "../models/accounts";
-import {useStore} from "..//stores/authSession";
 
 export const baseUrl = `${process.env.GATEWAY_BASE_URL}`;
 

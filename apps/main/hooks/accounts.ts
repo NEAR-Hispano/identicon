@@ -20,7 +20,7 @@ export const useGetAccount = (session: AuthSessionData) => {
 
 export const useUpdateAccount = (session: AuthSessionData) => {
     const { mutateAsync, isLoading, isSuccess, data } = useMutation(
-      (params: UpdateAccountData) => api.updateAccount({...params, session}),
+      (params: UpdateAccountData) => api.updateAccount(params),
       {}
     );
     return {

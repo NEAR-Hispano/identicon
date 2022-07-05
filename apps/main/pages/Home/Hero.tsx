@@ -33,7 +33,7 @@ const Hero = (props: HeroProps) => {
           <Box>
             <Button
               variant={"solid"}
-              colorScheme={"indigo"}
+              colorScheme={"green"}
               size={"lg"}
               mr={4}
               px="xl"
