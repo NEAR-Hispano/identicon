@@ -1,10 +1,9 @@
 require("dotenv").config();
 const request = require("supertest");
-const app = 'http://127.0.0.1:4000';
+const { api, AUTH_KEY } = require('./test-setup');
 
-const AUTH_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2RhdGEiOnsiaWQiOiJiZDRlZGJmYjlkMWU0ZDAyODdlYWVjZmQyMzUzNDEwMC5pZGVudGljb24udGVzdG5ldCIsImVtYWlsIjoibWF6aXRvLnYyKzJAZ21haWwuY29tIiwicGhvbmUiOiJtYXppdG8udjIrMkBnbWFpbC5jb20iLCJ2ZXJpZmllZCI6ZmFsc2V9LCJuZWFyX2FjY291bnRfZGF0YSI6eyJhY2NvdW50X2lkIjpudWxsfSwiaWF0IjoxNjU2ODg1OTE1LCJleHAiOjE2NTY5NzIzMTV9.MCzSsn2gubJf-ODiK7wmZ_tmz5CoW5KASkW6D9QYQ2I";
 
-describe('Test verifications endpoint', () => {
+describe('Test POST /verifications endpoint', () => {
 
   const payload = {
     subject_id: 'AR_DNI_1234567808',
@@ -28,10 +27,16 @@ describe('Test verifications endpoint', () => {
     }   
   };
 
+  it('success test-setup', async () => {
+    console.log(api, AUTH_KEY);
+    expect(api !== undefined).toBe(true);
+    expect(AUTH_KEY !== undefined).toBe(true);
+  });
+
   it('fail POST /verifications: Invalid subject_id', async () => {
     let invalidPayload = JSON.parse(JSON.stringify(payload)) ;
     invalidPayload.subject_id = ''; // Invalid subject_id
-    await request(app)
+    await request(api)
       .post('/v1/verifications')
       .set({ 
         Authorization: `Bearer ${AUTH_KEY}` 
@@ -44,7 +49,7 @@ describe('Test verifications endpoint', () => {
   it('fail POST /verifications: Invalid type ', async () => {
     let invalidPayload = JSON.parse(JSON.stringify(payload)) ;
     invalidPayload.type = ''; // Invalid subject_id
-    await request(app)
+    await request(api)
       .post('/v1/verifications')
       .set({ 
         Authorization: `Bearer ${AUTH_KEY}` 
@@ -58,7 +63,7 @@ describe('Test verifications endpoint', () => {
   it('fail POST /verifications: Empty full_name', async () => {
     let invalidPayload = JSON.parse(JSON.stringify(payload)) ;
     invalidPayload.personal_info.full_name = ''; 
-    await request(app)
+    await request(api)
       .post('/v1/verifications')
       .set({ 
         Authorization: `Bearer ${AUTH_KEY}` 
@@ -71,7 +76,7 @@ describe('Test verifications endpoint', () => {
   it('fail POST /verifications: Invalid phone ', async () => {
     let invalidPayload = JSON.parse(JSON.stringify(payload)) ;
     invalidPayload.personal_info.phone = ''; 
-    await request(app)
+    await request(api)
       .post('/v1/verifications')
       .set({ 
         Authorization: `Bearer ${AUTH_KEY}` 
@@ -84,7 +89,7 @@ describe('Test verifications endpoint', () => {
   it('fail POST /verifications: Invalid email ', async () => {
     let invalidPayload = JSON.parse(JSON.stringify(payload)) ;
     invalidPayload.personal_info.email = 'pperino'; 
-    await request(app)
+    await request(api)
       .post('/v1/verifications')
       .set({ 
         Authorization: `Bearer ${AUTH_KEY}` 
@@ -97,7 +102,7 @@ describe('Test verifications endpoint', () => {
   it('fail POST /verifications: Invalid country ', async () => {
     let invalidPayload = JSON.parse(JSON.stringify(payload)) ;
     invalidPayload.personal_info.country = ''; 
-    await request(app)
+    await request(api)
       .post('/v1/verifications')
       .set({ 
         Authorization: `Bearer ${AUTH_KEY}` 
@@ -108,7 +113,7 @@ describe('Test verifications endpoint', () => {
   });
 
   it('success POST to /verifications', async () => {
-    await request(app)
+    await request(api)
       .post('/v1/verifications')
       .set({ 
         Authorization: `Bearer ${AUTH_KEY}` 
@@ -118,3 +123,4 @@ describe('Test verifications endpoint', () => {
       .expect(200);
   });
 });
+

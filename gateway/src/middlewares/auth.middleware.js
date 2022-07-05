@@ -41,6 +41,7 @@ const AuthMiddleware = async (req, res, next) => {
     } else {
       // we change the Req obj to include the decrypted token payload
       req.authorized = payload;
+      req.header.authorized = payload;
     }
     next();
   });

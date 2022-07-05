@@ -1,0 +1,6 @@
+// test common setup for some tests
+const api = 'http://127.0.0.1:4000';
+const AUTH_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2RhdGEiOnsiaWQiOiJiZDRlZGJmYjlkMWU0ZDAyODdlYWVjZmQyMzUzNDEwMC5pZGVudGljb24udGVzdG5ldCIsImVtYWlsIjoibWF6aXRvLnYyKzJAZ21haWwuY29tIiwicGhvbmUiOiJtYXppdG8udjIrMkBnbWFpbC5jb20iLCJ2ZXJpZmllZCI6ZmFsc2V9LCJuZWFyX2FjY291bnRfZGF0YSI6eyJhY2NvdW50X2lkIjpudWxsfSwiaWF0IjoxNjU2OTc3MjAxLCJleHAiOjE2NTcwNjM2MDF9.9bs55jSSjoCO5uj8lrwPjooRDyFYQK4FKcp1xd5Okw0';
+const AUTH_USER = "bd4edbfb9d1e4d0287eaecfd23534100.identicon.testnet";
+
+module.exports = { api, AUTH_KEY, AUTH_USER };

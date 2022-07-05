@@ -1,12 +1,16 @@
+const { Op } = require("sequelize");
 const { VerificationsModel } = require("../models/");
-//const EmailService = require("./email.service");
-//const crypto = require("crypto");
-const uuid = require("uuid");
 
 class VerificationsService {
   constructor() {}
 
-  static async createVerification(uid, subject_id, is_type, personal_info, account) {
+  static async createVerification(
+    uid, 
+    subject_id, 
+    is_type, 
+    personal_info, 
+    account
+  ) {
     const verification = await VerificationsModel.create({
       request_uid: uid,
       account_uid: account.uid,
@@ -20,6 +24,21 @@ class VerificationsService {
     return verification.dataValues;
   }
 
+  static async getVerifications(
+    requester_uid, 
+    states
+  ) {
+    const result = await VerificationsModel.findAll({
+      where: {
+        account_uid: requester_uid,
+        state: { [Op.in]: states }
+      },
+      order: [
+        ['created_at', 'ASC']
+      ],
+    });
+    return result;
+  }
 }
 
 module.exports = VerificationsService;
