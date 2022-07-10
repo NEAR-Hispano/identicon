@@ -41,20 +41,11 @@ export default function CallToActions() {
         justify="center"
         spacing={{ base: 2, lg: 5 }}
         py={5}>
-
-        // Left
         <Action>
-          <Box py={2} px={6}>
+          <Box py={4} px={12}>
             <HStack justifyContent="center">
-                {/* <Image
-                  src="account.svg"
-                  alt="Solicitud"
-                  fallback={<Skeleton />}
-                  maxH="96px" minW="96px"
-                  objectFit="cover"
-                /> */}
             </HStack>
-            <Text fontWeight="500" fontSize="sm">
+            <Text fontWeight="500" fontSize={{ base: 'md', lg: 'sm' }}>
               ¿ No estás registrada/o ?
             </Text>
           </Box>
@@ -62,7 +53,7 @@ export default function CallToActions() {
             bg={useColorModeValue('gray.50', 'gray.700')}
             py={4}
             borderBottomRadius={'xl'}>
-            <Text spacing={3} textAlign="start" px={12}>
+            <Text fontSize={{ base: 'lg', lg: 'md' }} textAlign="start" px={12}>
             Si deseas registrarte para solicitar la fé de vida tuya
             o de tus familiares o vecinos
             </Text>
@@ -73,20 +64,11 @@ export default function CallToActions() {
             </Box>
           </VStack>
         </Action>
-
-        // Center
         <Action>
           <Box py={4} px={12}>
             <HStack justifyContent="center">
-              {/* <Image
-                  src="1F91D.svg"
-                  alt="Lovely Image"
-                  fallback={<Skeleton />}
-                  maxH="96px" minW="96px"
-                  objectFit="cover"
-                /> */}
             </HStack>
-            <Text fontWeight="500" fontSize="sm">
+            <Text fontWeight="500" fontSize={{ base: 'md', lg: 'sm' }}>
               ¿ Ya tienes tu cuenta ?
             </Text>
           </Box>
@@ -94,7 +76,7 @@ export default function CallToActions() {
             bg={useColorModeValue('gray.50', 'gray.700')}
             py={4}
             borderBottomRadius={'xl'}>
-            <Text spacing={3} textAlign="start" px={12}>
+            <Text fontSize={{ base: 'lg', lg: 'md' }} textAlign="start" px={12}>
               Si ya tienes tu cuenta operativa, puedes
             </Text>
             <Box w="80%" pt={7}>
@@ -104,20 +86,11 @@ export default function CallToActions() {
             </Box>
           </VStack>
         </Action>
-
-        // Right
         <Action>
           <Box py={4} px={12}>
             <HStack justifyContent="center">
-              {/* <Image
-                  src="1F9D1-200D-1F4BB.svg"
-                  alt="Lovely Image"
-                  fallback={<Skeleton />}
-                  maxH="96px" minW="96px"
-                  objectFit="cover"
-              /> */}
             </HStack>
-            <Text fontWeight="500" fontSize="sm">
+            <Text fontWeight="500" fontSize={{ base: 'md', lg: 'sm' }}>
               ¿ Eres desarrollador ?
             </Text>
           </Box>
@@ -125,7 +98,7 @@ export default function CallToActions() {
             bg={useColorModeValue('gray.50', 'gray.700')}
             py={4}
             borderBottomRadius={'xl'}>
-            <Text spacing={2} textAlign="start" px={12}>
+            <Text fontSize={{ base: 'lg', lg: 'md' }} textAlign="start" px={12}>
               Si eres un desarrollador y deseas solicitar
               verificaciones desde tu App
             </Text>
@@ -136,7 +109,6 @@ export default function CallToActions() {
             </Box>
           </VStack>
         </Action>
-
       </Stack>
     </Box>
   );

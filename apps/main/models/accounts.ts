@@ -3,7 +3,6 @@ export interface CreateAccountData {
 }
 
 export interface UpdateAccountData {
-    session: AuthSessionData;
     uid: string;
     state?: string;
     type?: string;
