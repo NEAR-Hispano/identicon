@@ -105,13 +105,10 @@ async function createImplicitAccount() {
 
     // create new account using funds from the master account used to create it
     // see: https://docs.near.org/docs/api/naj-quick-reference#connection
+  
     const near = await connect(config);
-    const account = await near.account(MASTER_ACCOUNT_ID);
-    const receipt = await account.createAccount(
-      accountId, // new account name
-      publicKey, // public key for new account
-      INITIAL_BALANCE // initial balance for new account in yoctoNEAR
-    );
+    // const creator = await near.account(MASTER_ACCOUNT_ID);
+    const receipt = await near.createAccount(accountId, publicKey, INITIAL_BALANCE);
     console.info('receipt=', receipt);
 
     return {
@@ -123,6 +120,7 @@ async function createImplicitAccount() {
       receipt, // No errors
     };
   } catch (error) {
+    console.log("near.service createImplicitAccount Err=", error);
     return [null, error];
   }
 }
@@ -146,9 +144,16 @@ async function getContract(signer) {
 }
 
 async function requestVerification(args, signer) {
+  let result;
+  try {
   // @args: { request_uid, subject_id, is_type, payload }
   const contract = await getContract(signer);
-  return (contract)[changeMethods.requestVerification](args, ATTACHED_GAS);
+  result = await (contract)[changeMethods.requestVerification](args, ATTACHED_GAS);
+  } catch(e) {
+    console.log('ERROR request_verification', e)
+    throw e;
+  } 
+  return result;
 }
 
 

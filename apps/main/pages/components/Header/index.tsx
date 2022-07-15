@@ -31,9 +31,6 @@ import { AddIcon, ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { colors, primaryColor } from "../../../constants/colors";
 import { useStore as useAuth } from "../../../stores/authSession";
 import { useRouter } from "next/router";
-import { formatToLocaleNear } from "../../../lib/util";
-import { useLogin, useRecovery, useSignUp } from "../../../hooks/sessions";
-import { useGetAccount } from "../../../hooks/accounts";
 import SignUpModal from "./SignUpModal";
 import { useDisclosure } from "@chakra-ui/hooks";
 import OtpModal from "./OTPVerificationModal";
@@ -151,7 +148,12 @@ const Header: React.FC<ButtonProps> = (props) => {
                   </HStack>
                 </Flex>
 
-                {isSignedIn && <AccountInfo setAccountData={setAccountData} />}
+                {isSignedIn && (
+                  <AccountInfo
+                    accountData={accountData}
+                    setAccountData={setAccountData}
+                  />
+                )}
               </HStack>
               {isSignedIn && (
                 <Flex alignItems={"center"}>
@@ -165,7 +167,7 @@ const Header: React.FC<ButtonProps> = (props) => {
                     py={5}
                     borderRadius="3xl"
                     leftIcon={<AddIcon />}
-                    disabled={accountData && !accountData.verified}
+                    onClick={() => router.push("/request-verification")}
                   >
                     Solicitar una Fé de Vida
                   </Button>
