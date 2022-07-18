@@ -8,12 +8,12 @@ class AccountsService {
 
   static async createAccount(session, near_account) {
     const encryptedKeys = encryptIt({
-      public_key: near_account.account.public_key,
-      private_key: near_account.account.private_key,
+      public_key: near_account.public_key,
+      private_key: near_account.private_key,
     });
 
     const account = await AccountsModel.create({
-      uid: near_account.account.id, // instead of uuid.v4() we use this!
+      uid: near_account.id, // instead of uuid.v4() we use this!
       type: session.type,
       email: session.contact,
       phone: session.contact, // ToDo. manage email/phone store

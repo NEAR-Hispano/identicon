@@ -26,10 +26,10 @@ class MissingParams extends Response {
 }
 
 class UnknownException extends Response {
-  constructor() {
+  constructor(msg = null) {
     super(500, { 
       code: '500',
-      msg: 'Unknown Exception' 
+      msg: msg || 'Unknown Exception' 
     });
   }
 }

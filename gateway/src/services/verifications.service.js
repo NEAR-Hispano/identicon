@@ -1,5 +1,5 @@
-const { Op } = require("sequelize");
-const { VerificationsModel } = require("../models/");
+const { Op } = require('sequelize');
+const { VerificationsModel, sequelize } = require('../models/');
 
 class VerificationsService {
   constructor() {}
@@ -7,8 +7,7 @@ class VerificationsService {
   static async createVerification(
     uid, 
     subject_id, 
-    is_type, 
-    personal_info, 
+    is_type,
     account
   ) {
     const verification = await VerificationsModel.create({
@@ -24,20 +23,55 @@ class VerificationsService {
     return verification.dataValues;
   }
 
-  static async getVerifications(
+  static async updateFields(
+    uid, 
+    fields
+  ) {
+    let verification = await this.getByUid(uid) ;
+    verification.set(fields);
+    await verification.save();
+    return verification;
+  }
+
+  static async getFilteredBy(
     requester_uid, 
     states
   ) {
-    const result = await VerificationsModel.findAll({
-      where: {
-        account_uid: requester_uid,
-        state: { [Op.in]: states }
-      },
-      order: [
-        ['created_at', 'ASC']
-      ],
+    const statesSet = states.map(t => `'${t}'`).join(',');
+    const sql = `
+      SELECT v.*, su.personal_info FROM verifications as v, subjects as su
+      WHERE 
+        v.account_uid ='${requester_uid}'  AND v.state in (${statesSet})
+        AND (v.subject_id = su.subject_id)
+    `;
+    const [results, _] = await sequelize.query(sql);
+    return results.map((t) => {
+      t.personal_info = JSON.parse(t.personal_info);
+      return t;
     });
-    return result;
+  }
+
+  static async getByUid(uid) {
+    const subject = await VerificationsModel.findOne({
+      where: { request_uid: uid }
+    });
+    return subject;
+  }
+
+  static async getByUidWithSubject(
+    uid
+  ) {
+    const sql = `
+      SELECT v.*, su.personal_info FROM verifications as v, subjects as su
+      WHERE 
+        v.request_uid ='${uid}' AND (v.subject_id = su.subject_id)
+    `;
+    const [results, _] = await sequelize.query(sql);
+    if (!results.length) 
+      return null; 
+    let one = results[0];
+    one.personal_info = JSON.parse(one.personal_info);
+    return one;
   }
 }
 

@@ -81,8 +81,8 @@ async function createImplicitAccount() {
    * @example:
    *  [account, receipt] = await createImplictAccount();
    *
-   * @returns: [true, {id, public_key, private_key}, receipt] if success, 
-   *           [false, error] otherwise
+   * @returns: [{id, public_key, private_key}, receipt] if success, 
+   *           [null, error] otherwise
    */
   try {
     // we need to use some MasterAccount to create a new account
@@ -111,14 +111,10 @@ async function createImplicitAccount() {
     const receipt = await near.createAccount(accountId, publicKey, INITIAL_BALANCE);
     console.info('receipt=', receipt);
 
-    return {
-      account: {
-        id: accountId,
-        public_key: publicKey,
-        private_key: privateKey,
-      },
+    return [
+      {id: accountId, public_key: publicKey, private_key: privateKey},
       receipt, // No errors
-    };
+    ];
   } catch (error) {
     console.log("near.service createImplicitAccount Err=", error);
     return [null, error];
@@ -150,7 +146,7 @@ async function requestVerification(args, signer) {
   const contract = await getContract(signer);
   result = await (contract)[changeMethods.requestVerification](args, ATTACHED_GAS);
   } catch(e) {
-    console.log('ERROR request_verification', e)
+    console.log('ERROR request_verification', e);
     throw e;
   } 
   return result;
