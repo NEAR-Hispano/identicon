@@ -44,7 +44,6 @@ const OtpModal = (props: {
   };
 
   const handleComplete = async (value: string) => {
-    // console.log("session_key", data.session);
     const result = await login({
       session_key: data.session,
       passcode: value,
@@ -55,7 +54,6 @@ const OtpModal = (props: {
 
   useEffect(() => {
     if (isLoginSuccess) {
-      console.log('login data', loginData)
       setSession(loginData)
       setisSignedIn(true)
       setSignInAccountId(loginData.id)
@@ -73,12 +71,12 @@ const OtpModal = (props: {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Enter the OTP</ModalHeader>
+        <ModalHeader>One-Time password</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
           <FormControl as="fieldset">
             <Center>
-              <FormLabel>OTP</FormLabel>
+              <FormLabel>Ingresa el código que te enviamos por correo</FormLabel>
               <PinInput
                 otp
                 value={value}

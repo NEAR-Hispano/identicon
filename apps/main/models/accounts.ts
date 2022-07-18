@@ -7,31 +7,32 @@ export interface UpdateAccountData {
     state?: string;
     type?: string;
     verified?: boolean;
-    personal_info: PersonalInforData;
+    personal_info: PersonalInfoData;
 }
 
 export interface SubjectData {
     subject_id: string;
     verfiied: boolean;
-    personal_info: PersonalInforData;
+    personal_info: PersonalInfoData;
 }
 
-export interface PersonalInforData {
+export interface PersonalInfoData {
     full_name: string;
-    birthday: string;
-    age: number;
-    sex: string; // change to gender
+    birthday?: string;  // change to dob (date of birth)
+    age?: number;
+    sex?: string; // change to gender
     country: string;
-    region: string;
-    comune: string;
-    address: string;
+    region?: string;
+    comune?: string;
+    address?: string;
     coordinates?: string;
-    languages: string;
-    email: string;
-    phone:string;
+    languages?: string;
+    email?: string;
+    phone?:string;
     preferred?: string;
     health?: string;
     extras?:string;
+    dni:string;
 }
 export interface OTPData {
     email?: string;

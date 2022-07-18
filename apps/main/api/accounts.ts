@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import { AuthSessionData, UpdateAccountData } from "../models/accounts";
 
@@ -8,7 +7,12 @@ const api = {
   getAccountById: async (session: AuthSessionData) => {
     return axios
       .get(`${baseUrl}/v1/accounts/${session.id}`)
-      .then((response) => response.data);
+      .then((response) => ({
+        ...response.data.dataValues,
+        personal_info: response.data.personal_info
+          ? JSON.parse(response.data.personal_info)
+          : null,
+      }));
   },
   deleteAccount: async (id: string) => {
     return axios
