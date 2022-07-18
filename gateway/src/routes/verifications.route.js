@@ -6,6 +6,7 @@ const { FlattenMiddleware } = require('../middlewares/flatten.middleware');
 const ValidateParamsMiddleware = require('../middlewares/validate.middleware')
 const verificationsController = require('../controllers/verifications.controller');
 
+
 /**
  * POST /verifications
  */
@@ -38,10 +39,11 @@ router.post('/',
   }
 );
 
+
 /**
  * GET /verifications ? requester_uid= & states=
  */
- const getPreconditions = [
+const getPreconditions = [
   check('requester_uid').exists().notEmpty().trim(),
   check('states').exists().notEmpty().isIn(['UN', 'PN', 'ST', 'FI']), 
 ];
@@ -63,6 +65,7 @@ router.get('/',
     next();
   }
 );
+
 
 /**
  * GET /verifications/:uid
@@ -88,6 +91,7 @@ router.get('/:uid',
   }
 );
 
+
 /**
  * PUT /verifications/:uid
  */
@@ -112,6 +116,41 @@ router.put('/:uid',
         subject_id: req.body.subject_id,
         type: req.body.type,
         personal_info: req.body.personal_info,
+        authorized_uid: req.authorized.account_data.id 
+      });
+      res.status(response.status).send(response.body);
+    } catch (error) {
+      res.status(error.statusCode ? error.statusCode : 500).send(error, error.stack);
+    }
+    next();
+  }
+);
+
+
+/**
+ * POST /verifications/:uid/results
+ */
+const postResultsPreconditions = [
+  check('uid').exists().notEmpty().trim(),
+  body('validator_uid').exists().not().isEmpty().trim(),
+  body('type').isIn(['ProofOfLife']), 
+  body('state').isEmail().isIn(['Approved', 'Rejected', 'NotPossible', 'WillNotDo']),
+  body('remarks').exists().trim().escape(),
+  body('files').exists(),
+];
+
+router.post('/:uid/results', 
+  AuthMiddleware,
+  ValidateParamsMiddleware(postResultsPreconditions),
+  async (req, res, next) => {
+    try {
+      const response = await verificationsController.updateResults({
+        request_uid: req.params.uid,
+        validator_uid: req.body.validator_uid,
+        type: req.body.type,
+        state: req.body.state,
+        remarks: req.body.remarks,
+        files: req.body.files || [],
         authorized_uid: req.authorized.account_data.id 
       });
       res.status(response.status).send(response.body);

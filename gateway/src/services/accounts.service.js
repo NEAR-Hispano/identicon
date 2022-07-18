@@ -18,7 +18,7 @@ class AccountsService {
       email: session.contact,
       phone: session.contact, // ToDo. manage email/phone store
       linked_account_uid: null, // this is used only for paying validators
-      subject_id: uuid.v4(),
+      subject_id: uuid.v4(), // TODO: This MUST be NULL
       keys: encryptedKeys,
     });
     return account;
