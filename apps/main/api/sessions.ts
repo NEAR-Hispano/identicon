@@ -5,7 +5,7 @@ import { OTPData, LoginAccountData} from "../models/accounts";
 export const baseUrl = `${process.env.GATEWAY_BASE_URL}`;
 
 const api = {
-  signUp: async (data: OTPData) => {
+    signUp: async (data: OTPData) => {
     return axios
       .post(`${baseUrl}/v1/sessions/signup`, data)
       .then((response) => response.data);
