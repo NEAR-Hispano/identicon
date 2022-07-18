@@ -8,7 +8,7 @@ const {
 } = require("../response");
 const AccountsService = require("../services/accounts.service");
 const SessionsService = require("../services/sessions.service");
-const { createImplicitAccount } = require("../services/near.service");
+const NearService = require("../services/near.service");
 const AuthService = require("../services/auth.service");
 
 class SessionsController {
@@ -67,8 +67,14 @@ class SessionsController {
       );
       
       if (!account) {
-        const nearAccount = await createImplicitAccount();
+        // We create a new NEAR account for this user with public & private keys
+        const [nearAccount, receipt] = await NearService.createImplicitAccount();
+        
+        // Must be stored in our index database with encripted keys
         account = await AccountsService.createAccount(session, nearAccount);
+
+        // If the new account is a Validator, me must register him
+        //const [status, receipt] = await NearService.registerAsValidator(nearAccount);        
       }
       const payload = {
         account_data: {
