@@ -4,7 +4,7 @@ class AuthService {
     constructor() { }
     static generateAccessToken(payload) {
         const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
-            expiresIn: '24h'
+            expiresIn: '8760h'
         });
         console.info({ accessToken: token})
         return token;
