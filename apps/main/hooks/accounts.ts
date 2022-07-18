@@ -1,9 +1,14 @@
-import { useMutation, useQuery } from "react-query";
-import { AuthSessionData, LoginAccountData, OTPData, UpdateAccountData } from "../models/accounts";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  AuthSessionData,
+  LoginAccountData,
+  OTPData,
+  UpdateAccountData,
+} from "../models/accounts";
 import api from "../api";
 
 export const useGetAccount = (session: AuthSessionData) => {
-  const { data, isLoading } = useQuery(
+  return useQuery(
     "acccount",
     () => api.getAccountById(session),
     {
@@ -12,21 +17,28 @@ export const useGetAccount = (session: AuthSessionData) => {
       },
     }
   );
-  return {
-    isLoadinAccount: isLoading,
-    data: data,
-  };
+  // return {
+  //   isLoadingAccount: isLoading,
+  //   data: data,
+  // };
 };
 
 export const useUpdateAccount = (session: AuthSessionData) => {
-    const { mutateAsync, isLoading, isSuccess, data } = useMutation(
-      (params: UpdateAccountData) => api.updateAccount(params),
-      {}
-    );
-    return {
-      updateAccount: mutateAsync,
-      isUpdating: isLoading,
-      isUpdateSuccess: isSuccess,
-      updateData: data 
-    };
+  const queryClient = useQueryClient();
+  const { mutateAsync, isLoading, isSuccess, data } = useMutation(
+    (params: UpdateAccountData) => api.updateAccount(params),
+    {
+      // onSuccess: (dataUpdate) => {
+      //   console.log('dataupdate', dataUpdate)
+      //   queryClient.setQueryData(['acccount'], dataUpdate)
+      // },
+      onSettled: () => queryClient.refetchQueries("account")
+    }
+  );
+  return {
+    updateAccount: mutateAsync,
+    isUpdating: isLoading,
+    isUpdateSuccess: isSuccess,
+    updateData: data,
   };
+};

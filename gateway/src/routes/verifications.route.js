@@ -25,8 +25,10 @@ router.post('/',
   ValidateParamsMiddleware(postPreconditions),
   async (req, res, next) => {
     try {
+      const info = req.body.personal_info;
+      const subject_id = `${info.country}_dni_${info.dni}`.toUpperCase();
       const response = await verificationsController.createVerification({
-        subject_id: req.body.subject_id,
+        subject_id: subject_id,
         type: req.body.type,
         personal_info: req.body.personal_info,
         authorized_uid: req.authorized.account_data.id 

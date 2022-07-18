@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Center,
@@ -17,56 +17,82 @@ import {
   TabPanels,
   Tabs,
   VStack,
+  useToast
 } from "@chakra-ui/react";
 import { colors } from "../../constants/colors";
-import { useFormik } from "formik";
-import { PersonalInforData } from "../../models/accounts";
-import { useUpdateAccount } from "../../hooks/accounts";
-import { useStore } from "../../stores/authSession";
+import { useFormik, Form, Formik } from "formik";
+import { PersonalInfoData } from "../../models/accounts";
+import { useUpdateAccount, useGetAccount } from "../../hooks/accounts";
+import { useStore as useAuth } from "../../stores/authSession";
+import {useRouter} from 'next/router'
 type Props = {
   account_id: string;
 };
 
 const PersonalInfo = (props: Props) => {
+  const route = useRouter();
   const { account_id } = props;
-  const initialValuesSignUp: PersonalInforData = {
-    full_name: "",
-    birthday: "",
-    age: 0,
-    sex: "M",
-    country: "",
-    region: "",
-    comune: "",
-    address: "",
-    coordinates: "",
-    languages: "",
-    phone: "",
-    preferred: "",
-    health: "",
-    extras: "",
-    email: "",
-  };
-  const { session } = useStore();
+const toast = useToast();
+ 
+  const { session } = useAuth();
+  const { data, isLoading } = useGetAccount(session);
   const { updateAccount, isUpdating, isUpdateSuccess, updateData } =
     useUpdateAccount(session);
+    const initialValuesSignUp: PersonalInfoData = {
+      full_name: "",
+      birthday: "",
+      age: 0,
+      sex: "M",
+      country: "",
+      region: "",
+      comune: "",
+      address: "",
+      coordinates: "",
+      languages: "",
+      phone: "",
+      preferred: "",
+      health: "",
+      extras: "",
+      email: "",
+      dni:""
+    };
   const form = useFormik({
     initialValues: initialValuesSignUp,
     validateOnMount: true,
     enableReinitialize: true,
     validateOnBlur: true,
     validateOnChange: true,
-    onSubmit: async (values: PersonalInforData) => {
+    onSubmit: async (values: PersonalInfoData) => {
       console.log("calling update account");
       const result = await updateAccount({
-        uid: account_id,
+        uid: session.id,
         personal_info: values,
       });
       console.log("update result:", result);
     },
   });
 
+  useEffect(()=> {
+    if (!isLoading && data && data.personal_info) {
+      form.setValues(data.personal_info);
+    }
+  }, [data]);
+  
+  useEffect(() => {
+    if (isUpdateSuccess) {
+      toast({
+        title: "Información personal actualizada",
+        status: "success",
+        duration: 9000,
+        position: "top-right",
+        isClosable: true,
+      });
+    }
+  }, [isUpdateSuccess])
+
   return (
     <>
+       <Stack maxWidth={600} margin="auto" spacing={5} marginTop={5}>
       <FormControl>
         <FormLabel>Nombre Completo</FormLabel>
         <Input
@@ -78,7 +104,7 @@ const PersonalInfo = (props: Props) => {
           onBlur={form.handleBlur}
           onChange={form.handleChange}
         />
-        <FormLabel>Fecha de Nacimiento</FormLabel>
+        {/* <FormLabel>Fecha de Nacimiento</FormLabel>
         <Input
           id="birthday"
           name="birthday"
@@ -87,7 +113,7 @@ const PersonalInfo = (props: Props) => {
           onPaste={form.handleChange}
           onBlur={form.handleBlur}
           onChange={form.handleChange}
-        />
+        /> */}
         {/* <FormLabel>Gender</FormLabel>
       <RadioGroup
         defaultValue="M"
@@ -111,7 +137,7 @@ const PersonalInfo = (props: Props) => {
           onBlur={form.handleBlur}
           onChange={form.handleChange}
         />
-        <FormLabel>Provincia</FormLabel>
+        {/* <FormLabel>Provincia</FormLabel>
         <Input
           id="region"
           name="region"
@@ -140,16 +166,34 @@ const PersonalInfo = (props: Props) => {
           onPaste={form.handleChange}
           onBlur={form.handleBlur}
           onChange={form.handleChange}
+        /> */}
+         <FormLabel>DNI</FormLabel>
+        <Input
+          id="dni"
+          name="dni"
+          placeholder="Número"
+          value={form.values.dni}
+          onPaste={form.handleChange}
+          onBlur={form.handleBlur}
+          onChange={form.handleChange}
         />
       </FormControl>
-
+      <FormControl>
       <Button
-        colorScheme="blue"
+        mr={3}
+        onClick={() => route.push("/")}
+      >
+        Volver
+      </Button>
+      <Button
+        colorScheme="indigo"
         mr={3}
         onClick={(e: any) => form.handleSubmit(e)}
       >
         Guardar
       </Button>
+      </FormControl>
+      </Stack>
     </>
   );
 };
