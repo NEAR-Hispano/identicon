@@ -6,6 +6,8 @@ const {
   GenericError,
 } = require("../response");
 const accountsService = require("../services/accounts.service");
+const { getAccountOrError } = require('./controllers.helpers');
+const nearService = require('../services/near.service');
 
 class AccountsController {
   constructor() {}
@@ -46,6 +48,25 @@ class AccountsController {
       const account = await accountsService.getAccountById(id);
       if (!account) return new NotFoundError("Account not found");
       const response = await accountsService.deleteAccount(id);
+      return new Success({ id: response });
+    } catch (err) {
+      return new GenericError(err);
+    }
+  }
+
+  static async registerAccountAsValidator({id, can_do, authorized_uid}) {
+    try {
+      if (!id) return new MissingParams("Account Id is required");
+      const [account, err] = await getAccountOrError(authorized_uid);
+      if (err) 
+        return err;
+
+      // call the Contract
+      const response = await nearService.registerAsValidator(
+        { can_do: can_do },
+        account
+      );
+
       return new Success({ id: response });
     } catch (err) {
       return new GenericError(err);

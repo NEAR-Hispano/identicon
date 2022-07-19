@@ -73,9 +73,11 @@ class SessionsController {
         // Must be stored in our index database with encripted keys
         account = await AccountsService.createAccount(session, nearAccount);
 
-        // If the new account is a Validator, me must register him
-        //const [status, receipt] = await NearService.registerAsValidator(nearAccount);        
+        // If the new account is a Validator, me must register him 
+        // and indicate which types of validations can perform
+        //await NearService.registerAsValidator({can_do: ['ProofOfLife']}, account);        
       }
+
       const payload = {
         account_data: {
           id: account.uid,
