@@ -22,7 +22,7 @@ class VerificationsController {
     authorized_uid 
   }) {
     try {
-      const { account, err } = await getAccountOrError(authorized_uid);
+      const [account, err] = await getAccountOrError(authorized_uid);
       if (err) 
         return err;
 
@@ -66,7 +66,7 @@ class VerificationsController {
     authorized_uid 
   }) {
     try {
-      const { account, err } = await getAccountOrError(authorized_uid);
+      const [account, err] = await getAccountOrError(authorized_uid);
       if (err) 
         return err;
 
@@ -90,7 +90,7 @@ class VerificationsController {
     authorized_uid 
   }) {
     try {
-      const { account, err } = await getAccountOrError(authorized_uid);
+      const [account, err] = await getAccountOrError(authorized_uid);
       if (err) 
         return err;
 
@@ -114,7 +114,7 @@ class VerificationsController {
     authorized_uid 
   }) {
     try {
-      const { account, err } = await getAccountOrError(authorized_uid);
+      const [account, err] = await getAccountOrError(authorized_uid);
       if (err) 
         return err;
   

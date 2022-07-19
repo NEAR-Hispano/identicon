@@ -15,16 +15,15 @@ Implicit accounts work similarly to Bitcoin/Ethereum accounts.
 */
 const nearAPI = require('near-api-js');
 const Uuid = require('uuid');
-const { KeyPair, utils, connect, keyStores } = nearAPI;
-const {viewMethods, changeMethods} = require('./contractMethods');
-const { decryptIt } = require("../utils/cypher.utils");
+const { KeyPair, connect } = nearAPI;
+const { decryptIt } = require('../utils/cypher.utils');
 
-const 
+const
   NETWORK_ID = process.env.NETWORK_ID,
   MASTER_ACCOUNT_ID = process.env.MASTER_ACCOUNT_ID,
   MASTER_PRIVATE_KEY = process.env.MASTER_PRIVATE_KEY,
   CONTRACT_ID = process.env.CONTRACT_ID,
-  INITIAL_BALANCE = '200_000_000_000_000_000_000_000', 
+  INITIAL_BALANCE = '200000000000000000000_000',
   ATTACHED_GAS = '300000000000000';
 
 const Config = {
@@ -58,7 +57,10 @@ async function getConfig(accountId, privateKey) {
   // see: https://docs.near.org/docs/api/naj-quick-reference#key-store
   // creates keyStore from a private key string
   // you can define your key here or use an environment variable
-  const { keyStores, KeyPair } = nearAPI;
+  const {
+    keyStores,
+    KeyPair
+  } = nearAPI;
   const keyStore = new keyStores.InMemoryKeyStore();
 
   // creates a public / private key pair using the provided private key
@@ -68,7 +70,7 @@ async function getConfig(accountId, privateKey) {
   // adds the keyPair you created to keyStore
   await keyStore.setKey(NETWORK_ID, accountId, keyPair);
   config.keyStore = keyStore;
-
+  console.log('keyStore', config.keyStore);
   return config;
 }
 
@@ -85,38 +87,93 @@ async function createImplicitAccount() {
    *           [null, error] otherwise
    */
   try {
+    const { keyStores, KeyPair } = nearAPI;
+
     // we need to use some MasterAccount to create a new account
     const config = await getConfig(MASTER_ACCOUNT_ID, MASTER_PRIVATE_KEY);
-
-    // create the KeyPair for the implicit account
-    // see: https://github.com/near/near-cli/blob/master/commands/generate-key.js
-    const keyPair = KeyPair.fromRandom('ed25519');
+/*
+    const { keyStores, KeyPair, BN } = nearAPI;
+    const myKeyStore = new keyStores.InMemoryKeyStore();
+    const PRIVATE_KEY = MASTER_PRIVATE_KEY;
+    // creates a public / private key pair using the provided private key
+    const keyPair = KeyPair.fromString(MASTER_PRIVATE_KEY);
+    // adds the keyPair you created to keyStore
+    await myKeyStore.setKey("testnet", MASTER_ACCOUNT_ID, keyPair);    
     const publicKey = keyPair.publicKey.toString();
     const privateKey = keyPair.secretKey.toString();
+    console.log("KEYPAIR=",keyPair, "pub=", publicKey, "prv=", privateKey);
+
+    const { connect } = nearAPI;
+    const connectionConfig = {
+      networkId: "testnet",
+      keyStore: myKeyStore, // first create a key store 
+      nodeUrl: "https://rpc.testnet.near.org",
+      walletUrl: "https://wallet.testnet.near.org",
+      helperUrl: "https://helper.testnet.near.org",
+      explorerUrl: "https://explorer.testnet.near.org",
+    };
+    const nearConnection = await connect(connectionConfig);
+
+    // create a new account using funds from the account used to create it.
+    const newAccountId = "maz0x6."+MASTER_ACCOUNT_ID;
+    const masterAccount = await nearConnection.account(MASTER_ACCOUNT_ID);
+    let receipt = await masterAccount.createAccount(
+      newAccountId, // new account name
+      publicKey, // public key for new account
+      INITIAL_BALANCE // initial balance for new account in yoctoNEAR
+    );
+
+    console.log("DONE=", {
+      id: newAccountId,
+      public_key: publicKey,
+      private_key: privateKey
+    }, "\n", receipt);
+*/
+        
+    // create the KeyPair for the implicit account
+    // see: https://github.com/near/near-cli/blob/master/commands/generate-key.js
+    const keyPair = KeyPair.fromString(MASTER_PRIVATE_KEY);
+    const publicKey = keyPair.publicKey.toString();
+    const privateKey = keyPair.secretKey.toString();
+    console.log('KEYPAIR=',keyPair, 'pub=', publicKey, 'prv=', privateKey);
+
+    // adds the keyPair you created to keyStore
+    const myKeyStore = new keyStores.InMemoryKeyStore();
+    await myKeyStore.setKey(NETWORK_ID, MASTER_ACCOUNT_ID, keyPair);    
 
     // create the new accountId using UUIDs, because the implicit way:
     // does not seem to work for us ???
     // ??? const accountId = utils.PublicKey.fromString(publicKey).data.hexSlice();
     const uid = Uuid.v4().replace(new RegExp('-', 'g'), '');
-    const accountId = `${uid}.${MASTER_ACCOUNT_ID}`;
+    const newAccountId = `${uid}.${MASTER_ACCOUNT_ID}`;
     console.info(
-      `createImplicitAccount id='${accountId}' initial=${INITIAL_BALANCE}`
+      `createImplicitAccount id='${newAccountId}' initial=${INITIAL_BALANCE}`
     );
 
     // create new account using funds from the master account used to create it
     // see: https://docs.near.org/docs/api/naj-quick-reference#connection
-  
     const near = await connect(config);
-    // const creator = await near.account(MASTER_ACCOUNT_ID);
-    const receipt = await near.createAccount(accountId, publicKey, INITIAL_BALANCE);
-    console.info('receipt=', receipt);
+    const masterAccount = await near.account(MASTER_ACCOUNT_ID);
+    const receipt = await masterAccount.createAccount(
+      newAccountId, // new account name
+      publicKey, // public key for new account
+      INITIAL_BALANCE // initial balance for new account in yoctoNEAR
+    );
+    console.info({
+      id: newAccountId,
+      public_key: publicKey,
+      private_key: privateKey
+    }, '\nreceipt=', receipt);
 
-    return [
-      {id: accountId, public_key: publicKey, private_key: privateKey},
+    return [{
+        id: newAccountId,
+        public_key: publicKey,
+        private_key: privateKey
+      },
       receipt, // No errors
     ];
   } catch (error) {
-    console.log("near.service createImplicitAccount Err=", error);
+    console.log('near.service createImplicitAccount Err=', error);
     return [null, error];
   }
 }
@@ -125,90 +182,106 @@ async function createImplicitAccount() {
 async function getContract(signer) {
   // @signer: (optional) is an Account object (defined in models)
   // @returns: the initialized contract with predefined methods
-  const signerId = signer 
-    ? signer.uid : MASTER_ACCOUNT_ID;
-  const privateKey = signer 
-    ? decryptIt(signer.keys).private_key : MASTER_PRIVATE_KEY;
+  /*
+  const { connect, keyStores, utils, Contract } = nearAPI;
+  
+  const prk = "5yqbGt8769deysJ1vtdHxvR5UwidaeSsH5chBNU8NgpXTVBAH11SZ3NeXYLXBZ3htRj2a9qaCCegB4NWXJ3f3K4M";
+  const accid = "8809a03076ee40f3b499c8bc3f0fef87.identicon.testnet";
+  const networkId = 'testnet';
+
+  const keyPair = new utils.key_pair.KeyPairEd25519(prk);
+  const keyStore = new keyStores.InMemoryKeyStore();
+  await keyStore.setKey(networkId, accid, keyPair);
+
+  const near = await connect({
+    keyStore,
+    networkId,
+    nodeUrl: "https://rpc.testnet.near.org",
+  });
+  
+  const account = await near.account(accid);
+  const contract = new Contract(
+    account,
+    'c1.identicon.testnet',
+    {
+      viewMethods: [
+        'get_assigned_validations'
+      ],
+      changeMethods: [
+        'request_verification',
+        'cancel_verification',
+        'register_as_validator',
+        'unregister_as_validator',
+        'assign_validators'
+      ]
+    }
+  );
+  return contract;
+  */  
+  const signerId = signer ? signer.uid : MASTER_ACCOUNT_ID;
+  const keyPair = decryptIt(signer.keys);
+  const privateKey = signer ? keyPair.private_key : MASTER_PRIVATE_KEY;
+  const publicKey = signer ? keyPair.public_key : '0x0';
+  console.log('getContract signerId=', signerId);
+  console.log('getContract keys prv=', privateKey, 'pub=', publicKey);
+
   const config = await getConfig(signerId, privateKey);
   const near = await connect(config);
   const account = await near.account(signerId);
-  return new nearAPI.Contract(account, CONTRACT_ID, {
-    viewMethods: Object.values(viewMethods),
-    changeMethods: Object.values(changeMethods),
-    sender: account, // account object to initialize and sign transactions.
-  });
+  console.log('getContract config.keyStore', config.keyStore);
+
+  try {
+    const contract = new nearAPI.Contract(
+      account, 
+      CONTRACT_ID, 
+      {
+        viewMethods: [
+          'get_assigned_validations'
+        ],
+        changeMethods: [
+          'request_verification',
+          'cancel_verification',
+          'register_as_validator',
+          'unregister_as_validator',
+          'assign_validators'
+        ],
+        // sender: account, // account object to initialize and sign transactions.
+      }
+    );
+    return contract;
+  }
+  catch (err) {
+    console.log('getContract ERR=', err);
+    return null;
+  }
 }
+
 
 async function requestVerification(args, signer) {
   let result;
   try {
-  // @args: { request_uid, subject_id, is_type, payload }
-  const contract = await getContract(signer);
-  result = await (contract)[changeMethods.requestVerification](args, ATTACHED_GAS);
-  } catch(e) {
+    // @args: { request_uid, subject_id, is_type, payload }
+    const contract = await getContract(signer);
+    result = await contract.request_verification(args, ATTACHED_GAS);
+  } catch (e) {
     console.log('ERROR request_verification', e);
     throw e;
-  } 
+  }
   return result;
 }
 
 
-async function callContract(method, args, signerId, privateKey) {
-  /**
-   * Call a contract method
-   * 
-   * @method: the name of the method to call in the CONTRACT_ID
-   * @args: obj with arg name and value - empty object if no args required
-   * @signerId: account Id of caller and signer, ex: "maz.testnet"
-   * @privatekey: private key of signer account, ex: "29z...rLG"
-   * 
-   * @exampĺe:
-   * let { result, error } = callContract(
-   *   "request_verification", { 
-   *      "uid": "ABCD1234607", 
-   *      "is_type": "ProofOfLife", 
-   *      "subject_id": "AR_DNI_12345678907", 
-   *      "payload": "Simulated encrypted PAYLOAD"          
-   *   }, 
-   *   "maz.testnet", "29z...rLG"
-   * );
-   * 
-   * @returns: { result, error } with result if success, error otherwise
-   */
+async function registerAsValidator(args, signer) {
+  let result;
   try {
-    if (!Object.values(viewMethods).contains(method) ||
-        !Object.values(changeMethods).contains(method))
-      throw `Invalid method in '${CONTRACT_ID}'.`;
-
-    const config = await getConfig(signerId, privateKey);
-    const near = await connect(config);
-    const signer = await near.account(signerId);
-
-    const contract = new nearAPI.Contract(
-      signer, // the account object that is connecting
-      CONTRACT_ID, // name of contract we're connecting to
-      {
-        // view methods do not change state but usually return a value
-        viewMethods: Object.values(viewMethods),
-        // change methods modify state
-        changeMethods: Object.values(changeMethods),
-        sender: signer, // account object to initialize and sign transactions.
-      }
-    );
-
-    let ret = await contract[method](
-      args, // the args obj: name and value - empty object if no args required
-      ATTACHED_GAS // optional attached gas
-      // "1000000000000000000000000" // attached deposit in yoctoNEAR (optional)
-    );
-
-    console.info(`called ${method}(${JSON.stringify(args)}):`, ret);
-    return { result: ret };
-  } 
-  catch (error) {
-    console.log(`called ${method}(${JSON.stringify(args)}): ${error}`);
-    return { error: error };
+    args = args || { can_do: ['Remote'] };
+    const contract = await getContract(signer);
+    result = await contract.register_as_validator(args, ATTACHED_GAS);
+  } catch (e) {
+    console.log('ERROR register_as_validator', e);
+    throw e;
   }
+  return result;
 }
 
 
@@ -216,5 +289,5 @@ module.exports = {
   getConfig,
   createImplicitAccount,
   requestVerification,
-  callContract
+  registerAsValidator
 };

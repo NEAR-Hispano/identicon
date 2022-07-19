@@ -39,5 +39,22 @@ router.delete('/:id', AuthMiddleware, async (req, res, next) => {
     next();
 });
 
+router.post('/validators', 
+  AuthMiddleware, 
+  async (req, res, next) => {
+  const account = req.body;
+  try {
+      const response = await accountsController.registerAccountAsValidator({
+        id: req.authorized.account_data.id,
+        can_do: req.body.can_do,
+        authorized_uid: req.authorized.account_data.id 
+      });
+      res.status(response.status).send(response.body);
+  } catch (error) {
+      res.status(error?.statusCode ? error.statusCode : 500).send(error, error.stack);
+  }
+  next();
+});
+
 
 module.exports = router;
