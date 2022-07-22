@@ -32,7 +32,7 @@ type Props = {
 const PersonalInfo = (props: Props) => {
   const route = useRouter();
   const { account_id } = props;
-const toast = useToast();
+  const toast = useToast();
  
   const { session } = useAuth();
   const { data, isLoading } = useGetAccount(session);
@@ -83,10 +83,13 @@ const toast = useToast();
       toast({
         title: "Información personal actualizada",
         status: "success",
-        duration: 9000,
+        duration: 3000,
         position: "top-right",
         isClosable: true,
       });
+      setTimeout(() => {
+        route.push("/dashboard");
+      }, 3000);
     }
   }, [isUpdateSuccess])
 
@@ -181,14 +184,14 @@ const toast = useToast();
       <FormControl>
       <Button
         mr={3}
-        onClick={() => route.push("/")}
+        onClick={() => route.push("/dashboard")}
       >
         Volver
       </Button>
       <Button
         colorScheme="indigo"
         mr={3}
-        onClick={(e: any) => form.handleSubmit(e)}
+        onClick={(e: any) => { form.handleSubmit(e); }}
       >
         Guardar
       </Button>

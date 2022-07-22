@@ -85,7 +85,7 @@ const RequestVerification = (props: Props) => {
 
   return (
     <>
-      <Stack maxWidth={600} margin="auto" spacing={5} marginTop={5}>
+      <Stack maxWidth="96%" margin="auto" spacing={5} marginTop={5} p="4" border="1px solid red">
         <FormControl
           isInvalid={
             !!form.values.requestFor &&

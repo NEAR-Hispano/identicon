@@ -134,7 +134,7 @@ const Header: React.FC<ButtonProps> = (props) => {
                   <HStack spacing={2} alignItems={"center"}>
                     <Image
                       objectFit="cover"
-                      src="logo.png"
+                      src="images/logo.png"
                       alt="logo"
                       boxSize={"64px"}
                     />

@@ -62,7 +62,7 @@ const Hero = (props: HeroProps) => {
         w={{ base: "100%", sm: "65%", md: "55%" }}
       >
         <Image
-          src="man-woman-beach.jpg"
+          src="images/man-woman-beach.jpg"
           boxSize="100%"
           rounded="1rem"
           shadow="2xl"
