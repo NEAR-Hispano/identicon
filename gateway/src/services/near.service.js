@@ -91,44 +91,6 @@ async function createImplicitAccount() {
 
     // we need to use some MasterAccount to create a new account
     const config = await getConfig(MASTER_ACCOUNT_ID, MASTER_PRIVATE_KEY);
-/*
-    const { keyStores, KeyPair, BN } = nearAPI;
-    const myKeyStore = new keyStores.InMemoryKeyStore();
-    const PRIVATE_KEY = MASTER_PRIVATE_KEY;
-    // creates a public / private key pair using the provided private key
-    const keyPair = KeyPair.fromString(MASTER_PRIVATE_KEY);
-    // adds the keyPair you created to keyStore
-    await myKeyStore.setKey("testnet", MASTER_ACCOUNT_ID, keyPair);    
-    const publicKey = keyPair.publicKey.toString();
-    const privateKey = keyPair.secretKey.toString();
-    console.log("KEYPAIR=",keyPair, "pub=", publicKey, "prv=", privateKey);
-
-    const { connect } = nearAPI;
-    const connectionConfig = {
-      networkId: "testnet",
-      keyStore: myKeyStore, // first create a key store 
-      nodeUrl: "https://rpc.testnet.near.org",
-      walletUrl: "https://wallet.testnet.near.org",
-      helperUrl: "https://helper.testnet.near.org",
-      explorerUrl: "https://explorer.testnet.near.org",
-    };
-    const nearConnection = await connect(connectionConfig);
-
-    // create a new account using funds from the account used to create it.
-    const newAccountId = "maz0x6."+MASTER_ACCOUNT_ID;
-    const masterAccount = await nearConnection.account(MASTER_ACCOUNT_ID);
-    let receipt = await masterAccount.createAccount(
-      newAccountId, // new account name
-      publicKey, // public key for new account
-      INITIAL_BALANCE // initial balance for new account in yoctoNEAR
-    );
-
-    console.log("DONE=", {
-      id: newAccountId,
-      public_key: publicKey,
-      private_key: privateKey
-    }, "\n", receipt);
-*/
         
     // create the KeyPair for the implicit account
     // see: https://github.com/near/near-cli/blob/master/commands/generate-key.js
@@ -224,10 +186,10 @@ async function getContract(signer) {
 async function requestVerification(args, signer) {
   let result;
   try {
-    // @args: { request_uid, subject_id, is_type, payload }
-    const contract = await getContract(signer);
-    result = await contract.request_verification(args, ATTACHED_GAS);
-  } catch (e) {
+  // @args: { request_uid, subject_id, is_type, payload }
+  const contract = await getContract(signer);
+  result = await (contract)[changeMethods.requestVerification](args, ATTACHED_GAS);
+  } catch(e) {
     console.log('ERROR request_verification', e);
     throw e;
   }

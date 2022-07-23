@@ -1,7 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import PageLoading from "../components/PageLoading";
+import PageLoading from "../../components/PageLoading";
 
 export default function ProjectDetailsContainer() {
   const router = useRouter();
