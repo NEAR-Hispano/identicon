@@ -182,42 +182,6 @@ async function createImplicitAccount() {
 async function getContract(signer) {
   // @signer: (optional) is an Account object (defined in models)
   // @returns: the initialized contract with predefined methods
-  /*
-  const { connect, keyStores, utils, Contract } = nearAPI;
-  
-  const prk = "5yqbGt8769deysJ1vtdHxvR5UwidaeSsH5chBNU8NgpXTVBAH11SZ3NeXYLXBZ3htRj2a9qaCCegB4NWXJ3f3K4M";
-  const accid = "8809a03076ee40f3b499c8bc3f0fef87.identicon.testnet";
-  const networkId = 'testnet';
-
-  const keyPair = new utils.key_pair.KeyPairEd25519(prk);
-  const keyStore = new keyStores.InMemoryKeyStore();
-  await keyStore.setKey(networkId, accid, keyPair);
-
-  const near = await connect({
-    keyStore,
-    networkId,
-    nodeUrl: "https://rpc.testnet.near.org",
-  });
-  
-  const account = await near.account(accid);
-  const contract = new Contract(
-    account,
-    'c1.identicon.testnet',
-    {
-      viewMethods: [
-        'get_assigned_validations'
-      ],
-      changeMethods: [
-        'request_verification',
-        'cancel_verification',
-        'register_as_validator',
-        'unregister_as_validator',
-        'assign_validators'
-      ]
-    }
-  );
-  return contract;
-  */  
   const signerId = signer ? signer.uid : MASTER_ACCOUNT_ID;
   const keyPair = decryptIt(signer.keys);
   const privateKey = signer ? keyPair.private_key : MASTER_PRIVATE_KEY;
