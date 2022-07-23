@@ -29,9 +29,18 @@ export default function DashboardContainer(props: Props) {
         {/* <div>Account Data 
           <pre>{ JSON.stringify(data, null,2) }</pre>
         </div> */}
-
-        <Heading size="xs" mt="md">Lista de verificaciones</Heading>
-        <VerificationsList />
+        if (data.type === 'RQ' || data.type === 'EX') {
+          <>
+            <Heading size="xs" mt="md">Lista de verificaciones</Heading>
+            <VerificationsList />
+          </>
+        }
+        if (data.type === 'VL') {
+          <>
+            <Heading size="xs" mt="md">Lista de verificaciones</Heading>
+            <VerificationsList />
+          </>
+        }
       </Container>
 
     </>
