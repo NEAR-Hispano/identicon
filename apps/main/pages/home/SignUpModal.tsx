@@ -14,18 +14,20 @@ import {
   ModalOverlay,
   Flex,
   Center,
+  Stack,
   Heading,
   useBreakpointValue,
-  Stack,
+  Box,
+  useColorModeValue,
+  Text,
   HStack,
-  Text
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import signUpSchemaValidation from "../../../validation/signUpSchemaValidation";
-import { OTPData } from "../../../models/accounts";
-import { useLogin, useRecovery } from "../../../hooks/sessions";
+import signUpSchemaValidation from "../../validation/signUpSchemaValidation";
+import { OTPData } from "../../models/accounts";
+import { useSignUp } from "../../hooks/sessions";
 
-const LoginModal = (props: {
+const SignUpModal = (props: {
   onSuccess: any;
   isOpen: boolean;
   onOpen: any;
@@ -33,12 +35,13 @@ const LoginModal = (props: {
 }) => {
   const { onSuccess, isOpen, onOpen, onClose } = props;
   const {
-    recovery,
-    isRecovering,
-    isRecoverySuccess,
-    recoveryData,
-    isRecoveryError,
-  } = useRecovery();
+    signUp,
+    isSigningUp,
+    isSignUpSuccess,
+    signUpData,
+    isSignUpError,
+    signUpError,
+  } = useSignUp();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const initialValuesSignUp: OTPData = {
@@ -52,15 +55,15 @@ const LoginModal = (props: {
     validateOnBlur: true,
     validateOnChange: true,
     onSubmit: async (values: any) => {
-      recovery(values);
+      signUp(values);
     },
   });
 
   useEffect(() => {
-    if (isRecoverySuccess) {
-      onSuccess(recoveryData);
+    if (isSignUpSuccess) {
+      onSuccess(signUpData);
     }
-  }, [isRecoverySuccess]);
+  }, [isSignUpSuccess]);
 
   return (
     <Modal
@@ -75,14 +78,14 @@ const LoginModal = (props: {
           {" "}
           <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
             <Heading size={useBreakpointValue({ base: "xs", md: "sm" })}>
-              Inicia sesión
+              Crea tu cuenta
             </Heading>
           </Stack>
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
-          <Stack>
-            <FormControl>
+          <FormControl>
+            <Stack>
               <FormLabel>Email</FormLabel>
               <Center>
                 <Input
@@ -101,14 +104,20 @@ const LoginModal = (props: {
                 !!form.errors.email && (
                   <p className="error-text"> {form.errors.email}</p>
                 )}
-            </FormControl>
-          </Stack>
-          <HStack spacing="1" mt={4} justify="center">
-            <Text fontSize="md" color="muted">No tienes una cuenta?</Text>
+            </Stack>
+            <Stack spacing="1" mt={4} justify="center">
+              <Text fontSize="md" color="muted">
+                A continuación te enviaremos un código
+                numérico que deberás ingresar para completar el registro
+              </Text>
+            </Stack>
+          </FormControl>
+          {/* <Stack spacing="1" justify="center">
+          
             <Button variant="link" colorScheme="blue">
-              Crea tu cuenta
+              Sign up
             </Button>
-          </HStack>
+          </Stack> */}
         </ModalBody>
 
         <ModalFooter>
@@ -130,4 +139,4 @@ const LoginModal = (props: {
   );
 };
 
-export default LoginModal;
+export default SignUpModal;

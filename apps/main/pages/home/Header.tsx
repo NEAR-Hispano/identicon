@@ -28,14 +28,13 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { AddIcon, ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
-import { colors, primaryColor } from "../../../constants/colors";
-import { useStore as useAuth } from "../../../stores/authSession";
+import { useDisclosure } from "@chakra-ui/hooks";
+import { colors, primaryColor } from "../../constants/colors";
+import { useStore as useAuth } from "../../stores/authSession";
 import { useRouter } from "next/router";
 import SignUpModal from "./SignUpModal";
-import { useDisclosure } from "@chakra-ui/hooks";
 import OtpModal from "./OTPVerificationModal";
 import LoginModal from "./LoginModal";
-import AccountInfo from "./AccountInfo";
 
 const Header: React.FC<ButtonProps> = (props) => {
   const [signInAccountId, setSignInAccountId] = useState("");
@@ -136,92 +135,42 @@ const Header: React.FC<ButtonProps> = (props) => {
                       objectFit="cover"
                       src="images/logo.png"
                       alt="logo"
-                      boxSize={"64px"}
+                      boxSize={"48px"}
                     />
 
                     <Box>
-                      <Text fontSize="2xl" color="indigo.600">
+                      <Text fontSize="xl" fontWeight="bold" color="indigo.600">
                         Identicon
                       </Text>
-                      <Text fontSize="sm">Uniendo tu vida digital y real</Text>
+                      <Text fontSize="xs">Uniendo tu vida digital y real</Text>
                     </Box>
                   </HStack>
                 </Flex>
-
-                {isSignedIn && (
-                  <AccountInfo
-                    accountData={accountData}
-                    setAccountData={setAccountData}
-                  />
-                )}
               </HStack>
-              {isSignedIn && (
-                <Flex alignItems={"center"}>
+
+              <HStack h={16} alignItems={"center"} justifyContent="flex-end">
+                <Box>
                   <Button
                     variant={"solid"}
-                    colorScheme={"green"}
-                    size={"sm"}
-                    mr={4}
-                    pl="1rem"
-                    pr="1.25rem"
-                    py={5}
-                    borderRadius="3xl"
-                    leftIcon={<AddIcon />}
-                    onClick={() => router.push("/request-verification")}
+                    colorScheme={"indigo"}
+                    borderRadius="xl"
+                    onClick={onOpenSignUp}
                   >
-                    Solicitar una Fé de Vida
+                    Crear una cuenta
                   </Button>
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rounded={"full"}
-                      variant={"link"}
-                      cursor={"pointer"}
-                      minW={0}
-                    >
-                      <Avatar
-                        size={"sm"}
-                        src={
-                          "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                        }
-                      />
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem onClick={() => router.push("/personal-info")}>
-                        Mis datos personales
-                      </MenuItem>
-                      <MenuItem>Preferencias</MenuItem>
-                      <MenuDivider />
-                      <MenuItem onClick={logout}>Salir </MenuItem>
-                    </MenuList>
-                  </Menu>
-                </Flex>
-              )}
-              {!isSignedIn && (
-                <HStack h={16} alignItems={"center"} justifyContent="flex-end">
-                  <Box>
-                    <Button
-                      variant={"solid"}
-                      colorScheme={"indigo"}
-                      borderRadius="xl"
-                      onClick={onOpenSignUp}
-                    >
-                      Crear una cuenta
-                    </Button>
-                  </Box>
-                  <Spacer />
-                  <Box>
-                    <Button
-                      borderRadius="xl"
-                      borderColor="gray.300"
-                      variant="outline"
-                      onClick={onOpenLogin}
-                    >
-                      Inicia sesión
-                    </Button>
-                  </Box>
-                </HStack>
-              )}
+                </Box>
+                <Spacer />
+                <Box>
+                  <Button
+                    borderRadius="xl"
+                    borderColor="gray.300"
+                    variant="outline"
+                    onClick={onOpenLogin}
+                  >
+                    Inicia sesión
+                  </Button>
+                </Box>
+              </HStack>
             </Flex>
           </Container>
         </Box>

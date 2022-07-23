@@ -18,11 +18,11 @@ import {
   PinInputField,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import signUpSchemaValidation from "../../../validation/signUpSchemaValidation";
-import { OTPData } from "../../../models/accounts";
-import { useStore } from "../../../stores/authSession";
+import signUpSchemaValidation from "../../validation/signUpSchemaValidation";
+import { OTPData } from "../../models/accounts";
+import { useStore } from "../../stores/authSession";
 import { useRouter } from 'next/router'
-import { useLogin } from "../../../hooks/sessions";
+import { useLogin } from "../../hooks/sessions";
 const OtpModal = (props: {
   data: any;
   setisSignedIn: any;

@@ -19,6 +19,12 @@ const api = {
       }})
       .then((response) => response.data);
   },
+
+  getSingleVerification: async (id) => {
+    return axios
+      .get(`${baseUrl}/v1/verifications/${id}`)
+      .then((response) => response.data);
+  },
 };
 
 export default api;

@@ -1,5 +1,6 @@
 
 import React, { useEffect } from "react";
+import Header from "./Header";
 import Hero from "./Hero";
 import CallToActions from "./CallToActions";
 import { useStore as useAuth } from "../../stores/authSession";
@@ -14,11 +15,17 @@ const Home = (props: Props) => {
   const { session } = useAuth();
 
   useEffect(() => {
-    if (session && session.id != "") route.push("/dashboard");
+    if (session && session.id != "") {
+      route.push("/dashboard");
+    }
+    else {
+      route.push("/home");
+    }
   }, [session]);
 
   return (
-    <>
+    <>  
+      <Header />
       <Hero />
       <CallToActions />
     </>

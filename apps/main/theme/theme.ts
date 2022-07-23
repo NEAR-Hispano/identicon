@@ -1,6 +1,7 @@
 import { color, extendTheme } from "@chakra-ui/react";
 import { theme as proTheme } from "@chakra-ui/pro-theme";
 import { colors } from "../constants/colors";
+
 const fontSizes = {
   xs: "0.75rem",
   sm: "0.875rem",
@@ -89,8 +90,8 @@ const customTheme = extendTheme(
       }),
     },
     fonts: {
-      heading: "Meta Space",
-      body: "Meta Space",
+      heading: "Nunito",
+      body: "Nunito",
     },
   },
   proTheme

@@ -5,17 +5,22 @@ import { useGetAccount } from "../../hooks/accounts";
 import { useGetVerifications } from "../../hooks/verifications";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
+import Header from './Header'
 import VerificationsList from './VerificationsList';
 
 type Props = {
   account_id: string;
 };
 
-export default function DashboardContainer(props: Props) {
+export default function Dashboard(props: Props) {
   const { account_id } = props;
   const route = useRouter();
   const { session } = useAuth();
   const { data, isLoading } = useGetAccount(session);
+
+  useEffect(() => {
+    if (session && !session.id) route.push("/home");
+  }, [session]);
   
   useEffect(()=> {
     if (!isLoading && data && data.personal_info) {
@@ -25,20 +30,19 @@ export default function DashboardContainer(props: Props) {
 
   return (
     <>
-      <Container maxW="container.2xl" id="dashboard">
-        {/* <div>Account Data 
-          <pre>{ JSON.stringify(data, null,2) }</pre>
-        </div> */}
-        if (data.type === 'RQ' || data.type === 'EX') {
+      {data && (
+        <Header account={data}/>
+      )}
+      <Container maxW="container.xl" id="dashboard">
+        {(data && (data.type === 'RQ' || data.type === 'EX')) &&
           <>
-            <Heading size="xs" mt="md">Lista de verificaciones</Heading>
-            <VerificationsList />
+            <VerificationsList account={data} />
           </>
         }
-        if (data.type === 'VL') {
+        {(data && data.type === 'VL') &&
           <>
-            <Heading size="xs" mt="md">Lista de verificaciones</Heading>
-            <VerificationsList />
+            <Heading size="xs" mt="md">Lista de tareas</Heading>
+            {/* <AssignmentsList /> */}
           </>
         }
       </Container>
