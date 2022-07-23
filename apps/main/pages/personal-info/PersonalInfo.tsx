@@ -10,6 +10,8 @@ import {
   Radio,
   RadioGroup,
   Show,
+  Select,
+  FormErrorMessage,
   Stack,
   Tab,
   TabList,
@@ -95,106 +97,81 @@ const PersonalInfo = (props: Props) => {
 
   return (
     <>
-       <Stack maxWidth={600} margin="auto" spacing={5} marginTop={5}>
+      <Stack maxWidth={600} margin="auto" spacing={8} marginTop={8}>
+        <FormControl>
+          <FormLabel>Nombre Completo</FormLabel>
+          <Input
+            id="full_name"
+            name="full_name"
+            placeholder="Juan Perez"
+            value={form.values.full_name}
+            onPaste={form.handleChange}
+            onBlur={form.handleBlur}
+            onChange={form.handleChange}
+          />
+        </FormControl>
+
+        <FormControl
+          isInvalid={
+            !!form.values.country &&
+            !!form.touched.country &&
+            !!form.errors.country
+          }
+          >
+          <FormLabel>Pais</FormLabel>
+          <Select
+            id="country"
+            name="country"
+            placeholder="Seleccione un país"
+            value={form.values.country}
+            onPaste={form.handleChange}
+            onBlur={form.handleBlur}
+            onChange={form.handleChange}
+          >
+            <option value="ar">Argentina</option>
+            <option value="mx">Mexico</option>
+            <option value="ve">Venezuela</option>
+            <option value="bo">Bolivia</option>
+            <option value="cl">Chile</option>
+            <option value="uy">Uruguay</option>
+            <option value="ve">Peru</option>
+          </Select>
+          <FormErrorMessage>{form.errors.country}</FormErrorMessage>
+        </FormControl>
+
+        <FormControl
+          isInvalid={
+            !!form.values.dni &&
+            !!form.touched.dni &&
+            !!form.errors.dni
+          }
+        >
+          <FormLabel>DNI</FormLabel>
+          <Input
+            id="dni"
+            name="dni"
+            placeholder="Número"
+            value={form.values.dni}
+            onPaste={form.handleChange}
+            onBlur={form.handleBlur}
+            onChange={form.handleChange}
+          />
+        </FormControl>
+
       <FormControl>
-        <FormLabel>Nombre Completo</FormLabel>
-        <Input
-          id="full_name"
-          name="full_name"
-          placeholder="Juan Perez"
-          value={form.values.full_name}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        />
-        {/* <FormLabel>Fecha de Nacimiento</FormLabel>
-        <Input
-          id="birthday"
-          name="birthday"
-          placeholder="01/01/1979"
-          value={form.values.birthday}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        /> */}
-        {/* <FormLabel>Gender</FormLabel>
-      <RadioGroup
-        defaultValue="M"
-        value={form.values.sex}
-        onBlur={form.handleBlur}
-        onChange={form.handleChange}
-      >
-        <Stack spacing={4} direction="row">
-          <Radio value="M">Male</Radio>
-          <Radio value="F">Female</Radio>
-          <Radio value="N">N/D</Radio>
-        </Stack>
-      </RadioGroup> */}
-        <FormLabel>Pais</FormLabel>
-        <Input
-          id="country"
-          name="country"
-          placeholder="Argentina"
-          value={form.values.country}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        />
-        {/* <FormLabel>Provincia</FormLabel>
-        <Input
-          id="region"
-          name="region"
-          placeholder="Tucuman"
-          value={form.values.region}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        />
-        <FormLabel>Ciudad</FormLabel>
-        <Input
-          id="comune"
-          name="comune"
-          placeholder="Tafi del Valle"
-          value={form.values.comune}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        />
-        <FormLabel>Dirección</FormLabel>
-        <Input
-          id="address"
-          name="address"
-          placeholder="Av. Juan Calchaquí 400"
-          value={form.values.address}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        /> */}
-         <FormLabel>DNI</FormLabel>
-        <Input
-          id="dni"
-          name="dni"
-          placeholder="Número"
-          value={form.values.dni}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        />
-      </FormControl>
-      <FormControl>
-      <Button
-        mr={3}
-        onClick={() => route.push("/dashboard")}
-      >
-        Volver
-      </Button>
-      <Button
-        colorScheme="indigo"
-        mr={3}
-        onClick={(e: any) => { form.handleSubmit(e); }}
-      >
-        Guardar
-      </Button>
+        <Button
+          mr={3}
+          onClick={() => route.push("/dashboard")}
+        >
+          Volver
+        </Button>
+        <Button
+          colorScheme="indigo"
+          mr={3}
+          onClick={(e: any) => { form.handleSubmit(e); }}
+        >
+          Guardar
+        </Button>
       </FormControl>
       </Stack>
     </>

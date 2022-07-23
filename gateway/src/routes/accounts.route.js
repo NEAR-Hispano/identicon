@@ -1,8 +1,11 @@
 
 const express = require('express');
 const router = express.Router();
+const { body, check } = require('express-validator');
 const accountsController = require('../controllers/accounts.controller');
 const AuthMiddleware = require('../middlewares/auth.middleware');
+const { FlattenMiddleware } = require('../middlewares/flatten.middleware');
+const ValidateParamsMiddleware = require('../middlewares/validate.middleware')
 
 router.get('/:uid', AuthMiddleware, async (req, res, next) => {
     const { uid } = req.params;
@@ -15,7 +18,18 @@ router.get('/:uid', AuthMiddleware, async (req, res, next) => {
     next();
 });
 
-router.put('/:id', AuthMiddleware, async (req, res, next) => {
+
+const putPreconditions = [
+  body('personal_info__dni').not().isEmpty().trim().escape(),
+  body('personal_info__full_name').not().isEmpty().trim().escape(),
+  body('personal_info__country').isIn(['mx', 'ar', 've', 'bo', 'cl', 'uy', 'pe']),
+];
+
+router.put('/:id', 
+  AuthMiddleware, 
+  FlattenMiddleware('personal_info'), 
+  ValidateParamsMiddleware(putPreconditions),
+  async (req, res, next) => {
     const { id } = req.params;
     const account = req.body;
     try {

@@ -13,13 +13,15 @@ class AccountsService {
     });
 
     const account = await AccountsModel.create({
-      uid: near_account.id, // instead of uuid.v4() we use this!
+      uid: uuid.v4().replace(new RegExp('-', 'g'), ''), 
       type: session.type,
       email: session.contact,
       phone: session.contact, // ToDo. manage email/phone store
-      linked_account_uid: null, // this is used only for paying validators
-      subject_id: uuid.v4(), // ToDo. subject_id should be null on creation, to be set on create verification
+      linked_account_uid: near_account.id, 
+      subject_id: null, // ToDo. subject_id should be null on creation, to be set on create verification
       keys: encryptedKeys,
+      state: 'A',
+      verified: false
     });
     return account;
   }
@@ -72,9 +74,11 @@ class AccountsService {
 
   static async updateAccount(id, account, accountUpdate) {
     let subjectId = account.subject_id;
+    const personal = accountUpdate.personal_info;
     console.log("account subject_id", subjectId);
     if (subjectId == undefined || !subjectId) {
-      subjectId = uuid.v4(); // Todo: create unique subject_id (did) based on identicon docs AR_DNI_xxxxxxxxxx
+      // create unique subject_id (did) based on identicon docs AR_DNI_xxxxxxxxxx
+      subjectId = `${personal.country}_DNI_${personal.dni}`.toUpperCase(); 
     }
     console.log("updating subject  ", {
       verified: account.verified,
