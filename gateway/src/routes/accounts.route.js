@@ -23,6 +23,7 @@ const putPreconditions = [
   body('personal_info__dni').not().isEmpty().trim().escape(),
   body('personal_info__full_name').not().isEmpty().trim().escape(),
   body('personal_info__country').isIn(['mx', 'ar', 've', 'bo', 'cl', 'uy', 'pe']),
+  body('personal_info__languages').isIn(['es', 'en', 'po']),
 ];
 
 router.put('/:id', 

@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { AccountsModel, SubjectsModel } = require("../models");
+const { AccountsModel, SubjectsModel, FeaturesModel } = require("../models");
 const uuid = require("uuid");
 const { encryptIt } = require('../utils/cypher.utils');
 
@@ -72,34 +72,39 @@ class AccountsService {
     return result;
   }
 
+
   static async updateAccount(id, account, accountUpdate) {
     let subjectId = account.subject_id;
     const personal = accountUpdate.personal_info;
-    console.log("account subject_id", subjectId);
+
+    // create or update the Subject binded to this account and
+    // assign a subject_id (did) based on Country and Dni
+    // so we can get something like: 'AR_DNI_xxxxxxxxxx'
     if (subjectId == undefined || !subjectId) {
-      // create unique subject_id (did) based on identicon docs AR_DNI_xxxxxxxxxx
       subjectId = `${personal.country}_DNI_${personal.dni}`.toUpperCase(); 
     }
-    console.log("updating subject  ", {
-      verified: account.verified,
-      subject_id: subjectId,
-      personal_info: JSON.stringify(accountUpdate.personal_info),
-    });
     await SubjectsModel.upsert({
       verified: account.verified,
       subject_id: subjectId,
       personal_info: JSON.stringify(accountUpdate.personal_info),
     });
 
+    // need to update features binded to this account
+    // because we will need them to filter validators
+    await FeaturesModel.upsert({
+      account_uid: id,
+      country: personal.country,
+      idioms: personal.languages
+    });
+
     return await AccountsModel.update({
       ...account,
       subject_id: subjectId
-    }, {
-      where: {
-        uid: id
-      }
+    }, { 
+      where: { uid: id }
     });
   }
+
 
   static async deleteAccount(id) {
     return await AccountsModel.update({
@@ -110,6 +115,26 @@ class AccountsService {
       }
     });
   }
+
+
+  static async filterValidatorsBy({
+    country, 
+    language 
+  }) {
+    const sql = `
+      SELECT 
+        acc.uid, acc.linked_account_id
+      FROM acccounts as acc, features as fe
+      WHERE 
+        (acc.uid = fe.account_uid)
+        AND (acc.state in ('A'))
+        AND (fe.country = '${country}')  
+        AND (fe.idioms = '${language}')  
+    `;
+    const [results, _] = await sequelize.query(sql);
+    return results;
+  }
+
 }
 
 module.exports = AccountsService;

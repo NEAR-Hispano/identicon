@@ -97,9 +97,9 @@ const PersonalInfo = (props: Props) => {
 
   return (
     <>
-      <Stack maxWidth={600} margin="auto" spacing={8} marginTop={8}>
+      <Stack maxWidth={600} margin="auto" spacing={6} marginTop={8}>
         <FormControl>
-          <FormLabel>Nombre Completo</FormLabel>
+          <FormLabel pl={4}>Nombres y Apellidos completo</FormLabel>
           <Input
             id="full_name"
             name="full_name"
@@ -118,7 +118,7 @@ const PersonalInfo = (props: Props) => {
             !!form.errors.country
           }
           >
-          <FormLabel>Pais</FormLabel>
+          <FormLabel pl={4}>País</FormLabel>
           <Select
             id="country"
             name="country"
@@ -146,7 +146,7 @@ const PersonalInfo = (props: Props) => {
             !!form.errors.dni
           }
         >
-          <FormLabel>DNI</FormLabel>
+          <FormLabel pl={4}>DNI</FormLabel>
           <Input
             id="dni"
             name="dni"
@@ -156,6 +156,30 @@ const PersonalInfo = (props: Props) => {
             onBlur={form.handleBlur}
             onChange={form.handleChange}
           />
+        </FormControl>
+
+        <FormControl
+          isInvalid={
+            !!form.values.languages &&
+            !!form.touched.languages &&
+            !!form.errors.languages
+          }
+          >
+          <FormLabel pl={4}>Idioma que habla</FormLabel>
+          <Select
+            id="languages"
+            name="languages"
+            placeholder="Seleccione su idioma"
+            value={form.values.languages}
+            onPaste={form.handleChange}
+            onBlur={form.handleBlur}
+            onChange={form.handleChange}
+          >
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="po">Português</option>
+          </Select>
+          <FormErrorMessage>{form.errors.languages}</FormErrorMessage>
         </FormControl>
 
       <FormControl>
