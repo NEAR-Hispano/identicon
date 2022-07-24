@@ -10,6 +10,7 @@ const accountsService = require('../services/accounts.service');
 const subjects = require('../services/subjects.service');
 const { getAccountOrError } = require('./controllers.helpers');
 const uuid = require('uuid');
+const AccountsService = require('../services/accounts.service');
 
 class VerificationsController {
   constructor() {}
@@ -35,8 +36,7 @@ class VerificationsController {
 
       // call the Contract
       const request_uid = uuid.v4();
-      const result = await nearService.requestVerification(
-        {
+      const result = await nearService.requestVerification({
           uid: request_uid,
           subject_id: subject_id,
           is_type: type,
@@ -51,6 +51,14 @@ class VerificationsController {
         request_uid, subject_id, type, // all request verification info
         account // account requesting this verification
       );
+
+      // now assign the validators with an async call BUT NO wait
+      setTimeout(() => {
+        this.assignValidators({
+          request_uid: request_uid, 
+          payload: personal_info
+        }) ;
+      }, 200);
 
       return new Success(response);
     }
@@ -140,6 +148,27 @@ class VerificationsController {
     catch (error) {
       return new UnknownException(error);
     }
+  }
+
+
+  static async assignValidators({
+    request_uid,
+    payload // personal info and ...
+  }) {
+    // find a set of validators filtered by country and language
+    const validators = await AccountsService.getFilteredValidators({
+      country: payload.country,
+      languages: payload.languages
+    });   
+    
+    const theSet = validators.map((t) => t.linked_account_uid);
+    console.log(theSet);
+
+//     nearService.assignValidators({
+//        uid: request_uid 
+//        validators_set: (validators || []).map((t) => t.linked_account_uid)
+//     }, {})
+
   }
 }
 

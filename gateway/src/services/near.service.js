@@ -144,8 +144,8 @@ async function createImplicitAccount() {
 async function getContract(signer) {
   // @signer: (optional) is an Account object (defined in models)
   // @returns: the initialized contract with predefined methods
-  const signerId = signer ? signer.uid : MASTER_ACCOUNT_ID;
-  const keyPair = decryptIt(signer.keys);
+  const signerId = signer ? signer.linked_account_uid : MASTER_ACCOUNT_ID;
+  const keyPair = signer && decryptIt(signer.keys);
   const privateKey = signer ? keyPair.private_key : MASTER_PRIVATE_KEY;
   const publicKey = signer ? keyPair.public_key : '0x0';
   console.log('getContract signerId=', signerId);
@@ -186,9 +186,9 @@ async function getContract(signer) {
 async function requestVerification(args, signer) {
   let result;
   try {
-  // @args: { request_uid, subject_id, is_type, payload }
-  const contract = await getContract(signer);
-  result = await (contract)[changeMethods.requestVerification](args, ATTACHED_GAS);
+    // @args: { request_uid, subject_id, is_type, payload }
+    const contract = await getContract(signer);
+    result = await contract.requestVerification(args, ATTACHED_GAS);
   } catch(e) {
     console.log('ERROR request_verification', e);
     throw e;
@@ -211,9 +211,26 @@ async function registerAsValidator(args, signer) {
 }
 
 
+async function assignValidators(args, signer) {
+  let result;
+  try {
+    // { request_uid, validators_set }
+    args = args || {};
+    // signer MUST be null, because signer will be MASTER (default)
+    const contract = await getContract();
+    result = await contract.assigned_validators(args, ATTACHED_GAS);
+  } catch (e) {
+    console.log('ERROR assigned_validators', e);
+    throw e;
+  }
+  return result;
+}
+
+
 module.exports = {
   getConfig,
   createImplicitAccount,
   requestVerification,
-  registerAsValidator
+  registerAsValidator,
+  assignValidators
 };

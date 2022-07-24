@@ -11,8 +11,8 @@ const { getAccountOrError } = require('../src/controllers/controllers.helpers');
 async function run_createAccount() {
   // Simulate session 
   let session = {
-    type: "RQ",
-    contact: 'mazito.v2+4@gmail.com'
+    type: "VL",
+    contact: 'mazito.v2+v7@gmail.com'
   };
 
   await sequelize.sync({ 
@@ -68,6 +68,7 @@ async function run_createAccount() {
   console.log('Account=', account);
   console.log(`AUTH_KEY="${token}"`);
 }
+
 
 setTimeout(async () => {
   await run_createAccount();

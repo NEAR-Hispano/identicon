@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { AccountsModel, SubjectsModel, FeaturesModel } = require("../models");
+const { AccountsModel, SubjectsModel, FeaturesModel, sequelize } = require("../models");
 const uuid = require("uuid");
 const { encryptIt } = require('../utils/cypher.utils');
 
@@ -117,19 +117,20 @@ class AccountsService {
   }
 
 
-  static async filterValidatorsBy({
+  static async getFilteredValidators({
     country, 
-    language 
+    languages 
   }) {
     const sql = `
       SELECT 
-        acc.uid, acc.linked_account_id
-      FROM acccounts as acc, features as fe
+        acc.uid, acc.linked_account_uid
+      FROM accounts as acc, features as fe
       WHERE 
         (acc.uid = fe.account_uid)
-        AND (acc.state in ('A'))
-        AND (fe.country = '${country}')  
-        AND (fe.idioms = '${language}')  
+        AND acc.state in ('A')
+        AND acc.type = 'VL'
+        AND fe.country = '${country}'  
+        AND fe.idioms = '${languages}';  
     `;
     const [results, _] = await sequelize.query(sql);
     return results;
