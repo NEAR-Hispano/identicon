@@ -37,4 +37,25 @@ impl VerificationContract {
       },
     }
   }
+
+  pub fn reset_all(
+    &mut self
+  ) {
+    self.verifications = UnorderedMap::new(b"a");
+    self.subjects = UnorderedMap::new(b"b");
+    self.assignments = UnorderedMap::new(b"c");
+    self.spendings = UnorderedMap::new(b"d");
+    self.validators = Vec::new();
+    self.params = Parameters {
+          min_validators_needed: 2,
+          min_consensus_needed: 2,
+          max_reviewers_needed: 1,
+          remote_validation_fee: 1.0,
+          onsite_validation_fee: 1.0,
+          review_validation_fee: 1.0,
+          allowed_monthly_requests: 20, // changed for testing
+    };
+
+    log!("reset_all {:?}", self);
+  }
 }
