@@ -55,7 +55,8 @@ class VerificationsController {
 
       // also store it in DB for indexing
       const response = await verifications.createVerification(
-        request_uid, subject_id, type, // all request verification info
+        // all request verification info
+        request_uid, subject_id, type, result.state, 
         account // account requesting this verification
       );
 

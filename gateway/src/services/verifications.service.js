@@ -8,6 +8,7 @@ class VerificationsService {
     uid, 
     subject_id, 
     is_type,
+    state, 
     account
   ) {
     const verification = await VerificationsModel.create({
@@ -15,7 +16,7 @@ class VerificationsService {
       account_uid: account.uid,
       subject_id: subject_id,
       type: is_type,
-      state: 'UN',
+      state: state,
       result: null,
       must_start_utc: '2022-01-01 00:00:00',
       must_end_utc:  '2022-01-01 00:00:00',
