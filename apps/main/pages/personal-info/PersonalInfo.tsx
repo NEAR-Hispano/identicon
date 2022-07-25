@@ -185,7 +185,7 @@ const PersonalInfo = (props: Props) => {
           <FormErrorMessage>{form.errors.languages}</FormErrorMessage>
         </FormControl>
 
-        {(data.type === 'VL') && 
+        {(data && data.type === 'VL') && 
           <Text size="sm">Eres un <b>Validador</b>. Por ahora solo podrás realizar validación Remota.</Text>
         }
 
