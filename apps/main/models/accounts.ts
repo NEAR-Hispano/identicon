@@ -33,6 +33,7 @@ export interface PersonalInfoData {
     health?: string;
     extras?:string;
     dni:string;
+    can_do?:string;
 }
 export interface OTPData {
     email?: string;
