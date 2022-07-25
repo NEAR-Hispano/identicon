@@ -1,8 +1,9 @@
 use crate::definitions::*;
 use crate::errors::*;
-use crate::utils::{cheap_random_gen};
+//use crate::utils::{cheap_random_gen};
 use near_sdk::near_bindgen;
 use near_sdk::{env, log};
+use near_rng::{Rng};
 
 #[near_bindgen]
 impl VerificationContract {
@@ -48,14 +49,16 @@ impl VerificationContract {
         the_set: &Vec<String>,
         min: usize
     ) -> Vec<ValidatorId> {
+        let mut rng = Rng::new(&env::random_seed());
+
         // randonly add one additional validator to the min validators
-        let number = if cheap_random_gen(0, 10) == 5 { min+1 } else { min };
+        let number = if rng.rand_bounded_usize(10) == 5 { min+1 } else { min };
 
         // create a vector of randomly selected items from the_set
         let mut v: Vec<String> = Vec::new();
         for j in 0..number {
             loop {
-                let index: usize = cheap_random_gen(0, the_set.len()-1);
+                let index: usize = rng.rand_bounded_usize(the_set.len()-1);
                 // avoid repeating an already added validator
                 if !v.contains(&the_set[index].to_string()) {
                     v.push(the_set[index].to_string());

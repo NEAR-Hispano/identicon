@@ -1,7 +1,7 @@
 require("dotenv").config();
 const nearService = require("../src/services/near.service");
 
-describe('Create NEAR implicit account', () => {
+describe('Call contracts', () => {
 
   it('should test that nearService is loaded', () => {
     expect(nearService !== null && nearService !== null ).toBe(true);
