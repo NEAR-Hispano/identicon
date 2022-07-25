@@ -4,6 +4,7 @@ const {
   UnknownException,
   ConflictError
 } = require('../response');
+const config = require('../config');
 const nearService = require('../services/near.service');
 const verifications = require('../services/verifications.service');
 const accountsService = require('../services/accounts.service');
@@ -158,17 +159,20 @@ class VerificationsController {
     // find a set of validators filtered by country and language
     const validators = await AccountsService.getFilteredValidators({
       country: payload.country,
-      languages: payload.languages
+      languages: payload.languages || config.countryLanguages[payload.country]
     });   
     
     const theSet = validators.map((t) => t.linked_account_uid);
     console.log(theSet);
-
-//     nearService.assignValidators({
-//        uid: request_uid 
-//        validators_set: (validators || []).map((t) => t.linked_account_uid)
-//     }, {})
-
+    try {
+      await nearService.assignValidators({
+        uid: request_uid, 
+        validators_set: (validators || []).map((t) => t.linked_account_uid)
+      });
+    }
+    catch (err) {
+      console.log("assignValidators failed ERR=", err);
+    }
   }
 }
 

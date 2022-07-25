@@ -34,6 +34,23 @@ async function run_updateAccount(id, data) {
   if (!account) 
     return;
   const r = await AccountsService.updateAccount(id, account, data);
+
+  if (account.type === 'VL') {
+    try {
+      // TODO: use validator options from PersonalInfo options
+      // we now assign only default 'Remote' to a new Validator
+      nearService.registerAsValidator(
+        { // args
+          can_do: ['Remote'] // 'Onsite', Review'
+        }, 
+        account
+      );
+    }
+    catch(err) {
+      console.log('Register as validator ERR=', err);
+    }
+  }
+
   console.log("Account update uid=", r, id, data);
 }
 

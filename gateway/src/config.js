@@ -18,12 +18,20 @@ required.forEach(param => {
   }
 });
 
+const DEFAULT_LANGUAGES = {
+  'ar': 'es'
+};
+
 const config = {
   // general config.
   general: {
     env: process.env.NODE_ENV,
     port: process.env.EXPRESS_PORT,
     api_version: process.env.API_VERSION
+  },
+
+  countryLanguages: {
+    'ar': 'es'
   },
 
   database: {

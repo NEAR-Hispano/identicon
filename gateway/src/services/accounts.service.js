@@ -77,12 +77,10 @@ class AccountsService {
     let subjectId = account.subject_id;
     const personal = accountUpdate.personal_info;
 
-    // create or update the Subject binded to this account and
+    // allways update the Subject binded to this account and
     // assign a subject_id (did) based on Country and Dni
     // so we can get something like: 'AR_DNI_xxxxxxxxxx'
-    if (subjectId == undefined || !subjectId) {
-      subjectId = `${personal.country}_DNI_${personal.dni}`.toUpperCase(); 
-    }
+    subjectId = `${personal.country}_DNI_${personal.dni}`.toUpperCase(); 
     await SubjectsModel.upsert({
       verified: account.verified,
       subject_id: subjectId,
