@@ -4,6 +4,7 @@ const { sequelize } = require('../src/models');
 const express = require('express');
 const nearService = require('../src/services/near.service');
 const AccountsService = require('../src/services/accounts.service');
+const { getAccountOrError } = require('../src/controllers/controllers.helpers.js');
 
 const testset = [
   ['bd4edbfb9d1e4d0287eaecfd23534100', '40010', 'Pedro A'],
@@ -15,7 +16,8 @@ const testset = [
   ['d9e091c56d5147c799c67d37a3b95294', '40016', 'Pablo G'],
   ['99ed722aab18447bab94135f1dcea51f', '40017', 'Ernesto H'],
   ['67aed78193644b25a74c56650c5d8422', '40018', 'Cristian I'],
-  ['80eaf4de78644cafae4cfb13b3925f16', '40019', 'Marcelo J']
+  ['80eaf4de78644cafae4cfb13b3925f16', '40019', 'Marcelo J'],
+  ['5c430b459b95487da2823a58db65462a', '40020', 'Lucy Liu']
 ];
 
 const templ = {
@@ -30,7 +32,7 @@ const templ = {
 };
 
 async function run_updateAccount(id, data) {
-  const account = await AccountsService.getAccountById(id);
+  const [account, err] = await getAccountOrError(id);
   if (!account) 
     return;
   const r = await AccountsService.updateAccount(id, account, data);
@@ -39,7 +41,7 @@ async function run_updateAccount(id, data) {
     try {
       // TODO: use validator options from PersonalInfo options
       // we now assign only default 'Remote' to a new Validator
-      nearService.registerAsValidator(
+      await nearService.registerAsValidator(
         { // args
           can_do: ['Remote'] // 'Onsite', Review'
         }, 
