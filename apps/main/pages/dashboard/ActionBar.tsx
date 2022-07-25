@@ -54,21 +54,23 @@ const ActionBar = (props) => {
   return (
     <>
       <Flex alignItems={"center"}>
-        <Button
-          variant={"solid"}
-          colorScheme={"green"}
-          size={"md"}
-          fontWeight="bold"
-          mr={4}
-          pl="1rem"
-          pr="1.25rem"
-          py={6}
-          borderRadius="3xl"
-          leftIcon={<AddIcon />}
-          cursor="pointer"
-          onClick={() => router.push("/request-verification")}>
-          Solicita una Fé de Vida
-        </Button>
+        {(account.type !== 'VL') &&
+          <Button
+              variant={"solid"}
+              colorScheme={"green"}
+              size={"md"}
+              fontWeight="bold"
+              mr={4}
+              pl="1rem"
+              pr="1.25rem"
+              py={6}
+              borderRadius="3xl"
+              leftIcon={<AddIcon />}
+              cursor="pointer"
+              onClick={() => router.push("/request-verification")}>
+              Solicita una Fé de Vida
+            </Button>
+        }
         <Menu>
           <MenuButton
             as={Button}

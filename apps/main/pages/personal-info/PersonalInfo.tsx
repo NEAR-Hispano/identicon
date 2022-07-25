@@ -19,6 +19,7 @@ import {
   TabPanels,
   Tabs,
   VStack,
+  Text,
   useToast
 } from "@chakra-ui/react";
 import { colors } from "../../constants/colors";
@@ -56,7 +57,8 @@ const PersonalInfo = (props: Props) => {
       health: "",
       extras: "",
       email: "",
-      dni:""
+      dni:"",
+      can_do: "" // Only for validators
     };
   const form = useFormik({
     initialValues: initialValuesSignUp,
@@ -98,6 +100,7 @@ const PersonalInfo = (props: Props) => {
   return (
     <>
       <Stack maxWidth={600} margin="auto" spacing={6} marginTop={8}>
+
         <FormControl>
           <FormLabel pl={4}>Nombres y Apellidos completo</FormLabel>
           <Input
@@ -182,19 +185,24 @@ const PersonalInfo = (props: Props) => {
           <FormErrorMessage>{form.errors.languages}</FormErrorMessage>
         </FormControl>
 
+        {(data.type === 'VL') && 
+          <Text size="sm">Eres un <b>Validador</b>. Por ahora solo podrás realizar validación Remota.</Text>
+        }
+
       <FormControl>
         <Button
+          variant="outline"
           mr={3}
           onClick={() => route.push("/dashboard")}
         >
-          Volver
+          &lt; &nbsp; Lo haré después 
         </Button>
         <Button
           colorScheme="indigo"
           mr={3}
           onClick={(e: any) => { form.handleSubmit(e); }}
         >
-          Guardar
+          Actualiza tu información personal ! 
         </Button>
       </FormControl>
       </Stack>
