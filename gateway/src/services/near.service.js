@@ -188,7 +188,7 @@ async function requestVerification(args, signer) {
   try {
     // @args: { request_uid, subject_id, is_type, payload }
     const contract = await getContract(signer);
-    result = await contract.requestVerification(args, ATTACHED_GAS);
+    result = await contract.request_verification(args, ATTACHED_GAS);
   } catch(e) {
     console.log('ERROR request_verification', e);
     throw e;
@@ -218,9 +218,9 @@ async function assignValidators(args, signer) {
     args = args || {};
     // signer MUST be null, because signer will be MASTER (default)
     const contract = await getContract();
-    result = await contract.assigned_validators(args, ATTACHED_GAS);
+    result = await contract.assign_validators(args, ATTACHED_GAS);
   } catch (e) {
-    console.log('ERROR assigned_validators', e);
+    console.log('ERROR assign_validators', e);
     throw e;
   }
   return result;
