@@ -106,7 +106,7 @@ unregister_as_validator()
 
 ### assign_validators
 
-Assigns the validators to this request. 
+Assigns the validators to this request. Will return a vector with the selected validators id's.
 
 Status (deployed :ok:)
 
@@ -114,11 +114,12 @@ Status (deployed :ok:)
 assign_validators(
 	uid: RequestId,
   validators_set: Vec<String>
-) 
+) -> Vec<String> 
 ~~~
 
 Preconditions:
 - The request `uid` must be an existent pending request.
+- ValidatorIds in the `validators_set` must be already registered validators.
 
 ### pay_validators
 

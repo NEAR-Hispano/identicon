@@ -14,7 +14,7 @@ impl VerificationContract {
         &mut self,
         uid: RequestId,
         validators_set: Vec<String>
-    ) {
+    ) -> Vec<ValidatorId> {
         // MUST use the signer_account_id, see: 
         let contract_account_id = env::current_account_id();
         let signer_account_id = env::signer_account_id();
@@ -41,6 +41,8 @@ impl VerificationContract {
         // Finally update state
         self.update_assignments(uid.to_string(), &selected);
         self.build_tasks(uid.to_string(), &selected);
+
+        selected
     }
 
     // Select a number of validator Ids from the set of allowed validators
