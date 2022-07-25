@@ -166,6 +166,7 @@ async function getContract(signer) {
         ],
         changeMethods: [
           'request_verification',
+          'get_verification',
           'cancel_verification',
           'register_as_validator',
           'unregister_as_validator',
@@ -226,11 +227,25 @@ async function assignValidators(args, signer) {
   return result;
 }
 
+async function getVerification(args, signer) {
+  let result;
+  try {
+    // @args: { request_uid }
+    const contract = await getContract(signer);
+    result = await contract.get_verification(args, ATTACHED_GAS);
+  } catch(e) {
+    console.log('ERROR request_verification', e);
+    throw e;
+  }
+  return result;
+}
+
 
 module.exports = {
   getConfig,
   createImplicitAccount,
   requestVerification,
+  getVerification,
   registerAsValidator,
   assignValidators
 };

@@ -1,4 +1,5 @@
 const VerificationsModel = (sequelize, { DataTypes }) => {
+
   const Verifications = sequelize.define('verifications', {
     // UNIQUE request UUID
     request_uid: {
@@ -30,14 +31,20 @@ const VerificationsModel = (sequelize, { DataTypes }) => {
         notEmpty: false,
       }
     },
-    // PN: Pending, ST: Started, FI: Finished
+    // 
     state: {
-      type: DataTypes.ENUM('UN', 'PN', 'ST', 'FI'),
+      type: DataTypes.ENUM(
+        'Unassigned','Pending', 'Approved', 'Rejected', 
+        'NotPossible', 'WillNotDo', 'Canceled'
+      ),
       allowNull: true,
     },
     // AP, RX, NP, WND, CX
     result: {
-      type: DataTypes.ENUM('AP', 'RX', 'NP', 'WND', 'CX'),
+      type: DataTypes.ENUM(
+        'Unassigned','Pending', 'Approved', 'Rejected', 
+        'NotPossible', 'WillNotDo', 'Canceled'
+      ),
       allowNull: true,
     },
     // Must start verification after UTC time stamp in ISO-8601 format
@@ -66,6 +73,10 @@ const VerificationsModel = (sequelize, { DataTypes }) => {
   Verifications.associate = (models) => {
     Verifications.belongsTo(models.AccountsModel);
   };
+
+  Verifications.state = {
+    UNASSIGNED: 'Unassigned'
+  }; 
 
   return Verifications;
 };

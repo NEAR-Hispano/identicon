@@ -47,19 +47,22 @@ class VerificationsController {
       );
       console.log('\n\n',result,'\n\n');
 
+      // now assign the validators 
+      const validators = await this.assignValidators({
+        request_uid: request_uid, 
+        payload: personal_info
+      }) ;
+
       // also store it in DB for indexing
       const response = await verifications.createVerification(
         request_uid, subject_id, type, // all request verification info
         account // account requesting this verification
       );
 
-      // now assign the validators with an async call BUT NO wait
-      setTimeout(() => {
-        this.assignValidators({
-          request_uid: request_uid, 
-          payload: personal_info
-        }) ;
-      }, 200);
+      // send email to selected validators  
+      for (var j=0; j < validators.length; j++) {
+        // send mail 
+      }
 
       return new Success(response);
     }
@@ -103,9 +106,29 @@ class VerificationsController {
       if (err) 
         return err;
 
-      const verification = await verifications.getByUidWithSubject(uid);
+      let verification = await verifications.getByUidWithSubject(uid);
       if (!verification)
         return new NotFoundError(`Not found the request with uid=${uid}`);
+
+      try {
+        let updated = await nearService.getVerification(
+          { uid: verification.request_uid },
+          account
+        );
+        // update the DB  with current state   
+        const mapStates = {
+          'Pending': 'PN',
+          'Unassigned': 'UN'
+        };  
+        verifications.updateFields(uid, {
+          state: mapStates[updated.state]
+        });
+        verification.state = mapStates[updated.state];
+        verification.contract = updated;
+      }
+      catch (err) {
+        console.log("getOneVerification ERR=", err)
+      }
 
       return new Success(verification);
     }
