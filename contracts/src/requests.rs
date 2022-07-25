@@ -66,7 +66,7 @@ impl VerificationContract {
 
 
     /// Cancels an existent verification
-    fn cancel_verification(
+    pub fn cancel_verification(
         &mut self,
         uid: RequestId,
         cause: String
@@ -91,7 +91,7 @@ impl VerificationContract {
       
 
     /// Returns a given Verification request
-    fn get_verification(
+    pub fn get_verification(
         &mut self,
         uid: RequestId
     ) -> VerificationRequest {
