@@ -27,6 +27,7 @@ Cargo.lock
 
 #DB
 /db/*.sqlite
+/db/*.sqbpro
 /gateway/db/*.sqlite
 
 # IDE
