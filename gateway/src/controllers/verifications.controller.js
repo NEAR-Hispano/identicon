@@ -9,9 +9,9 @@ const nearService = require('../services/near.service');
 const verifications = require('../services/verifications.service');
 const accountsService = require('../services/accounts.service');
 const subjects = require('../services/subjects.service');
+const tasksService = require('../services/tasks.service');
 const { getAccountOrError } = require('./controllers.helpers');
 const uuid = require('uuid');
-const AccountsService = require('../services/accounts.service');
 
 class VerificationsController {
   constructor() {}
@@ -28,15 +28,9 @@ class VerificationsController {
       if (err) 
         return err;
 
-      // get Subject or create it
-      let subject = await subjects.getById(subject_id);
-      if (!subject)
-        subject = await subjects.create(subject_id, personal_info);
-      if (!subject || subject.error) 
-        return new UnknownException(subject.error);
-
       // call the Contract
       const request_uid = uuid.v4();
+      personal_info.subject_id = subject_id;
       const result = await nearService.requestVerification({
           uid: request_uid,
           subject_id: subject_id,
@@ -60,9 +54,26 @@ class VerificationsController {
         account // account requesting this verification
       );
 
-      // send email to selected validators  
+      // get Subject or create it
+      let subject = await subjects.getById(subject_id);
+      if (!subject)
+        subject = await subjects.create(subject_id, personal_info);
+      if (!subject || subject.error) 
+        return new UnknownException(subject.error);
+
       for (var j=0; j < validators.length; j++) {
-        // send mail 
+        const validator = await accountsService.getAccountByLinkedId(validators[j]);
+        if (validator) {
+          // add the tasks to DB for indexing
+          const task = await tasksService.create({
+            request_uid: request_uid,
+            validator_uid: validator.uid,
+            type: type 
+          });
+
+          // also send mail to validators
+          console.log('Email to=', validator.uid, validator.email, ' Task=', task);
+        }
       }
 
       return new Success(response);
@@ -123,7 +134,7 @@ class VerificationsController {
         verification.contract = updated;
       }
       catch (err) {
-        console.log("getOneVerification ERR=", err)
+        console.log('getOneVerification ERR=', err)
       }
 
       return new Success(verification);
@@ -176,7 +187,7 @@ class VerificationsController {
     payload // personal info and ...
   }) {
     // find a set of validators filtered by country and language
-    const validators = await AccountsService.getFilteredValidators({
+    const validators = await accountsService.getFilteredValidators({
       country: payload.country,
       languages: payload.languages || config.countryLanguages[payload.country]
     });   
@@ -184,13 +195,16 @@ class VerificationsController {
     const theSet = validators.map((t) => t.linked_account_uid);
     console.log(theSet);
     try {
-      await nearService.assignValidators({
+      const selected = await nearService.assignValidators({
         uid: request_uid, 
         validators_set: (validators || []).map((t) => t.linked_account_uid)
       });
+      console.log('assignValidators selected=', selected);
+      return selected;
     }
     catch (err) {
-      console.log("assignValidators failed ERR=", err);
+      console.log('assignValidators failed ERR=', err);
+      return [];
     }
   }
 }
