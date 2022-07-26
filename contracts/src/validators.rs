@@ -50,8 +50,9 @@ impl VerificationContract {
 
 
     /// Called by a given validator to get all of its assigned tasks.
-    fn get_assigned_validations(
-        &mut self
+    pub fn get_assigned_validations(
+        &mut self,
+        order: String
     ) -> Vec<VerificationRequest> {
         // MUST use the signer_account_id, see: 
         let signer_id = env::signer_account_id();
