@@ -1,3 +1,5 @@
+const { VerificationTypes, VerificationStates } = require('./definitions');
+
 const VerificationsModel = (sequelize, { DataTypes }) => {
 
   const Verifications = sequelize.define('verifications', {
@@ -12,7 +14,7 @@ const VerificationsModel = (sequelize, { DataTypes }) => {
     },
     // Request type: ProofOfLife, ...
     type: {
-      type: DataTypes.ENUM('ProofOfLife', 'ProofOfIdentity', 'ProofOfExistence', 'ProofOfState', 'ProofOfOwnership', 'ProofOfService'),
+      type: DataTypes.ENUM(VerificationTypes),
       allowNull: true,
     },
     // UNIQUE NEAR account ID
@@ -33,18 +35,12 @@ const VerificationsModel = (sequelize, { DataTypes }) => {
     },
     // 
     state: {
-      type: DataTypes.ENUM(
-        'Unassigned','Pending', 'Approved', 'Rejected', 
-        'NotPossible', 'WillNotDo', 'Canceled'
-      ),
+      type: DataTypes.ENUM(VerificationStates),
       allowNull: true,
     },
     // AP, RX, NP, WND, CX
     result: {
-      type: DataTypes.ENUM(
-        'Unassigned','Pending', 'Approved', 'Rejected', 
-        'NotPossible', 'WillNotDo', 'Canceled'
-      ),
+      type: DataTypes.ENUM(VerificationStates),
       allowNull: true,
     },
     // Must start verification after UTC time stamp in ISO-8601 format
@@ -73,10 +69,6 @@ const VerificationsModel = (sequelize, { DataTypes }) => {
   Verifications.associate = (models) => {
     Verifications.belongsTo(models.AccountsModel);
   };
-
-  Verifications.state = {
-    UNASSIGNED: 'Unassigned'
-  }; 
 
   return Verifications;
 };
