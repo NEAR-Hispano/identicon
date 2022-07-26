@@ -116,15 +116,10 @@ class VerificationsController {
           { uid: verification.request_uid },
           account
         );
-        // update the DB  with current state   
-        const mapStates = {
-          'Pending': 'PN',
-          'Unassigned': 'UN'
-        };  
         verifications.updateFields(uid, {
-          state: mapStates[updated.state]
+          state: updated.state
         });
-        verification.state = mapStates[updated.state];
+        verification.state = updated.state;
         verification.contract = updated;
       }
       catch (err) {

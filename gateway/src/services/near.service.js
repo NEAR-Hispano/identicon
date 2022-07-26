@@ -162,15 +162,15 @@ async function getContract(signer) {
       CONTRACT_ID, 
       {
         viewMethods: [
-          'get_assigned_validations'
+          'get_verification'
         ],
         changeMethods: [
           'request_verification',
-          'get_verification',
           'cancel_verification',
           'register_as_validator',
           'unregister_as_validator',
-          'assign_validators'
+          'assign_validators',
+          'get_assigned_validations',
         ],
         // sender: account, // account object to initialize and sign transactions.
       }
@@ -240,6 +240,19 @@ async function getVerification(args, signer) {
   return result;
 }
 
+async function getAssignedValidations(args, signer) {
+  let result;
+  try {
+    // @args {order: 'asc'} ;
+    const contract = await getContract(signer);
+    result = await contract.get_assigned_validations(args, ATTACHED_GAS);
+  } catch(e) {
+    console.log('ERROR get_assigned_validations', e);
+    throw e;
+  }
+  return result;
+}
+
 
 module.exports = {
   getConfig,
@@ -247,5 +260,6 @@ module.exports = {
   requestVerification,
   getVerification,
   registerAsValidator,
-  assignValidators
+  assignValidators,
+  getAssignedValidations
 };
