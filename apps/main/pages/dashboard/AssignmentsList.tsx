@@ -35,7 +35,7 @@ const AssignmentsList = (props) => {
     };
     const vs = pending
       .map((v, i) => {
-        const href = "/tasks/request_uid?"+v.request_uid;
+        const href = "/tasks/"+v.uid;
         const info = JSON.parse(v.info);
         const task = v.validations[0];
         return (
