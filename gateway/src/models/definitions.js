@@ -18,14 +18,26 @@ const isVerificationDone = (st) => {
   ].includes(st);
 };
 
+const initialVerificationState = 'Pending';
+
+
 const ValidationTypes = [
   'Remote','Onsite', 'Review'
 ];
+
+const defaultValidationType = 'Remote';
+
+const TaskStates = ['P','F','X'];
+const initialTaskState = 'P';
 
 module.exports = {
   VerificationTypes,
   VerificationStates,
   isVerificationPending,
   isVerificationDone,
-  ValidationTypes
+  ValidationTypes,
+  defaultValidationType,
+  initialVerificationState,
+  TaskStates,
+  initialTaskState
 };
