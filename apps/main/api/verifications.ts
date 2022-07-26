@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AuthSessionData, UpdateAccountData } from "../models/accounts";
 import { RequestVerificationData } from "../models/verifications";
+import { VerificationStates } from "../constants/states";
 
 export const baseUrl = `${process.env.GATEWAY_BASE_URL}`;
 
@@ -15,7 +16,8 @@ const api = {
     return axios
       .get(`${baseUrl}/v1/verifications`, { params: {
         requester_uid: session.id,
-        states: ['UN','PN','ST']
+        states: ['Unassigned','Pending', 'Approved', 'Rejected', 
+        'NotPossible', 'WillNotDo','Canceled']//VerificationStates
       }})
       .then((response) => response.data);
   },

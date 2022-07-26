@@ -1,22 +1,23 @@
 
 import React, { useEffect } from "react";
 import { Container, Heading, Box, Stack, Text, Button, Flex, Spacer, Icon, VStack } from '@chakra-ui/react';
-import { useGetVerifications } from "../../hooks/verifications";
+import { useGetTasksAssigned } from "../../hooks/tasks";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
 import Link from 'next/link';
 import { isVerificationDone, isVerificationPending } from "../../constants/states";
-const VerificationsList = (props) => {
+
+const AssignmentsList = (props) => {
   const route = useRouter();
   const { session } = useAuth();
-  const { data, isLoading } = useGetVerifications(session);
+  const { data, isLoading } = useGetTasksAssigned(session);
   let pending=[], emitted =[];  
   const { account } = props;
   console.log("VerificationList props=", props, account);
 
   useEffect(()=> {
     if (!isLoading && data) {
-      console.log("Verifications list loaded", data);
+      console.log("Tasks list loaded", data);
     }
   }, [data]);
 
@@ -26,16 +27,17 @@ const VerificationsList = (props) => {
   //   </Stack>
   // ));
 
-  function PendingItemsList(props) {
+  function AssignedItemsList(props) {
     const { items } = props;
-    const pending = (data || []).filter((t) => isVerificationPending(t.state));
-    //const emitted = (data || []).filter((t) => isVerificationDone(t.state));
+    const pending = (data || []);
     if (!pending.length) {
-      return (<p>No hay verificaciones pendientes</p>)
+      return (<p>No hay asignaciones pendientes</p>)
     };
     const vs = pending
       .map((v, i) => {
-        const href = "/verifications/"+v.request_uid;
+        const href = "/tasks/request_uid?"+v.request_uid;
+        const info = JSON.parse(v.info);
+        const task = v.validations[0];
         return (
           <Link href={href} key={v.id}>
             <Flex cursor="pointer" 
@@ -45,20 +47,22 @@ const VerificationsList = (props) => {
               <Box w="6rem" align="center">
                 <b>#{v.id}</b>
                 <br/>
-                {v.state}
+                {task.result}
                 <Icon />
               </Box>
               <VStack align="left">
                 <Text fontSize="lg" lineHeight="1em">
-                  {v.personal_info.full_name}  
+                  {info.full_name}  
                 </Text>
                 <Text fontSize="xs" fontWeight="bold" color="blue" lineHeight="1em">
-                  {v.subject_id} 
+                  {info.subject_id} 
                 </Text>
               </VStack>
               <Spacer/>
               <Text>
-                {v.created_at}
+                {v.when.starts} 
+                <br/> 
+                { v.when.ends }
               </Text>
             </Flex>
           </Link>
@@ -70,43 +74,24 @@ const VerificationsList = (props) => {
     );
   }
 
-  function EmmitedItemsList(props) {
-    const { items } = props;
-    const emitted = (data || []).filter((t) => ['FN'].includes(t.state));
-    if (!emitted.length) {
-      return (<p>No hay verificaciones emitidas</p>)
-    };
-    const vs = emitted
-      .map((v, i) => 
-        <Link  key={v.id} >
-          <a href="#">
-            {v.request_uid} | {v.state} {v.personal_info.full_name} {v.subject_id}
-          </a>
-        </Link>
-    );
-    return (
-      <Box  borderWidth='1px' borderRadius='lg' >{vs}</Box>
-    );
-  }
-
   if (data) {
     return(
       <>
-        <Text fontSize="12px" fontWeight="bold" pt={10} pb={8} pl="2rem">SOLICITUDES PENDIENTES</Text>
+        <Text fontSize="12px" fontWeight="bold" pt={10} pb={8} pl="2rem">TAREAS PENDIENTES</Text>
         <Box >
-          <PendingItemsList items={data}/> 
+          <AssignedItemsList items={data}/> 
         </Box>
 
-        <Heading as="h2" fontSize="xs" mb={0} pb={0}>CERTIFICADOS EMITIDOS</Heading>
-        <EmmitedItemsList items={data}/> 
+        {/* <Heading as="h2" fontSize="xs" mb={0} pb={0}>CERTIFICADOS EMITIDOS</Heading>
+        <EmmitedItemsList items={data}/>  */}
       </>
     )
   }
   else {
     return(
-      <Heading size="sm">Actualizando tu lista de verificaciones ... </Heading>
+      <Heading size="sm" mt={12}>Actualizando tu lista de tareas ... </Heading>
     ) 
   }
 };
 
-export default VerificationsList;
+export default AssignmentsList;

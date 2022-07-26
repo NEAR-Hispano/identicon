@@ -7,6 +7,7 @@ import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
 import Header from './Header'
 import VerificationsList from './VerificationsList';
+import AssignmentsList from './AssignmentsList';
 
 type Props = {
   account_id: string;
@@ -42,7 +43,7 @@ export default function Dashboard(props: Props) {
         {(data && data.type === 'VL') &&
           <>
             <Heading size="xs" mt="md">Lista de tareas</Heading>
-            {/* <AssignmentsList /> */}
+            <AssignmentsList  account={data} />
           </>
         }
       </Container>

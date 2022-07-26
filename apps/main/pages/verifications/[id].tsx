@@ -6,6 +6,7 @@ import { useGetAccount } from "../../hooks/accounts";
 import { useGetSingleVerification } from "../../hooks/verifications";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
+import { stateDescription } from "../../constants/states";
 
 export default function VerificationContainer(props: Props) {
   const { account_id } = props;
@@ -27,13 +28,6 @@ export default function VerificationContainer(props: Props) {
       <Td>{label}</Td>
       <Td>{content}</Td>
     </Tr>
-  }
-
-  const stateDescriptions = {
-    'UN': 'Todavía no te han asignado validadores',
-    'PN': 'Ya tienes validadores asignados, espera que te contacten', 
-    'ST': 'Ya iniciada, falta que todos los validadores terminen sus tareas',
-    'FN': 'Finalizada'
   }
 
   const langDescriptions = {
@@ -65,7 +59,7 @@ export default function VerificationContainer(props: Props) {
             <Table variant="simple" colorScheme="teal">
               <Row label="Para" content={data.personal_info.full_name} />
               <Row label="Pais, Doc y Numero" content={data.subject_id} />
-              <Row label="Estado" content={stateDescriptions[data.state]} />
+              <Row label="Estado" content={stateDescription([data.state])} />
               <Row label="Preferencias" content={"Se verificara usando " + data.personal_info.preferred +" al móvil "+data.personal_info.phone} />
               <Row label="Idiomas" content={data.personal_info.languages || langDescriptions[data.personal_info.country]} />
               <Row label="Debe comenzar" content={data.must_start_utc} />
