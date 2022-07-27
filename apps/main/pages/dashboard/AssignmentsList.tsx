@@ -21,65 +21,118 @@ const AssignmentsList = (props) => {
     }
   }, [data]);
 
-  // let arr = [1, 2].map((item, i) => (
-  //   <Stack m="2rem" key={`skeleton-${i}`}>
-  //     <p>{item}</p>
-  //   </Stack>
-  // ));
+
+  const ListItem = (props) => {
+    const 
+      refTo = props.refTo,
+      t = props.item;
+    return (
+      <Link href={refTo} key={t.uid}>
+        <Flex cursor="pointer" 
+          py={4} pr={6} pl={0}
+          borderBottom="1px solid #eeb"
+          alignItems="center">
+          <Box w="6rem" align="center">
+            {t.result}
+            <Icon />
+          </Box>
+          <VStack align="left">
+            <Text fontSize="lg" lineHeight="1em">
+              {t.full_name}  
+            </Text>
+            <Text fontSize="xs" fontWeight="bold" color="blue" lineHeight="1em">
+              {t.subject_id} 
+            </Text>
+          </VStack>
+          <Spacer/>
+          <Text>
+            {t.timing1}
+            {t.timing2 && 
+              <><br/>{t.timing2}</>
+            }
+          </Text>
+        </Flex>
+      </Link>
+    )    
+  }
+
+  
+  const SectionHeading = (props) => {
+    return (
+      <Text fontSize="12px" fontWeight="bold" pt={10} pb={2} pl="4">
+        {props.title}
+      </Text>
+    )
+  }
+
+  const SectionPanel = (props) => {
+    return (
+      <Box  borderRadius='lg' bg="#fefefe" >
+        {props.children}
+      </Box>
+    )
+  }
+
 
   function AssignedItemsList(props) {
     const { items } = props;
-    const pending = (data || []);
+    const pending = (data || []).filter((t) => (t.state === 'P'));
     if (!pending.length) {
       return (<p>No hay asignaciones pendientes</p>)
     };
     const vs = pending
-      .map((t, i) => {
-        const href = "/report-result/"+t.uid;
+      .map((t) => {
+        const refTo = "/report-result/"+t.uid;
+        const item = {
+          uid: t.uid,
+          result: t.result,
+          subject_id: t.subject_id,
+          full_name: t.full_name,
+          timing1: t.must_start,
+          timing2: t.must_end
+        }
         return (
-          <Link href={href} key={t.uid}>
-            <Flex cursor="pointer" 
-              py={4} pr={6} pl={0}
-              borderBottom="1px solid #eeb"
-              alignItems="center">
-              <Box w="6rem" align="center">
-                {t.result}
-                <Icon />
-              </Box>
-              <VStack align="left">
-                <Text fontSize="lg" lineHeight="1em">
-                  {t.full_name}  
-                </Text>
-                <Text fontSize="xs" fontWeight="bold" color="blue" lineHeight="1em">
-                  {t.subject_id} 
-                </Text>
-              </VStack>
-              <Spacer/>
-              <Text>
-                {t.must_start} 
-                <br/> 
-                {t.must_end}
-              </Text>
-            </Flex>
-          </Link>
+          <ListItem refTo={refTo} item={item} key={t.uid}/>
         )
       }
     );
-    return (
-      <Box  borderRadius='lg' bg="#fefefe" >{vs}</Box>
+    return vs.length ? vs : <Text>No hay validaciones pendientes</Text> ;
+  }
+
+  function CompletedItemsList(props) {
+    const { items } = props;
+    const done = (data || []).filter((t) => (t.state === 'F'));
+    const vs = done
+      .map((t) => {
+        const refTo = "/report-result/"+t.uid;
+        const item = {
+          uid: t.uid,
+          result: t.result,
+          subject_id: t.subject_id,
+          full_name: t.full_name,
+          timing1: `Realizada ${t.updated_at}`,
+          timing2: null
+        }
+        return (
+          <ListItem refTo={refTo} item={item} key={t.uid}/>
+        )
+      }
     );
+    return vs.length ? vs : <Text>No hay validaciones finalizadas</Text> ;
   }
 
   if (data) {
     return(
       <>
-        <Text fontSize="12px" fontWeight="bold" pt={10} pb={2} pl="4">TUS VALIDACIONES PENDIENTES</Text>
-        <Box >
+        <SectionHeading title='TUS VALIDACIONES PENDIENTES' />
+        <SectionPanel>
           <AssignedItemsList items={data}/> 
-        </Box>
+        </SectionPanel>
 
-        {/* <Heading as="h2" fontSize="xs" mb={0} pb={0}>CERTIFICADOS EMITIDOS</Heading>
-        <EmmitedItemsList items={data}/>  */}
+        <SectionHeading title='VALIDACIONES FINALIZADAS' />
+        <SectionPanel>
+          <CompletedItemsList items={data}/> 
+        </SectionPanel>
       </>
     )
   }

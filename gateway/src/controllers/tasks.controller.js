@@ -32,10 +32,12 @@ class TasksController {
           uid: t.uid,
           subject_id: t.subject_id,
           full_name: info.full_name,
+          state: t.state,
           result: t.result,
           contents: JSON.stringify(t.contents),
           must_start: t.created_at,
-          must_end: ''
+          must_end: '',
+          updated_at: t.updated_at
         };
       });
       console.log('\n\n',results,'\n\n');

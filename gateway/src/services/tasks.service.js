@@ -58,11 +58,19 @@ class SubjectsService {
     validator_uid, 
     state
   }) {
+    // const sql = `
+    //   SELECT t.*, vr.subject_id, su.personal_info 
+    //   FROM tasks as t, subjects as su, verifications as vr
+    //   WHERE 
+    //     t.validator_uid ='${validator_uid}'  AND t.state='${state}'
+    //     AND (vr.request_uid = t.request_uid)
+    //     AND (vr.subject_id = su.subject_id)
+    // `;
     const sql = `
       SELECT t.*, vr.subject_id, su.personal_info 
       FROM tasks as t, subjects as su, verifications as vr
       WHERE 
-        t.validator_uid ='${validator_uid}'  AND t.state='${state}'
+        t.validator_uid = '${validator_uid}'  AND t.state != 'X'
         AND (vr.request_uid = t.request_uid)
         AND (vr.subject_id = su.subject_id)
     `;
