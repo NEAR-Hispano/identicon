@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import { Container, Flex, Heading, Spacer, Text, IconButton, Box } from '@chakra-ui/react';
+import { Container, Flex, Heading, Spacer, Text, IconButton, Box, Spinner } from '@chakra-ui/react';
 import { Table, Thead, Tbody, Tfoot, Tr, Th, Td,TableCaption, TableContainer } from '@chakra-ui/react';
 import StateIcon from "../../components/StateIcon";
 import { SectionHeading , SectionPanel } from '../../components/Section';
+import { Header } from '../../components/Header';
 import { CloseIcon } from '@chakra-ui/icons'
 import { useGetAccount } from "../../hooks/accounts";
 import { useGetSingleVerification } from "../../hooks/verifications";
@@ -50,7 +51,7 @@ export default function VerificationContainer(props: Props) {
             <Box width="2.5rem" textAlign="center">
               <StateIcon result={t.result} />
             </Box>
-            <Text m={0} p={0} lineheight="1em">
+            <Text m={0} p={0} lineHeight="1em">
               Anónimo ({t.validator_id.split('.')[0]})
               <br/>
               <b>{shortStateDescription(t.result)}</b> 
@@ -67,22 +68,38 @@ export default function VerificationContainer(props: Props) {
 
   return (
     <>
+      <Header 
+        isLoading={!data}
+        breadcrumb={`/ Fe de vida / Solicitud en Proceso`}
+        title={data && `${data.personal_info.full_name}`}
+        subtitle={data && `Solicitada por ${data.requester.full_name}`}
+        bigImage={`certificate-outline.svg`} >
+        <IconButton 
+          onClick={() => router.push('/dashboard')}
+          borderRadius="full"
+          aria-label='Cerrar' 
+          icon={<CloseIcon />} />
+      </Header>
+
       <Container maxW="container.xl" id="dashboard">
+        <br/>
+        {(!data) && <SectionPanel>
+          <Flex alignItems="center">
+            <Spinner
+              thickness='4px'
+              speed='0.65s'
+              emptyColor='gray.200'
+              color='indigo.600'
+              size='lg'
+              />
+            <Text ml={8}>
+              Un momentico por favor ....
+            </Text>
+          </Flex>
+          </SectionPanel>
+        }
         {(data) &&
           <>
-            <Flex alignItems="center">
-              <Box>
-                <Heading size="sm">Prueba de Vida #{data.id}</Heading>
-                <Text fontSize="sm">Uid: {data.request_uid}</Text>
-              </Box>
-              <Spacer/>
-              <Box>
-                <IconButton 
-                  onClick={() => router.push('/dashboard')}
-                  aria-label='Cerrar' icon={<CloseIcon />}
-                  />
-              </Box>
-            </Flex>
             <Table variant="simple" colorScheme="teal" borderRadius="lg">
               <Row label="Para" content={data.personal_info.full_name} />
               <Row label="Pais, Doc y Numero" content={data.subject_id} />
@@ -97,14 +114,14 @@ export default function VerificationContainer(props: Props) {
             <br/>
             <SectionHeading title="VALIDACIONES"/>
             <SectionPanel>
-              <ValidationsList items={data.contract.validations} />
+              <ValidationsList items={data && data.contract.validations} />
             </SectionPanel>
 
             <hr/>
-            {/* <Text fontSize="xs" pt="lg">
+            {/* {<Text fontSize="xs" pt="lg">
               Verification content:
               <pre>{JSON.stringify(data, null, 2)}</pre>
-            </Text> */}
+            </Text>} */}
           </>
         }
       </Container>

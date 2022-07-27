@@ -101,7 +101,7 @@ const AssignmentsList = (props) => {
         )
       }
     );
-    return vs.length ? vs : <Text>No hay validaciones pendientes</Text> ;
+    return vs.length ? vs : <Text p={4}>No hay validaciones pendientes</Text> ;
   }
 
   function CompletedItemsList(props) {
@@ -122,7 +122,7 @@ const AssignmentsList = (props) => {
         )
       }
     );
-    return vs.length ? vs : <Text>No hay validaciones finalizadas</Text> ;
+    return vs.length ? vs : <Text p={4}>No hay validaciones finalizadas</Text> ;
   }
 
   if (data) {
