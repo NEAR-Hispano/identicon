@@ -118,7 +118,7 @@ class VerificationsController {
       if (err) 
         return err;
 
-      let verification = await verifications.getByRequestUidWithSubject(uid);
+      let verification = await verifications.getByUidWithSubject (uid);
       if (!verification)
         return new NotFoundError(`Not found the request with uid=${uid}`);
 
