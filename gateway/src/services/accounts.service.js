@@ -63,6 +63,13 @@ class AccountsService {
     return result;
   }
 
+  static async getAccountByLinkedId(linked_id) {
+    const result = await AccountsModel.findOne({
+      where: { linked_account_uid: linked_id },
+    });
+    return result;
+  }
+
   static async getAccounts() {
     const result = await AccountsModel.findAll({
       order: [

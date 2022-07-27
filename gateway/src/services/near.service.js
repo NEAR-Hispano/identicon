@@ -162,7 +162,6 @@ async function getContract(signer) {
       CONTRACT_ID, 
       {
         viewMethods: [
-          'get_verification'
         ],
         changeMethods: [
           'request_verification',
@@ -171,6 +170,7 @@ async function getContract(signer) {
           'unregister_as_validator',
           'assign_validators',
           'get_assigned_validations',
+          'get_verification'
         ],
         // sender: account, // account object to initialize and sign transactions.
       }
@@ -232,9 +232,9 @@ async function getVerification(args, signer) {
   try {
     // @args: { request_uid }
     const contract = await getContract(signer);
-    result = await contract.get_verification(args, ATTACHED_GAS);
+    result = await contract.get_verification(args);
   } catch(e) {
-    console.log('ERROR request_verification', e);
+    console.log('ERROR get_verification', e);
     throw e;
   }
   return result;
@@ -245,7 +245,7 @@ async function getAssignedValidations(args, signer) {
   try {
     // @args {order: 'asc'} ;
     const contract = await getContract(signer);
-    result = await contract.get_assigned_validations(args, ATTACHED_GAS);
+    result = await contract.get_assigned_validations(args);
   } catch(e) {
     console.log('ERROR get_assigned_validations', e);
     throw e;

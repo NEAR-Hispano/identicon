@@ -21,7 +21,7 @@ class VerificationsService {
       must_start_utc: '2022-01-01 00:00:00',
       must_end_utc:  '2022-01-01 00:00:00',
     });
-    return verification.dataValues;
+    return verification;
   }
 
   static async updateFields(
