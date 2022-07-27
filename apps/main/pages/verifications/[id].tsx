@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { Container, Flex, Heading, Spacer, Text, IconButton, Box } from '@chakra-ui/react';
 import { Table, Thead, Tbody, Tfoot, Tr, Th, Td,TableCaption, TableContainer } from '@chakra-ui/react';
+import StateIcon from "../../components/StateIcon";
+import { SectionHeading , SectionPanel } from '../../components/Section';
 import { CloseIcon } from '@chakra-ui/icons'
 import { useGetAccount } from "../../hooks/accounts";
 import { useGetSingleVerification } from "../../hooks/verifications";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
-import { stateDescription } from "../../constants/states";
+import { stateDescription, shortStateDescription } from "../../constants/states";
 
 export default function VerificationContainer(props: Props) {
   const { account_id } = props;
@@ -38,6 +40,31 @@ export default function VerificationContainer(props: Props) {
     null: 'Aún no hay resultados',
   }
 
+
+  const ValidationsList = (props) => {
+    const { items } = props;
+    const vs = (items || []).map((t) => {
+      return(
+        <Box key={t.validator_id}>
+          <Flex alignItems="center">
+            <Box width="2.5rem" textAlign="center">
+              <StateIcon result={t.result} />
+            </Box>
+            <Text m={0} p={0} lineheight="1em">
+              Anónimo ({t.validator_id.split('.')[0]})
+              <br/>
+              <b>{shortStateDescription(t.result)}</b> 
+              &nbsp; ({t.is_type})
+              <br/>
+              {t.remarks}
+            </Text>
+          </Flex>
+        </Box>
+      )
+    })
+    return(vs.length ? vs : 'Aun no hay validadores asignados');
+  }
+
   return (
     <>
       <Container maxW="container.xl" id="dashboard">
@@ -56,7 +83,7 @@ export default function VerificationContainer(props: Props) {
                   />
               </Box>
             </Flex>
-            <Table variant="simple" colorScheme="teal">
+            <Table variant="simple" colorScheme="teal" borderRadius="lg">
               <Row label="Para" content={data.personal_info.full_name} />
               <Row label="Pais, Doc y Numero" content={data.subject_id} />
               <Row label="Estado" content={stateDescription([data.state])} />
@@ -66,10 +93,18 @@ export default function VerificationContainer(props: Props) {
               <Row label="Debe finalizar" content={"Antes de "+data.must_end_utc} />
               <Row label="Resultado" content={resultDescriptions[data.result]} />
             </Table>
-            <Text fontSize="xs" pt="lg">
+
+            <br/>
+            <SectionHeading title="VALIDACIONES"/>
+            <SectionPanel>
+              <ValidationsList items={data.contract.validations} />
+            </SectionPanel>
+
+            <hr/>
+            {/* <Text fontSize="xs" pt="lg">
               Verification content:
               <pre>{JSON.stringify(data, null, 2)}</pre>
-            </Text>
+            </Text> */}
           </>
         }
       </Container>

@@ -24,13 +24,28 @@ const VerificationStateDescriptions = {
   'Canceled': 'Cancelada por el solicitante'
 };
 
+const VerificationStateShortDescriptions = {
+  'Unassigned': 'Pendiente',
+  'Pending': 'Pendiente',
+  'Approved': 'Aprobada',
+  'Rejected': 'Rechazada', 
+  'NotPossible': 'No es posible', 
+  'WillNotDo': 'No se realizará', 
+  'Canceled': 'Cancelada'
+};
+
 const stateDescription = (st) => {
   return VerificationStateDescriptions[st] || 'Sin descripcion';
+};
+
+const shortStateDescription = (st) => {
+  return VerificationStateShortDescriptions[st] || 'Sin descripcion';
 };
 
 export {
   VerificationStates,
   isVerificationPending,
   isVerificationDone,
-  stateDescription
+  stateDescription,
+  shortStateDescription
 };
