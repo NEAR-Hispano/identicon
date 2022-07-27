@@ -1,4 +1,4 @@
-const { VerificationStates, ValidationTypes } = require('./definitions');
+const { VerificationStates, ValidationTypes, TaskStates } = require('./definitions');
 
 const TasksModel = (sequelize, { DataTypes }) => {
 
@@ -39,7 +39,8 @@ const TasksModel = (sequelize, { DataTypes }) => {
       allowNull: true,
     },
     state: {
-      type: DataTypes.ENUM(VerificationStates),
+      // P-Pending, F-Done, X-Deleted
+      type: DataTypes.ENUM(TaskStates),
       allowNull: true,
     },
     // AP, RX, NP, WND, CX
@@ -50,16 +51,10 @@ const TasksModel = (sequelize, { DataTypes }) => {
     contents: {
       type: DataTypes.TEXT, // JSON stringified array of Files
       allowNull: true,
-      validate: {
-        notEmpty: false,
-      }
     },
     remarks: {
       type: DataTypes.TEXT,
       allowNull: true,
-      validate: {
-        notEmpty: false,
-      }
     },
   },
   {

@@ -24,11 +24,11 @@ const initialVerificationState = 'Pending';
 const ValidationTypes = [
   'Remote','Onsite', 'Review'
 ];
-
 const defaultValidationType = 'Remote';
 
 const TaskStates = ['P','F','X'];
 const initialTaskState = 'P';
+const finalTaskState = 'F';
 
 module.exports = {
   VerificationTypes,
@@ -39,5 +39,6 @@ module.exports = {
   defaultValidationType,
   initialVerificationState,
   TaskStates,
-  initialTaskState
+  initialTaskState,
+  finalTaskState
 };

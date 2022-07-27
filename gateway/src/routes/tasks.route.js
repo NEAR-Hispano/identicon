@@ -12,14 +12,15 @@ const TasksController = require('../controllers/tasks.controller');
 const getPreconditions = [
 ];
 
-router.get('/assigned', 
+router.get('/', 
   AuthMiddleware, 
-  ValidateParamsMiddleware(getPreconditions),
+  //ValidateParamsMiddleware(getPreconditions),
   async (req, res, next) => {
     try {
-      const response = await TasksController.getTasksAssigned({
+      const response = await TasksController.getTasksByState({
         order: 'asc',
-        authorized_uid: req.authorized.account_data.id,
+        state:  req.query.state,
+        authorized_uid: req.authorized.account_data.id
       });
       res.status(response.status).send(response.body);
     } catch (error) {
@@ -29,14 +30,22 @@ router.get('/assigned',
   }
 );
 
-router.get('/completed', 
+
+/**
+ * GET /tasks/:uid
+ */
+const getOnePreconditions = [
+  check('uid').exists().notEmpty().trim(),
+];
+
+router.get('/:uid', 
   AuthMiddleware, 
-  ValidateParamsMiddleware(getPreconditions),
+  //ValidateParamsMiddleware(getOnePreconditions),
   async (req, res, next) => {
     try {
-      const response = await TasksController.getTasksCompleted({
-        order: 'asc',
-        authorized_uid: req.authorized.account_data.id,
+      const response = await TasksController.getSingleTask({
+        uid: req.params.uid,
+        authorized_uid: req.authorized.account_data.id
       });
       res.status(response.status).send(response.body);
     } catch (error) {
@@ -46,31 +55,7 @@ router.get('/completed',
   }
 );
 
-// /**
-//  * GET /tasks/:uid
-//  */
-// const getOnePreconditions = [
-//   check('uid').exists().notEmpty().trim(),
-// ];
-// 
-// router.get('/:uid', 
-//   AuthMiddleware, 
-//   ValidateParamsMiddleware(getOnePreconditions),
-//   async (req, res, next) => {
-//     try {
-//       const response = await verificationsController.getOneVerification({
-//         uid: req.params.uid,
-//         authorized_uid: req.authorized.account_data.id
-//       });
-//       res.status(response.status).send(response.body);
-//     } catch (error) {
-//       res.status(error.statusCode ? error.statusCode : 500).send(error, error.stack);
-//     }
-//     next();
-//   }
-// );
-// 
-// 
+
 // /**
 //  * PUT /verifications/:uid
 //  */
