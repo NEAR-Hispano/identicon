@@ -26,19 +26,35 @@ class SubjectsService {
     return task;
   }
 
-  static async getById(uid) {
+  static async update(
+    uid, 
+    fields
+  ) {
+    let task = await this.getByUid(uid) ;
+    if (!task) 
+      return null;
+    if (fields.contents) 
+      fields.contents = JSON.stringify(fields.contents);
+    task.set(fields);
+    await task.save();
+    return task;
+  }
+
+
+  static async getByUid(uid) {
     try {
       const t = await TasksModel.findOne({
         where: { uid: uid }
       });
       return t || null;
     } catch (e) {
-      console.log("task.service getById ERR=", e);
+      console.log('task.service getByUid ERR=', e);
       return null;
     }
   }
 
-  static async getFilteredBy({
+
+  static async getFilteredByValidator({
     validator_uid, 
     state
   }) {
@@ -56,6 +72,7 @@ class SubjectsService {
       return r;
     });
   }
+
 
   static async getByIdWithSubjectInfo({
     uid
@@ -75,7 +92,6 @@ class SubjectsService {
     r.personal_info = JSON.parse(r.personal_info);
     return r;
   }
-
 }
 
 module.exports = SubjectsService;

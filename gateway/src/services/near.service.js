@@ -169,6 +169,7 @@ async function getContract(signer) {
           'register_as_validator',
           'unregister_as_validator',
           'assign_validators',
+          'report_validation_result',
           'get_assigned_validations',
           'get_verification'
         ],
@@ -227,6 +228,28 @@ async function assignValidators(args, signer) {
   return result;
 }
 
+
+async function reportValidationResult(args, signer) {
+  let result;
+  try {
+    // args = { 
+    //   request_uid: RequestId, 
+    //   result: VerificationState, 
+    //   contents: Vec<ContentID>, 
+    //   remarks: String
+    // }
+    args = args || {};
+    // signer MUST be Validator account
+    const contract = await getContract(signer);
+    result = await contract.report_validation_result(args, ATTACHED_GAS);
+  } catch (e) {
+    console.log('ERROR report_validation_result', e);
+    throw e;
+  }
+  return result;
+}
+
+
 async function getVerification(args, signer) {
   let result;
   try {
@@ -261,5 +284,6 @@ module.exports = {
   getVerification,
   registerAsValidator,
   assignValidators,
-  getAssignedValidations
+  getAssignedValidations,
+  reportValidationResult
 };

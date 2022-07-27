@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
 const { VerificationsModel, sequelize } = require('../models/');
+const { VerificationStates, isVerificationDone, isVerificationPending } = require('../models/definitions');
 
 class VerificationsService {
   constructor() {}
@@ -25,10 +26,23 @@ class VerificationsService {
   }
 
   static async updateFields(
-    uid, 
+    request_uid, 
     fields
   ) {
-    let verification = await this.getByUid(uid) ;
+    let verification = await this.getByRequestUid(request_uid) ;
+    verification.set(fields);
+    await verification.save();
+    return verification;
+  }
+
+  static async updateState(
+    request_uid, 
+    fields
+  ) {
+    let verification = await this.getByRequestUid(request_uid) ;
+    if (isVerificationDone(fields.state)) {
+      fields.result = fields.state;
+    }
     verification.set(fields);
     await verification.save();
     return verification;
@@ -52,7 +66,7 @@ class VerificationsService {
     });
   }
 
-  static async getByUid(uid) {
+  static async getByRequestUid(uid) {
     const subject = await VerificationsModel.findOne({
       where: { request_uid: uid }
     });

@@ -5,9 +5,11 @@ const AuthMiddleware = require('../middlewares/auth.middleware');
 const { FlattenMiddleware } = require('../middlewares/flatten.middleware');
 const ValidateParamsMiddleware = require('../middlewares/validate.middleware')
 const TasksController = require('../controllers/tasks.controller');
+const { VerificationStates } = require('../models/definitions')
+
 
 /**
- * GET /tasks/assigned ? order=
+ * GET /tasks ?state= &order=
  */
 const getPreconditions = [
 ];
@@ -56,41 +58,36 @@ router.get('/:uid',
 );
 
 
-// /**
-//  * PUT /verifications/:uid
-//  */
-// const putOnePreconditions = [
-//   check('uid').exists().notEmpty().trim(),
-//   body('subject_id').not().isEmpty().trim(),
-//   body('type').isIn(['ProofOfLife']), 
-//   body('personal_info__email').isEmail().normalizeEmail(),
-//   body('personal_info__phone').not().isEmpty().trim().escape(),
-//   body('personal_info__full_name').not().isEmpty().trim().escape(),
-//   body('personal_info__country').isIn(['mx', 'ar', 've', 'bo', 'cl', 'uy', 'pe']),
-// ];
-// 
-// router.put('/:uid', 
-//   AuthMiddleware,
-//   FlattenMiddleware('personal_info'), 
-//   ValidateParamsMiddleware(putOnePreconditions),
-//   async (req, res, next) => {
-//     try {
-//       const response = await verificationsController.updateVerification({
-//         uid: req.params.uid,
-//         subject_id: req.body.subject_id,
-//         type: req.body.type,
-//         personal_info: req.body.personal_info,
-//         authorized_uid: req.authorized.account_data.id 
-//       });
-//       res.status(response.status).send(response.body);
-//     } catch (error) {
-//       res.status(error.statusCode ? error.statusCode : 500).send(error, error.stack);
-//     }
-//     next();
-//   }
-// );
-// 
-// 
+/**
+ * PUT /tasks/:uid
+ */
+const putOnePreconditions = [
+  check('uid').exists().notEmpty().trim(),
+  body('result').isIn(VerificationStates), 
+  body('remarks').not().isEmpty().trim().escape(),
+];
+
+router.put('/:uid', 
+  AuthMiddleware,
+  ValidateParamsMiddleware(putOnePreconditions),
+  async (req, res, next) => {
+    try {
+      const response = await TasksController.udpateTaskResult({
+        uid: req.params.uid,
+        result: req.body.result,
+        remarks: req.body.remarks,
+        contents: req.body.contents,
+        authorized_uid: req.authorized.account_data.id 
+      });
+      res.status(response.status).send(response.body);
+    } catch (error) {
+      res.status(error.statusCode ? error.statusCode : 500).send(error, error.stack);
+    }
+    next();
+  }
+);
+
+
 // /**
 //  * POST /verifications/:uid/results
 //  */
