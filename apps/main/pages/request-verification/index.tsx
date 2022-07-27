@@ -95,15 +95,9 @@ const RequestVerification = (props: Props) => {
 
   return (
     <>
-    <Container 
-        maxW="container.xl" id="request-verification" 
-        borderRadius="lg"
-        bg="white"
-        mt={2} mb={6}>
+    {data && <Header account={data} shadow={true}/>}
 
-      {data && <Header account={data} shadow={false}/>}
-
-      <Alert status='warning' borderRadius="lg">
+    <Alert status='warning' borderRadius="lg" mx="auto" maxW="container.xl" my={4}>
         <AlertIcon  boxSize='32px' mr={4}/>
         <Text fontSize="sm">
           Necesitamos que completes estos datos de la persona que será verificada. 
@@ -112,6 +106,11 @@ const RequestVerification = (props: Props) => {
         </Text>
       </Alert>
 
+    <Container 
+        maxW="container.xl" id="request-verification" 
+        borderRadius="lg"
+        bg="white"
+        mt={2} mb={6}>
       <Flex alignItems="flex-start">
         <Stack 
           width="60%" 

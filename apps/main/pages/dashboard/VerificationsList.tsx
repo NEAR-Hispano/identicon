@@ -92,7 +92,7 @@ const VerificationsList = (props) => {
   if (data) {
     return(
       <>
-        <Text fontSize="12px" fontWeight="bold" pt={10} pb={8} pl="2rem">SOLICITUDES PENDIENTES</Text>
+        <Text fontSize="12px" fontWeight="bold" pt={10} pb={2} pl="4">SOLICITUDES PENDIENTES</Text>
         <Box >
           <PendingItemsList items={data}/> 
         </Box>

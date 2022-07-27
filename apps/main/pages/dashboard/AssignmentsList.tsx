@@ -34,35 +34,31 @@ const AssignmentsList = (props) => {
       return (<p>No hay asignaciones pendientes</p>)
     };
     const vs = pending
-      .map((v, i) => {
-        const href = "/tasks/"+v.uid;
-        const info = JSON.parse(v.info);
-        const task = v.validations[0];
+      .map((t, i) => {
+        const href = "/report-result/"+t.uid;
         return (
-          <Link href={href} key={v.id}>
+          <Link href={href} key={t.uid}>
             <Flex cursor="pointer" 
               py={4} pr={6} pl={0}
               borderBottom="1px solid #eeb"
               alignItems="center">
               <Box w="6rem" align="center">
-                <b>#{v.id}</b>
-                <br/>
-                {task.result}
+                {t.result}
                 <Icon />
               </Box>
               <VStack align="left">
                 <Text fontSize="lg" lineHeight="1em">
-                  {info.full_name}  
+                  {t.full_name}  
                 </Text>
                 <Text fontSize="xs" fontWeight="bold" color="blue" lineHeight="1em">
-                  {info.subject_id} 
+                  {t.subject_id} 
                 </Text>
               </VStack>
               <Spacer/>
               <Text>
-                {v.when.starts} 
+                {t.must_start} 
                 <br/> 
-                { v.when.ends }
+                {t.must_end}
               </Text>
             </Flex>
           </Link>
@@ -77,7 +73,7 @@ const AssignmentsList = (props) => {
   if (data) {
     return(
       <>
-        <Text fontSize="12px" fontWeight="bold" pt={10} pb={8} pl="2rem">TAREAS PENDIENTES</Text>
+        <Text fontSize="12px" fontWeight="bold" pt={10} pb={2} pl="4">TUS VALIDACIONES PENDIENTES</Text>
         <Box >
           <AssignedItemsList items={data}/> 
         </Box>

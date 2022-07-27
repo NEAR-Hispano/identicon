@@ -13,8 +13,14 @@ const AccountInfo = (props) => {
   return (
     <Box>
       <HStack pb="1">
-         <Text fontSize="sm" color="indigo">Identicon</Text>
-         <Text fontSize="sm">/ Tu cuenta</Text>
+        <Text fontSize="sm" color="indigo">Identicon</Text>
+        <Text fontSize="sm">/ Tu cuenta</Text>
+        {(account.type === 'VL') &&
+          <span>/ <b>Validador</b></span>
+        }
+        {(account.type === 'RQ') &&
+          <span>/ <b>Solicitante</b></span>
+        }
       </HStack>
       <Text fontSize="2xl" py={0} lineHeight="1.2em">
         {account && account.personal_info

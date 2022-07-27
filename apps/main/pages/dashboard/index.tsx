@@ -42,7 +42,6 @@ export default function Dashboard(props: Props) {
         }
         {(data && data.type === 'VL') &&
           <>
-            <Heading size="xs" mt="md">Lista de tareas</Heading>
             <AssignmentsList  account={data} />
           </>
         }
