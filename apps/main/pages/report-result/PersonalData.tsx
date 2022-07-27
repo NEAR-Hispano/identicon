@@ -18,7 +18,6 @@ export default function PersonalData(props) {
     <>
         {(data) &&
           <>
-            <Text ml={0} fontSize="sm" fontWeight="bold">DATOS PERSONALES A VALIDAR</Text>
             <Table variant="simple" colorScheme="teal">
               <Row label="Nombre(s) y Apellido(s)" content={data.full_name} />
               <Row label="Pais, Doc y Número" content={data.subject_id} />

@@ -20,12 +20,12 @@ const Header = (props) => {
         <Box>
             <HStack pb="1">
              <Text fontSize="sm" color="indigo">Identicon</Text>
-             <Text fontSize="sm">/ Fé de Vida / Reporte de validación</Text>
+             <Text fontSize="sm">/ Fe de Vida / Reporte de Validación</Text>
           </HStack>
-          <Heading size="xs" fontWeight="normal">
+          <Heading fontSize="xl" lineHeight="1.5em" fontWeight="bold">
             {task.full_name}
           </Heading>
-          <Text fontSize="sm">
+          <Text fontSize="sm" color="gray.600">
             Realizada por <b>{account.personal_info.full_name}</b>
           </Text>
         </Box>

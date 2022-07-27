@@ -85,6 +85,27 @@ const ReportResult = (props) => {
   //   }
   // }, [isRequestSuccess]);
 
+
+  const Panel = (props) => { 
+    return (
+      <Stack 
+        width="100%" 
+        margin="auto" spacing={5} pt={0} pb={0} px={8} mt={2} mb={4} 
+        borderRadius="lg"
+        bg="white" >
+          { props.children }
+      </Stack>
+    );
+  };
+
+  const PanelHeading = (props) => {
+    return (
+      <Text ml={4} fontSize="sm" fontWeight="bold">
+        { props.title }
+      </Text>
+    )
+  }
+
   return (
     <>
     {account && account.data && task && task.data &&
@@ -105,30 +126,25 @@ const ReportResult = (props) => {
         </Text>
       </Alert>
 
-      <Stack 
-          width="100%" 
-          margin="auto" spacing={5} marginTop={0} pt={6} pb={6} mb={12} px={8} mt={6}
-          borderRadius="lg"
-          bg="white" >
-
+      <br/>
+      <PanelHeading title="DATOS PERSONALES A VALIDAR" />
+      <Panel>
           {account && account.data && task && task.data &&
             <>
               <PersonalData data={task.data} />
-
-              <ValidationForm data={task.data} />
-
-              {/* <pre>
-                {JSON.stringify(task.data,null,2)}
-              </pre> */}
             </>
           }
-        </Stack>
-
-        {/* <Box width="40%" p={12} px={8}>
-          Ayuda aqui 
-        </Box> */}
-      {/* </Flex> */}
-
+      </Panel>
+      
+      <br/>
+      <PanelHeading title="CONCLUSIONES DE LA VALIDACIÓN" />
+      <Panel>
+          {account && account.data && task && task.data &&
+            <>
+              <ValidationForm data={task.data} />
+            </>
+          }
+      </Panel>
     </Container>
     </>
   );

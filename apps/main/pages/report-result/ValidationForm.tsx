@@ -14,8 +14,20 @@ export default function ValidationForm(props) {
   const router = useRouter();
   const { session } = useAuth();
   const toast = useToast();
-  const { reportResult, isRequestSuccess } = useReportResult(session);
-    
+  const { reportResult, isProcessing, isRequestSuccess } = useReportResult(session);
+
+  useEffect(() => {
+    if (isProcessing) {
+      toast({
+        title: "EStamos enviando tu resultado ...",
+        status: "success",
+        duration: 2000,
+        position: "top-right",
+        isClosable: true,
+      });
+    }
+  }, [isProcessing]);
+  
   useEffect(() => {
     if (isRequestSuccess) {
       toast({
@@ -48,7 +60,7 @@ export default function ValidationForm(props) {
     validateOnBlur: true,
     validateOnChange: true,
     onSubmit: async (values: ValidationResultData) => {
-      alert(JSON.stringify(values, null, 2));
+      //alert(JSON.stringify(values, null, 2));
       const result = await reportResult({...values});
       alert(JSON.stringify(result, null, 2));
     },
@@ -58,12 +70,12 @@ export default function ValidationForm(props) {
     <>
       {(data) &&
         <>
-          <Text pt={6} pl={0} fontSize="sm" fontWeight="bold">CONCLUSIONES DE LA VALIDACIÓN</Text>
           <FormControl
+            mt={6}
             isInvalid={
               !!form.values.matches &&
-              !!form.touched.requestFor &&
-              !!form.errors.requestFor
+              !!form.touched.matches &&
+              !!form.errors.matches
             }
             >
             <FormLabel>
@@ -128,9 +140,7 @@ export default function ValidationForm(props) {
             <FormErrorMessage>{form.errors.remarks}</FormErrorMessage>
           </FormControl>
 
-          <hr/>
-
-          <FormControl>
+          <FormControl pt={8} pb={6}>
             <Flex>
               <Button colorScheme="gray" borderRadius="3xl" mr={3} 
                 onClick={() => router.push("/")}>
@@ -139,7 +149,7 @@ export default function ValidationForm(props) {
               <Spacer/>
               <Button colorScheme="indigo"  mr={3} borderRadius="3xl"
                 onClick={(e: any) => form.handleSubmit(e)}>
-                Solicítala ahora !
+                Envía tu reporte !
               </Button>
             </Flex>
           </FormControl>
