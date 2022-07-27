@@ -1,11 +1,13 @@
 
 import React, { useEffect } from "react";
 import { Container, Heading, Box, Stack, Text, Button, Flex, Spacer, Icon, VStack } from '@chakra-ui/react';
+import StateIcon from '../../components/StateIcon';
 import { useGetTasksAssigned } from "../../hooks/tasks";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
 import Link from 'next/link';
-import { isVerificationDone, isVerificationPending } from "../../constants/states";
+import { isVerificationDone, isVerificationPending, stateDescription } from "../../constants/states";
+
 
 const AssignmentsList = (props) => {
   const route = useRouter();
@@ -32,9 +34,8 @@ const AssignmentsList = (props) => {
           py={4} pr={6} pl={0}
           borderBottom="1px solid #eeb"
           alignItems="center">
-          <Box w="6rem" align="center">
-            {t.result}
-            <Icon />
+          <Box w="4rem" align="center" fontSize="2xl">
+            <StateIcon result={t.result} />
           </Box>
           <VStack align="left">
             <Text fontSize="lg" lineHeight="1em">
@@ -45,11 +46,10 @@ const AssignmentsList = (props) => {
             </Text>
           </VStack>
           <Spacer/>
-          <Text>
-            {t.timing1}
-            {t.timing2 && 
-              <><br/>{t.timing2}</>
-            }
+          <Text align="right" fontSize="sm" maxW="12rem">
+            {t.timing}
+            <br/>
+            {stateDescription(t.result)}
           </Text>
         </Flex>
       </Link>
@@ -73,6 +73,12 @@ const AssignmentsList = (props) => {
     )
   }
 
+  function prettyDatetime(ts) {
+    let datetime = ts.split(' ');
+    let hhmmss = datetime[1].split(':');
+    return `${datetime[0]} ${hhmmss[0]}:${hhmmss[1]}`
+  }
+
 
   function AssignedItemsList(props) {
     const { items } = props;
@@ -88,8 +94,7 @@ const AssignmentsList = (props) => {
           result: t.result,
           subject_id: t.subject_id,
           full_name: t.full_name,
-          timing1: t.must_start,
-          timing2: t.must_end
+          timing: `Solicitada: ${prettyDatetime(t.must_start)}`
         }
         return (
           <ListItem refTo={refTo} item={item} key={t.uid}/>
@@ -104,14 +109,13 @@ const AssignmentsList = (props) => {
     const done = (data || []).filter((t) => (t.state === 'F'));
     const vs = done
       .map((t) => {
-        const refTo = "/report-result/"+t.uid;
+        const refTo = "/results/"+t.uid;
         const item = {
           uid: t.uid,
           result: t.result,
           subject_id: t.subject_id,
           full_name: t.full_name,
-          timing1: `Realizada ${t.updated_at}`,
-          timing2: null
+          timing: `Realizada: ${prettyDatetime(t.updated_at)}`
         }
         return (
           <ListItem refTo={refTo} item={item} key={t.uid}/>

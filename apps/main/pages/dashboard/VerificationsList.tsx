@@ -1,6 +1,7 @@
 
 import React, { useEffect } from "react";
 import { Container, Heading, Box, Stack, Text, Button, Flex, Spacer, Icon, VStack } from '@chakra-ui/react';
+import StateIcon from '../../components/StateIcon';
 import { useGetVerifications } from "../../hooks/verifications";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
@@ -42,18 +43,16 @@ const VerificationsList = (props) => {
               py={4} pr={6} pl={0}
               borderBottom="1px solid #eeb"
               alignItems="center">
-              <Box w="6rem" align="center">
-                <b>#{v.id}</b>
-                <br/>
-                {v.state}
-                <Icon />
+              <Box w="4rem" align="center" fontSize="2xl">
+                <StateIcon result={v.state} />
               </Box>
               <VStack align="left">
                 <Text fontSize="lg" lineHeight="1em">
                   {v.personal_info.full_name}  
                 </Text>
                 <Text fontSize="xs" fontWeight="bold" color="blue" lineHeight="1em">
-                  {v.subject_id} 
+                {/*<b>#{v.id}</b>: */}
+                {v.subject_id} 
                 </Text>
               </VStack>
               <Spacer/>
