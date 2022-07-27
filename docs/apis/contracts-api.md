@@ -3,11 +3,13 @@
 
 :warning: This is Work in progress.
 
-**Requester methods** This methods will be called by Requester or External accounts, never by a Validator.
+**Requester methods**
+
+This methods will be called by Requester or External accounts, never by a Validator.
 
 ### request_verification
 
-Status (deployed :ok:)
+Status (deployed :ok:)
 
 Registers the new request in the blockchain, but does not yet assigns validators to verify it. 
 ~~~rust
@@ -28,7 +30,7 @@ In case the request was not allowed, the contract will panic with one of the err
 
 ### cancel_verification
 
-Status (deployed :ok:)
+Status (deployed :ok:)
 
 ~~~rust
 cancel_verification(
@@ -38,11 +40,13 @@ cancel_verification(
 ~~~
 
 ---
-**Validator methods**: This methods will be called only by a Validator account.
+**Validator methods**
+
+This methods will be called only by a Validator account.
 
 ### register_as_validator
 
-Status (deployed :ok:)
+Status (deployed :ok:)
 
 The account registers itself as a validator. indicating what types of work he/she can perform.
 ~~~ 
@@ -57,7 +61,7 @@ On failure may return:
 
 ### get_assigned_validations
 
-Status (deployed :ok:)
+Status (deployed :ok:)
 
 Called by a given validator to get all of its assigned tasks.
 ~~~rust
@@ -65,9 +69,11 @@ get_assigned_validations(
 ) -> Vec<VerificationRequest>
 ~~~
 
-Returns: A `Vec` of  `VerificationRequest` objs each containing the info of each reuest assigned to this validator.
+Returns: A `Vec` of  `VerificationRequest` objects each containing the info of each request assigned to this validator.
 
 ### report_validation_result
+
+Status (deployed :ok:)
 
 Report the result of the verification. If the verification was not possible, or the validator will not do it then  the validator must include a descriptive cause.
 ~~~rust
@@ -76,15 +82,20 @@ report_validation_result(
   result: VerificationState, 
   contents: Vec<ContentID>, 
   remarks: String
-) 
+) -> VerificationRequest
 ~~~
 
 Every time we receive a verification result we must also evaluate if all validations have been done, and which is the final result for the request. While the verifications are still in course the request state is Pending.
 
+Returns: The modified VerificationRequest. 
+
 ### evaluate_results
+
+Status (deployed :ok:)
 
 Every time we receive a verification result we must evaluate if all verifications have been done, and which is the final result for the request. While the verifications are still in course the request state is Pending.
 **Is a private method**.
+
 ~~~
 evaluate_results(
   &self, 
@@ -94,7 +105,7 @@ evaluate_results(
 
 ### unregister_as_validator
 
-Status (deployed :ok:)
+Status (deployed :ok:)
 
 Sometimes a validator may want to remove itself from the validator pool.
 ~~~rust
@@ -102,13 +113,15 @@ unregister_as_validator()
 ~~~
 
 ---
-**Master methods**: This methods will be called by the Master account (probably identicon.near), when it's time comes depending of the state of one or more queues, or on the GW demands.
+**Master methods**: 
+
+This methods will be called by the Master account (probably identicon.near), when it's time comes depending of the state of one or more queues, or on the GW demands.
 
 ### assign_validators
 
 Assigns the validators to this request. Will return a vector with the selected validators id's.
 
-Status (deployed :ok:)
+Status (deployed :ok:)
 
 ~~~rust
 assign_validators(
