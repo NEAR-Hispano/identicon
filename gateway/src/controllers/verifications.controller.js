@@ -1,9 +1,4 @@
-const {
-  Success,
-  NotFoundError,
-  UnknownException,
-  ConflictError
-} = require('../response');
+const { Success, NotFoundError, UnknownException, ConflictError } = require('../response');
 const config = require('../config');
 const nearService = require('../services/near.service');
 const verifications = require('../services/verifications.service');
@@ -13,9 +8,9 @@ const tasksService = require('../services/tasks.service');
 const { getAccountOrError } = require('./controllers.helpers');
 const uuid = require('uuid');
 
+
 class VerificationsController {
   constructor() {}
-
 
   static async createVerification({ 
     subject_id, 
@@ -118,28 +113,32 @@ class VerificationsController {
       if (err) 
         return err;
 
+      // we need some info from the subject to fill the requester
+      let subject = await subjects.getById(account.subject_id);
+      account.full_name = JSON.parse(subject.personal_info).full_name ;
+       
       let verification = await verifications.getByUidWithSubject (uid);
       if (!verification)
         return new NotFoundError(`Not found the request with uid=${uid}`);
 
-      try {
-        let updated = await nearService.getVerification(
-          { uid: verification.request_uid },
-          account
-        );
-        verifications.updateFields(uid, {
-          state: updated.state
-        });
-        verification.state = updated.state;
-        verification.contract = updated;
-      }
-      catch (err) {
-        console.log('getOneVerification ERR=', err)
-      }
+      let updated = await nearService.getVerification(
+        { uid: verification.request_uid },
+        account
+      );
 
+      // We take the chance to update the DB index here 
+      verifications.updateFields(uid, {
+        state: updated.state
+      });
+
+      verification.state = updated.state;
+      verification.contract = updated;
+      verification.requester = account;
+      
       return new Success(verification);
     }
     catch (error) {
+      console.log('getOneVerification ERR=', error);
       return new UnknownException(error);
     }
   }
