@@ -10,7 +10,6 @@ export const colors = {
   primary: 'indigo',
   secundary: 'cyan',
 
-
   whiteAlpha: {
     50: "rgba(255, 255, 255, 0.04)",
     100: "rgba(255, 255, 255, 0.06)",

@@ -34,16 +34,12 @@ export default function Dashboard(props: Props) {
       {data && (
         <Header account={data}/>
       )}
-      <Container maxW="container.xl" id="dashboard">
+      <Container maxW="container.xl" id="dashboard" pb="4rem">
         {(data && (data.type === 'RQ' || data.type === 'EX')) &&
-          <>
-            <VerificationsList account={data} />
-          </>
+          <VerificationsList account={data} />
         }
         {(data && data.type === 'VL') &&
-          <>
-            <AssignmentsList  account={data} />
-          </>
+          <AssignmentsList  account={data} />
         }
       </Container>
 

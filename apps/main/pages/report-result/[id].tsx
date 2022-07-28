@@ -10,7 +10,7 @@ import { useStore as useAuth } from "../../stores/authSession";
 import { useRouter } from "next/router";
 //import schemaValidation from "./schemaValidation";
 import Header from './Header';
-//import Helpbar from '../../components/Helpbar'
+import { SectionPanel, SectionHeading } from '../../components/Section'
 import PersonalData from './PersonalData';
 import ValidationForm from "./ValidationForm";
 
@@ -115,7 +115,7 @@ const ReportResult = (props) => {
         shadow={true}/>
     }
 
-    <Container maxW="container.xl" px="2rem">
+    <Container maxW="container.xl" px="2rem" pb="4rem">
 
       <Alert status='warning' borderRadius="lg" mx="auto" my={4}>
         <AlertIcon  boxSize='32px' mr={4}/>
@@ -127,24 +127,24 @@ const ReportResult = (props) => {
       </Alert>
 
       <br/>
-      <PanelHeading title="DATOS PERSONALES A VALIDAR" />
-      <Panel>
+      <SectionHeading title="DATOS PERSONALES A VALIDAR" />
+      <SectionPanel>
           {account && account.data && task && task.data &&
             <>
               <PersonalData data={task.data} />
             </>
           }
-      </Panel>
+      </SectionPanel>
       
       <br/>
-      <PanelHeading title="CONCLUSIONES DE LA VALIDACIÓN" />
-      <Panel>
+      <SectionHeading title="CONCLUSIONES DE LA VALIDACIÓN" />
+      <SectionPanel>
           {account && account.data && task && task.data &&
             <>
               <ValidationForm data={task.data} />
             </>
           }
-      </Panel>
+      </SectionPanel>
     </Container>
     </>
   );

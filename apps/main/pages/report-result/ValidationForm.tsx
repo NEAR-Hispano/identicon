@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Button, FormControl, FormErrorMessage, FormLabel,
   Input, Select, Textarea, Spacer, Flex, 
-  Text, useToast } from "@chakra-ui/react";
+  Text, useToast, Box, Stack } from "@chakra-ui/react";
 import { useFormik, Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import { ValidationResultData } from "../../models/validations";
@@ -69,7 +69,7 @@ export default function ValidationForm(props) {
   return (
     <>
       {(data) &&
-        <>
+        <Stack spacing={8} px={8}>
           <FormControl
             mt={6}
             isInvalid={
@@ -153,7 +153,7 @@ export default function ValidationForm(props) {
               </Button>
             </Flex>
           </FormControl>
-        </>
+        </Stack>
       }
     </>
   );

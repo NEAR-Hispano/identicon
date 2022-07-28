@@ -18,7 +18,7 @@ export default function PersonalData(props) {
     <>
         {(data) &&
           <>
-            <Table variant="simple" colorScheme="teal">
+            <Table variant="simple" colorScheme="teal" p={8} rounded="lg">
               <Row label="Nombre(s) y Apellido(s)" content={data.full_name} />
               <Row label="Pais, Doc y Número" content={data.subject_id} />
               <Row label="Fecha de Nacimiento" content={data.info.birthday} />

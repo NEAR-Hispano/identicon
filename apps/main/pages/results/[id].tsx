@@ -12,11 +12,11 @@ import { ValidatorsList } from './ValidatorsList';
 import { PersonalData } from './PersonalData';
 import { StatusNotice } from './Notice';
 
-export default function VerificationContainer(props: Props) {
+export default function ResultContainer(props: Props) {
   const router = useRouter();
   const { session } = useAuth();
   const id = router.query && router.query.id ? router.query.id : "";
-  const { data, isLoading } = useGetSingleVerification(id);
+  const { data, isLoading } = useGetSingleResult(id);
   
   useEffect(()=> {
     if (!isLoading && data && data.personal_info) {
@@ -28,7 +28,7 @@ export default function VerificationContainer(props: Props) {
     <>
       <Header 
         isLoading={!data}
-        breadcrumb={`/ Fe de vida / Solicitud en Proceso`}
+        breadcrumb={`/ Fe de vida / Reporte de Validación`}
         title={data && `${data.personal_info.full_name}`}
         subtitle={data && `Solicitada por ${data.requester.full_name}`}
         bigImage={`certificate-outline.svg`} >
