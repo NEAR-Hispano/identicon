@@ -10,11 +10,16 @@ export const Header = (props) => {
   return (
     <Navbar shadow={true}>
       <Flex alignItems="center" py={2}>
-        <Box mr={4}>
-          <Image color="red"
+        <Box position="relative" mr={5}>
+          <Image
             src={`/images/${bigImage}`}
             alt="Identicon logo"
             boxSize={"72px"} />
+          <Image 
+            alt="Identicon logo"
+            src="/images/logo.png" 
+            boxSize={"32px"} 
+            position="absolute" top="-2px" left="-8px" /> 
         </Box>
         <Box>
             <HStack pb="1">
