@@ -93,7 +93,7 @@ const AssignmentsList = (props) => {
     const { items } = props;
     const done = (data || []).filter((t) => (t.state === 'F'));
     const vs = done.map((t) => {
-        const refTo = "/results/"+t.uid;
+        const refTo = "/report-result/"+t.uid;
         const item = {
           uid: t.uid,
           result: t.result,

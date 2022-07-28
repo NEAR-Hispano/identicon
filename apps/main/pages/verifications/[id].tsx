@@ -10,7 +10,7 @@ import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
 import { ValidatorsList } from './ValidatorsList';
 import { PersonalData } from './PersonalData';
-import { StatusNotice } from './Notice';
+import { StatusNotice } from '../../components/Notice';
 
 export default function VerificationContainer(props: Props) {
   const router = useRouter();

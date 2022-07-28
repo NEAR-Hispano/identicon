@@ -22,7 +22,7 @@ const AccountInfo = (props) => {
           <span>/ <b>Solicitante</b></span>
         }
       </HStack>
-      <Text fontSize="2xl" py={0} lineHeight="1.2em">
+      <Text fontSize="xl" py={0} lineHeight="1.5em" fontWeight="bold">
         {account && account.personal_info
           ? account.personal_info.full_name
           : "Aún sin nombre"}

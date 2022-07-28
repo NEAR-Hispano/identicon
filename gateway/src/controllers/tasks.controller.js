@@ -68,6 +68,7 @@ class TasksController {
         subject_id: t.subject_id,
         full_name:  t.personal_info.full_name,
         result: t.result,
+        remarks: t.remarks,
         contents: JSON.stringify(t.contents),
         must_start: t.created_at,
         must_end: '',

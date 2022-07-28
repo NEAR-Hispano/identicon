@@ -11,64 +11,84 @@ import {
   Text,
   HStack,
 } from "@chakra-ui/react";
-import CallToActions from "./CallToActions";
 
-type HeroProps = {};
-const Hero = (props: HeroProps) => {
+const Banner = (props) => {
+
+  const {
+    isOpen: isOpenSignUp,
+    onOpen: onOpenSignUp,
+    onClose: onCloseSignUp,
+  } = props.disclosureSignup;
+
   return (
-    <Flex
-      align="center"
-      justify={{ base: "center", md: "space-around", xl: "space-between" }}
-      direction={{ base: "column-reverse", md: "row" }}
-      wrap="wrap"
-      px={8}
-      mb={16}
-      {...props}
-    >
-      <Stack spacing={4} w={{ base: "80%", md: "40%" }}>
-        <Heading as="h1" size="xl" fontWeight="bold" color="primary.800">
-          La fé de vida para tí o tus familiares sin moverte de tu casa
-        </Heading>
-        <HStack spacing="3">
-          <Box>
-            <Button
-              variant={"solid"}
-              colorScheme={"green"}
-              size={"lg"}
-              mr={4}
-              px="xl"
-              py={6}
-              borderRadius="xl"
-            >
-              Solicítala ahora
-            </Button>
-            <Link href="/#more-info">
-            <Button
-              size={"md"}
-              mr={4}
-              px="xl"
-              py={6}
-              borderRadius="xl"
-              borderColor="gray.300"
-              variant="outline"
-            >
-              Quiero más info
-            </Button>
-            </Link>
-          </Box>
-        </HStack>
-      </Stack>
-      <Box
-        w={{ base: "100%", sm: "65%", md: "55%" }}
+      <Stack spacing={4} w="full" minW="44%" px={8}
+        textAlign={{base: "center", md: "left"}}
       >
-        <Image
-          src="images/man-woman-beach.jpg"
-          boxSize="100%"
-          rounded="1rem"
-          shadow="2xl"
-        />
+      <Heading as="h1" 
+        size="lg" //{{ base:"4xl", md: "5xl" }}
+        fontWeight="bold" color="primary.700"
+        color="white"
+        >
+        La fé de vida para tí o tus familiares sin moverte de tu casa
+      </Heading>
+      <HStack spacing="5">
+        <Box>
+          <Button
+            onClick={onOpenSignUp}
+            variant={"solid"}
+            colorScheme={"green"}
+            size={"lg"}
+            mr={4}
+            px="xl"
+            py={6}
+            mb={4}
+            borderRadius="xl"
+          >
+            Solicítala ahora
+          </Button>
+          <Link href="/#more-info">
+          <Button
+            size={"md"}
+            mr={4}
+            mb={4}
+            px="xl"
+            py={6}
+            borderRadius="xl"
+            borderColor="gray.300"
+            variant="outline"
+          >
+            Quiero más info
+          </Button>
+          </Link>
+        </Box>
+      </HStack>
+    </Stack>
+  )
+}
+
+
+
+const Hero = (props) => {
+
+  return (
+    <Box minH="36rem" bg="white" borderBottom="1px #aac solid" mt="104px"
+      backgroundImage={'url("images/group-seniors-beach_53876-82577.webp")'}
+      backgroundSize="cover"
+      backgroundPosition="center"
+      minH="42rem"
+      w="100%"
+      position="relative"
+      >
+      <Box bg="gray.900" opacity="0.8"
+        rounded="lg" boxShadow="xl"
+        maxW="36rem"
+        w="80%" 
+        p={6} position="absolute" bottom={12} left={12}>
+        <Banner 
+          disclosureSignup={props.disclosureSignup}
+          />
       </Box>
-    </Flex>
+    </Box>
   );
 };
 
