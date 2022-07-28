@@ -1,7 +1,7 @@
 import { Heading, Box, Stack, Text, Flex, Spacer, Icon, VStack } from '@chakra-ui/react';
 import StateIcon from '../../components/StateIcon';
 import Link from 'next/link';
-import { stateDescription } from "../../constants/states";
+import { stateDescription, shortStateDescription } from "../../constants/states";
 
 export const ListItem = (props) => {
   const 
@@ -28,7 +28,7 @@ export const ListItem = (props) => {
         <Text align="right" fontSize="sm" maxW="14rem">
           {t.timing}
           <br/>
-          {stateDescription(t.result)}
+          {shortStateDescription(t.result)}
         </Text>
       </Flex>
     </Link>
