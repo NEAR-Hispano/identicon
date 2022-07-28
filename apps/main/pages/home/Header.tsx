@@ -36,31 +36,38 @@ import SignUpModal from "./SignUpModal";
 import OtpModal from "./OTPVerificationModal";
 import LoginModal from "./LoginModal";
 
-const Header: React.FC<ButtonProps> = (props) => {
+//const Header: React.FC<ButtonProps> = (props) => {
+const Header = (props) => {
   const [signInAccountId, setSignInAccountId] = useState("");
   const [accountData, setAccountData] = useState<any>();
   const [isSignedIn, setisSignedIn] = useState(false);
   const { session, deleteSession } = useAuth();
+  
   const [otpVerificationData, setotpVerificationData] = useState({
     session: "",
   });
+
   const {
     isOpen: isOpenSignUp,
     onOpen: onOpenSignUp,
     onClose: onCloseSignUp,
-  } = useDisclosure();
+  } = props.disclosureSignup;
+
   const {
     isOpen: isOpenLogin,
     onOpen: onOpenLogin,
     onClose: onCloseLogin,
-  } = useDisclosure();
+  } = props.disclosureLogin;
+
   const {
     isOpen: isOpenOtp,
     onOpen: onOpenOtp,
     onClose: onCloseOtp,
   } = useDisclosure();
+
   const router = useRouter();
   const toast = useToast();
+
   const onSignUp = (data: any) => {
     toast({
       title: "OTP was successfully sent",
@@ -73,6 +80,7 @@ const Header: React.FC<ButtonProps> = (props) => {
     setotpVerificationData(data);
     onOpenOtp();
   };
+
   const onLogin = (data: any) => {
     toast({
       title: "OTP was successfully sent",
@@ -117,7 +125,7 @@ const Header: React.FC<ButtonProps> = (props) => {
         onClose={onCloseOtp}
         onOpen={onOpenOtp}
       />
-      <Box as="section" pb={{ base: "6", md: "6" }}>
+      <Box as="section" pb={{ base: "6", md: "6" }} bg="white" boxShadow="sm" position="fixed" top="0" w="full">
         <Box as="nav" alignContent="flex-end">
           <Container maxW="container.2xl" pt={{ base: "3", lg: "4" }}>
             <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>

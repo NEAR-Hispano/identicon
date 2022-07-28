@@ -14,6 +14,7 @@ import {
   Image,
   Skeleton
 } from '@chakra-ui/react';
+import { useRouter } from "next/router";
 
 function Action({ children }: { children: ReactNode }) {
   return (
@@ -21,29 +22,46 @@ function Action({ children }: { children: ReactNode }) {
       bg="white"
       mb={4}
       maxW="18rem"
-      shadow="base"
+      shadow="md"
       borderWidth="1px"
       alignSelf={{ base: 'center', lg: 'flex-start' }}
       borderColor={useColorModeValue('gray.200', 'gray.600')}
-      borderRadius={'xl'}>
+      borderRadius={'lg'}>
       {children}
     </Box>
   );
 }
 
-export default function CallToActions() {
+const CallToActions = (props) => {
+
+  const {
+    isOpen: isOpenSignUp,
+    onOpen: onOpenSignUp,
+    onClose: onCloseSignUp,
+  } = props.disclosureSignup;
+
+  const {
+    isOpen: isOpenLogin,
+    onOpen: onOpenLogin,
+    onClose: onCloseLogin,
+  } = props.disclosureLogin;
+
   return (
-    <Box py={6} as="section"
-    id="more-info">
+    <Box py={8} as="section" id="more-info" bg="gray.100" borderBottom="1px #aac solid">
+
       <Stack
         direction={{ base: 'column', md: 'row' }}
         textAlign="center"
         justify="center"
         spacing={{ base: 2, lg: 5 }}
-        py={5}>
+        maxW="container.xl"
+        mx="auto"
+        pt={8}
+        pb={8}>
         <Action>
           <Box py={4} px={12}>
             <HStack justifyContent="center">
+              <Text fontSize="5xl">🙋‍♀️</Text>
             </HStack>
             <Text fontWeight="500" fontSize={{ base: 'md', lg: 'sm' }}>
               ¿ No estás registrada/o ?
@@ -58,7 +76,9 @@ export default function CallToActions() {
             o de tus familiares o vecinos
             </Text>
             <Box w="80%" pt={7}>
-              <Button w="full" color="indigo" variant="outline" borderRadius="xl">
+              <Button 
+                onClick={onOpenSignUp}
+                w="full" color="indigo" variant="outline" borderRadius="xl">
                 Crear una cuenta
               </Button>
             </Box>
@@ -67,6 +87,7 @@ export default function CallToActions() {
         <Action>
           <Box py={4} px={12}>
             <HStack justifyContent="center">
+              <Text fontSize="5xl">🤝</Text>
             </HStack>
             <Text fontWeight="500" fontSize={{ base: 'md', lg: 'sm' }}>
               ¿ Ya tienes tu cuenta ?
@@ -80,7 +101,9 @@ export default function CallToActions() {
               Si ya tienes tu cuenta operativa, puedes
             </Text>
             <Box w="80%" pt={7}>
-              <Button w="full" color="indigo" variant="outline" borderRadius="xl">
+              <Button 
+                onClick={onOpenLogin}
+                w="full" color="indigo" variant="outline" borderRadius="xl">
                 Iniciar sesión
               </Button>
             </Box>
@@ -89,6 +112,7 @@ export default function CallToActions() {
         <Action>
           <Box py={4} px={12}>
             <HStack justifyContent="center">
+              <Text fontSize="5xl">🧑🏽‍💻</Text>
             </HStack>
             <Text fontWeight="500" fontSize={{ base: 'md', lg: 'sm' }}>
               ¿ Eres desarrollador ?
@@ -103,7 +127,9 @@ export default function CallToActions() {
               verificaciones desde tu App
             </Text>
             <Box w="80%" pt={7}>
-              <Button w="full" color="indigo" variant="outline" borderRadius="xl">
+              <Button 
+                onClick={onOpenSignUp}
+                w="full" color="indigo" variant="outline" borderRadius="xl">
                 Comienza aquí
               </Button>
             </Box>
@@ -113,3 +139,5 @@ export default function CallToActions() {
     </Box>
   );
 }
+
+export default CallToActions;
