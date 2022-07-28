@@ -14,9 +14,10 @@ export const ValidatorsList = (props) => {
     </Loading>
   )
 
-  const vs = (items || []).map((t) => {
+  const vs = (items || []).map((t, i) => {
     return(
-      <Box key={t.validator_id}>
+      <Box key={t.validator_id} 
+        px={8} pt={6} pb={i===(items.length-1) ? 7 : 0}>
         <Flex alignItems="center">
           <Box width="2.5rem" textAlign="center">
             <StateIcon result={t.result} />

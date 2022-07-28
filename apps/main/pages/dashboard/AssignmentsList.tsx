@@ -2,12 +2,14 @@
 import React, { useEffect } from "react";
 import { Container, Heading, Box, Stack, Text, Button, Flex, Spacer, Icon, VStack } from '@chakra-ui/react';
 import StateIcon from '../../components/StateIcon';
+import { SectionHeading, SectionPanel } from '../../components/Section';
 import { useGetTasksAssigned } from "../../hooks/tasks";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
 import Link from 'next/link';
 import { isVerificationDone, isVerificationPending, stateDescription } from "../../constants/states";
-
+import { prettyDatetime } from "../../utils/formatters";
+import { ListItem } from './ListItem';
 
 const AssignmentsList = (props) => {
   const route = useRouter();
@@ -24,70 +26,50 @@ const AssignmentsList = (props) => {
   }, [data]);
 
 
-  const ListItem = (props) => {
-    const 
-      refTo = props.refTo,
-      t = props.item;
-    return (
-      <Link href={refTo} key={t.uid}>
-        <Flex cursor="pointer" 
-          py={4} pr={6} pl={0}
-          borderBottom="1px solid #eeb"
-          alignItems="center">
-          <Box w="4rem" align="center" fontSize="2xl">
-            <StateIcon result={t.result} />
-          </Box>
-          <VStack align="left">
-            <Text fontSize="lg" lineHeight="1em">
-              {t.full_name}  
-            </Text>
-            <Text fontSize="xs" fontWeight="bold" color="blue" lineHeight="1em">
-              {t.subject_id} 
-            </Text>
-          </VStack>
-          <Spacer/>
-          <Text align="right" fontSize="sm" maxW="12rem">
-            {t.timing}
-            <br/>
-            {stateDescription(t.result)}
-          </Text>
-        </Flex>
-      </Link>
-    )    
-  }
-
-  
-  const SectionHeading = (props) => {
-    return (
-      <Text fontSize="12px" fontWeight="bold" pt={10} pb={2} pl="4">
-        {props.title}
-      </Text>
-    )
-  }
-
-  const SectionPanel = (props) => {
-    return (
-      <Box  borderRadius='lg' bg="#fefefe" >
-        {props.children}
-      </Box>
-    )
-  }
-
-  function prettyDatetime(ts) {
-    let datetime = ts.split(' ');
-    let hhmmss = datetime[1].split(':');
-    return `${datetime[0]} ${hhmmss[0]}:${hhmmss[1]}`
-  }
+//   const ListItem = (props) => {
+//     const 
+//       refTo = props.refTo,
+//       t = props.item;
+//     return (
+//       <Link href={refTo} key={t.uid}>
+//         <Flex cursor="pointer" 
+//           py={4} pr={6} pl={0}
+//           borderBottom="1px solid #eeb"
+//           alignItems="center">
+//           <Box w="4rem" align="center" fontSize="2xl">
+//             <StateIcon result={t.result} />
+//           </Box>
+//           <VStack align="left">
+//             <Text fontSize="lg" lineHeight="1em">
+//               {t.full_name}  
+//             </Text>
+//             <Text fontSize="xs" fontWeight="bold" color="blue" lineHeight="1em">
+//               {t.subject_id} 
+//             </Text>
+//           </VStack>
+//           <Spacer/>
+//           <Text align="right" fontSize="sm" maxW="14rem">
+//             {t.timing}
+//             <br/>
+//             {stateDescription(t.result)}
+//           </Text>
+//         </Flex>
+//       </Link>
+//     )    
+//   }
+// 
+// 
+//   function prettyDatetime(ts) {
+//     let datetime = ts.split(' ');
+//     let hhmmss = datetime[1].split(':');
+//     return `${datetime[0]} ${hhmmss[0]}:${hhmmss[1]}`
+//   }
 
 
   function AssignedItemsList(props) {
     const { items } = props;
     const pending = (data || []).filter((t) => (t.state === 'P'));
-    if (!pending.length) {
-      return (<p>No hay asignaciones pendientes</p>)
-    };
-    const vs = pending
-      .map((t) => {
+    const vs = pending.map((t) => {
         const refTo = "/report-result/"+t.uid;
         const item = {
           uid: t.uid,
@@ -101,14 +83,16 @@ const AssignmentsList = (props) => {
         )
       }
     );
-    return vs.length ? vs : <Text p={4}>No hay validaciones pendientes</Text> ;
+    return(vs.length 
+      ? vs 
+      : <Text p={4}>No hay validaciones pendientes</Text>
+    );
   }
 
   function CompletedItemsList(props) {
     const { items } = props;
     const done = (data || []).filter((t) => (t.state === 'F'));
-    const vs = done
-      .map((t) => {
+    const vs = done.map((t) => {
         const refTo = "/results/"+t.uid;
         const item = {
           uid: t.uid,
@@ -122,7 +106,10 @@ const AssignmentsList = (props) => {
         )
       }
     );
-    return vs.length ? vs : <Text p={4}>No hay validaciones finalizadas</Text> ;
+    return(vs.length 
+      ? vs 
+      : <Text p={4}>No hay validaciones finalizadas</Text>
+     );
   }
 
   if (data) {

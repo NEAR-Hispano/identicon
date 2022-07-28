@@ -10,6 +10,7 @@ const langDescriptions = {
 
 const resultDescriptions = {
   null: 'Aún no hay resultados',
+  'Approved': 'Aprobado' 
 }
 
 function Row(props) {

@@ -40,19 +40,15 @@ export default function VerificationContainer(props: Props) {
       </Header>
 
       <Container maxW="container.xl" id="dashboard">
-        <br/>
-        <br/>
         <SectionHeading title="DATOS PERSONALES"/>
         <SectionPanel>
           <PersonalData data={data} />
         </SectionPanel>
 
-        <br/>
         <SectionHeading title="VALIDADORES"/>
         <SectionPanel>
           <ValidatorsList items={data && data.contract.validations} />
         </SectionPanel>
-
         <hr/>
         {/* {<Text fontSize="xs" pt="lg">
           Verification content:

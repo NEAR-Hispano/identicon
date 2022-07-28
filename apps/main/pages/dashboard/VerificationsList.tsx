@@ -2,11 +2,17 @@
 import React, { useEffect } from "react";
 import { Container, Heading, Box, Stack, Text, Button, Flex, Spacer, Icon, VStack } from '@chakra-ui/react';
 import StateIcon from '../../components/StateIcon';
+import { Loading } from '../../components/Loading';
+import { SectionHeading, SectionPanel } from '../../components/Section';
 import { useGetVerifications } from "../../hooks/verifications";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
 import Link from 'next/link';
 import { isVerificationDone, isVerificationPending } from "../../constants/states";
+import { prettyDatetime } from "../../utils/formatters";
+import { ListItem } from './ListItem';
+
+
 const VerificationsList = (props) => {
   const route = useRouter();
   const { session } = useAuth();
@@ -21,83 +27,64 @@ const VerificationsList = (props) => {
     }
   }, [data]);
 
-  // let arr = [1, 2].map((item, i) => (
-  //   <Stack m="2rem" key={`skeleton-${i}`}>
-  //     <p>{item}</p>
-  //   </Stack>
-  // ));
 
   function PendingItemsList(props) {
     const { items } = props;
     const pending = (data || []).filter((t) => isVerificationPending(t.state));
-    //const emitted = (data || []).filter((t) => isVerificationDone(t.state));
-    if (!pending.length) {
-      return (<p>No hay verificaciones pendientes</p>)
-    };
-    const vs = pending
-      .map((v, i) => {
-        const href = "/verifications/"+v.request_uid;
+    const vs = pending.map((t) => {
+        const refTo = "/verifications/"+t.request_uid;
+        const item = {
+          uid: t.uid,
+          result: t.state,
+          subject_id: t.subject_id,
+          full_name: t.personal_info.full_name,
+          timing: `Solicitada: ${prettyDatetime(t.created_at)}`
+        }
         return (
-          <Link href={href} key={v.id}>
-            <Flex cursor="pointer" 
-              py={4} pr={6} pl={0}
-              borderBottom="1px solid #eeb"
-              alignItems="center">
-              <Box w="4rem" align="center" fontSize="2xl">
-                <StateIcon result={v.state} />
-              </Box>
-              <VStack align="left">
-                <Text fontSize="lg" lineHeight="1em">
-                  {v.personal_info.full_name}  
-                </Text>
-                <Text fontSize="xs" fontWeight="bold" color="blue" lineHeight="1em">
-                {/*<b>#{v.id}</b>: */}
-                {v.subject_id} 
-                </Text>
-              </VStack>
-              <Spacer/>
-              <Text>
-                {v.created_at}
-              </Text>
-            </Flex>
-          </Link>
+          <ListItem refTo={refTo} item={item} key={t.uid}/>
         )
       }
     );
-    return (
-      <Box  borderRadius='lg' bg="#fefefe" >{vs}</Box>
-    );
+    return(vs.length 
+      ? vs 
+      : <Text p={4}>No hay verificaciones pendientes</Text>
+     );
   }
 
   function EmmitedItemsList(props) {
     const { items } = props;
-    const emitted = (data || []).filter((t) => ['FN'].includes(t.state));
-    if (!emitted.length) {
-      return (<p>No hay verificaciones emitidas</p>)
-    };
-    const vs = emitted
-      .map((v, i) => 
-        <Link  key={v.id} >
-          <a href="#">
-            {v.request_uid} | {v.state} {v.personal_info.full_name} {v.subject_id}
-          </a>
-        </Link>
-    );
-    return (
-      <Box  borderWidth='1px' borderRadius='lg' >{vs}</Box>
-    );
+    const emitted = (data || []).filter((t) => isVerificationDone(t.state));
+    const vs = emitted.map((t) => {
+      const refTo = "/verifications/"+t.request_uid;
+      const item = {
+        uid: t.uid,
+        result: t.state,
+        subject_id: t.subject_id,
+        full_name: t.personal_info.full_name,
+        timing: `Solicitada: ${prettyDatetime(t.created_at)}`
+      }
+      return (
+        <ListItem refTo={refTo} item={item} key={t.uid}/>
+      )
+    });
+    return(vs.length 
+      ? vs 
+      : <Text p={4}>No hay certificados emitidos</Text>
+     );
   }
 
   if (data) {
     return(
       <>
-        <Text fontSize="12px" fontWeight="bold" pt={10} pb={2} pl="4">SOLICITUDES PENDIENTES</Text>
-        <Box >
+        <SectionHeading title="SOLICITUDES PENDIENTES" />
+        <SectionPanel>
           <PendingItemsList items={data}/> 
-        </Box>
+        </SectionPanel>
 
-        <Heading as="h2" fontSize="xs" mb={0} pb={0}>CERTIFICADOS EMITIDOS</Heading>
-        <EmmitedItemsList items={data}/> 
+        <SectionHeading title="CERTIFICADOS EMITIDOS" />
+        <SectionPanel>
+          <EmmitedItemsList items={data}/> 
+        </SectionPanel>
       </>
     )
   }
