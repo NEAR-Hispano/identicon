@@ -17,7 +17,7 @@ const isVerificationDone = (st) => {
 const VerificationStateDescriptions = {
   'Unassigned': 'Todavía no te han asignado validadores.',
   'Pending': 'Pendiente. Ya tienes validadores asignados, espera que te contacten.',
-  'Approved': '¡ Tu solicitud fue Aprobada !',
+  'Approved': 'La solicitud está Aprobada.',
   'Rejected': 'Rechazada. Ver comentarios para entender porqué.', 
   'NotPossible': 'No es posible realizarla por causas ajenas al validador.', 
   'WillNotDo': 'Validador no realizará. Ver comentarios.', 
