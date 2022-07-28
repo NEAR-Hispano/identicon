@@ -4,15 +4,16 @@ import {
   MdOutlineClosedCaptionDisabled, 
   MdOutlineLocalFireDepartment
 } from 'react-icons/md';
+import { colors } from '../constants/colors';
 
 const StateIcon = (props) => {
   switch (props.result) {
-    case 'Pending': return <MdPanTool />;
-    case 'Approved': return <MdDoneOutline />;
-    case 'Rejected': return <MdThumbDownOffAlt />;
-    case 'NotPossible': return <MdOutlineLocalFireDepartment />
-    case 'WillNotDo': return <MdOutlineClosedCaptionDisabled />;
-    case 'Canceled': return <MdOutlineClosedCaptionDisabled />;
+    case 'Pending': return <MdPanTool color={colors.yellow['400']}/>;
+    case 'Approved': return <MdDoneOutline  color={colors.green['400']}/>;
+    case 'Rejected': return <MdThumbDownOffAlt  color={colors.red['400']}/>;
+    case 'NotPossible': return <MdOutlineLocalFireDepartment  color={colors.red['600']}/>
+    case 'WillNotDo': return <MdOutlineClosedCaptionDisabled  color={colors.red['600']}/>;
+    case 'Canceled': return <MdOutlineClosedCaptionDisabled  color={colors.gray['400']}/>;
   }
   return(<></>)
 }
