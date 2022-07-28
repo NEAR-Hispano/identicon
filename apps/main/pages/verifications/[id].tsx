@@ -41,6 +41,7 @@ export default function VerificationContainer(props: Props) {
 
       <Container maxW="container.xl" id="dashboard">
         <br/>
+        <br/>
         <SectionHeading title="DATOS PERSONALES"/>
         <SectionPanel>
           <PersonalData data={data} />

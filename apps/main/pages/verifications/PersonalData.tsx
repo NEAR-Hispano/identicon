@@ -16,7 +16,7 @@ function Row(props) {
   const { label, content } = props;
   return <Tr>
     <Td>{label}</Td>
-    <Td>{content}</Td>
+    <Td  fontSize="md">{content}</Td>
   </Tr>
 }
 
@@ -31,11 +31,11 @@ export const PersonalData = (props) => {
   )
 
   return (
-      <Table variant="simple" colorScheme="teal" borderRadius="lg">
+    <Table variant="simple" colorScheme="teal" borderRadius="lg">
       <Row label="Para" content={data.personal_info.full_name} />
       <Row label="Pais, Doc y Numero" content={data.subject_id} />
       <Row label="Estado" content={stateDescription([data.state])} />
-      <Row label="Preferencias" content={"Se verificara usando " + data.personal_info.preferred +" al móvil "+data.personal_info.phone} />
+      <Row label="Preferencias" content={"Se verificara usando '" + data.personal_info.preferred +"' al móvil "+data.personal_info.phone} />
       <Row label="Idiomas" content={data.personal_info.languages || langDescriptions[data.personal_info.country]} />
       <Row label="Debe comenzar" content={data.must_start_utc} />
       <Row label="Debe finalizar" content={"Antes de "+data.must_end_utc} />
