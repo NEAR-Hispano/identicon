@@ -50,8 +50,9 @@ impl VerificationContract {
 
 
     /// Called by a given validator to get all of its assigned tasks.
-    fn get_assigned_validations(
-        &mut self
+    pub fn get_assigned_validations(
+        &mut self,
+        order: String
     ) -> Vec<VerificationRequest> {
         // MUST use the signer_account_id, see: 
         let signer_id = env::signer_account_id();
@@ -85,7 +86,7 @@ impl VerificationContract {
         result: VerificationState,
         contents: Vec<FileId>,
         remarks: String,
-    ) {
+    ) -> VerificationRequest {
         // MUST use the signer_account_id, see: 
         let signer_id = env::signer_account_id();
         log!("\nreport_verification_result: Called method ({:?} {:?} {:?} {:?} {:?})",
@@ -114,10 +115,12 @@ impl VerificationContract {
             }
         }
 
-        // see if all tasks havecompleted and evaluate Verification state
+        // see if all tasks have completed and evaluate Verification state
         requested.state = self.evaluate_results(&requested);
         log!("{:?}",requested);
         self.verifications.insert(&request_uid, &requested);
+
+        requested // return the modified VerificationRequest
     }
 
 

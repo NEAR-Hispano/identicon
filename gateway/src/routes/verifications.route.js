@@ -47,7 +47,10 @@ router.post('/',
  */
 const getPreconditions = [
   check('requester_uid').exists().notEmpty().trim(),
-  check('states').exists().notEmpty().isIn(['UN', 'PN', 'ST', 'FI']), 
+  check('states').exists().notEmpty().isIn([
+    'Unassigned','Pending', 'Approved', 'Rejected', 
+    'NotPossible', 'WillNotDo','Canceled'
+  ]), 
 ];
 
 router.get('/', 

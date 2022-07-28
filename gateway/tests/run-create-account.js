@@ -12,7 +12,7 @@ async function run_createAccount() {
   // Simulate session 
   let session = {
     type: "VL",
-    contact: 'mazito.v2+0x9@gmail.com'
+    contact: 'mazito.v2+v7@gmail.com'
   };
 
   await sequelize.sync({ 
@@ -33,12 +33,14 @@ async function run_createAccount() {
     let [nearAccount, receipt] = await nearService.createImplicitAccount();
     console.log("NEAR account", nearAccount);
 
-    let created = await AccountsService.createAccount(session, nearAccount);
-    [account, error] = await getAccountOrError(created.uid);
+    if (nearAccount) {
+      let created = await AccountsService.createAccount(session, nearAccount);
+      [account, error] = await getAccountOrError(created.uid);
 
-    if (session.type === 'VL') {
-      await nearService.registerAsValidator({can_do: ['Remote']}, account);        
-    }     
+      if (created && session.type === 'VL') {
+        await nearService.registerAsValidator({can_do: ['Remote']}, account);        
+      }     
+    }
   }
   else {
     console.log(`EXISTS: Account ${session.contact} already exists`);
@@ -66,6 +68,7 @@ async function run_createAccount() {
   console.log('Account=', account);
   console.log(`AUTH_KEY="${token}"`);
 }
+
 
 setTimeout(async () => {
   await run_createAccount();

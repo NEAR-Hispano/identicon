@@ -14,11 +14,13 @@ const api = {
           : null,
       }));
   },
+
   deleteAccount: async (id: string) => {
     return axios
       .delete(`${baseUrl}/v1/accounts/${id}`)
       .then((response) => response.data);
   },
+
   updateAccount: async (data: UpdateAccountData) => {
     return axios
       .put(`${baseUrl}/v1/accounts/${data.uid}`, data)

@@ -1,19 +1,16 @@
-const {
-  Success,
-  NotFoundError,
-  UnknownException,
-  ConflictError
-} = require('../response');
+const { Success, NotFoundError, UnknownException, ConflictError } = require('../response');
+const config = require('../config');
 const nearService = require('../services/near.service');
 const verifications = require('../services/verifications.service');
 const accountsService = require('../services/accounts.service');
 const subjects = require('../services/subjects.service');
+const tasksService = require('../services/tasks.service');
 const { getAccountOrError } = require('./controllers.helpers');
 const uuid = require('uuid');
 
+
 class VerificationsController {
   constructor() {}
-
 
   static async createVerification({ 
     subject_id, 
@@ -26,17 +23,10 @@ class VerificationsController {
       if (err) 
         return err;
 
-      // get Subject or create it
-      let subject = await subjects.getById(subject_id);
-      if (!subject)
-        subject = await subjects.create(subject_id, personal_info);
-      if (!subject || subject.error) 
-        return new UnknownException(subject.error);
-
       // call the Contract
       const request_uid = uuid.v4();
-      const result = await nearService.requestVerification(
-        {
+      personal_info.subject_id = subject_id;
+      const result = await nearService.requestVerification({
           uid: request_uid,
           subject_id: subject_id,
           is_type: type,
@@ -46,11 +36,40 @@ class VerificationsController {
       );
       console.log('\n\n',result,'\n\n');
 
+      // now assign the validators 
+      const validators = await this.assignValidators({
+        request_uid: request_uid, 
+        payload: personal_info
+      }) ;
+
       // also store it in DB for indexing
       const response = await verifications.createVerification(
-        request_uid, subject_id, type, // all request verification info
+        // all request verification info
+        request_uid, subject_id, type, result.state, 
         account // account requesting this verification
       );
+
+      // get Subject or create it
+      let subject = await subjects.getById(subject_id);
+      if (!subject)
+        subject = await subjects.create(subject_id, personal_info);
+      if (!subject || subject.error) 
+        return new UnknownException(subject.error);
+
+      for (var j=0; j < validators.length; j++) {
+        const validator = await accountsService.getAccountByLinkedId(validators[j]);
+        if (validator) {
+          // add the tasks to DB for indexing
+          const task = await tasksService.create({
+            request_uid: request_uid,
+            validator_uid: validator.uid,
+            type: type 
+          });
+
+          // also send mail to validators
+          console.log('Email to=', validator.uid, validator.email, ' Task=', task);
+        }
+      }
 
       return new Success(response);
     }
@@ -94,13 +113,32 @@ class VerificationsController {
       if (err) 
         return err;
 
-      const verification = await verifications.getByUidWithSubject(uid);
+      // we need some info from the subject to fill the requester
+      let subject = await subjects.getById(account.subject_id);
+      account.full_name = JSON.parse(subject.personal_info).full_name ;
+       
+      let verification = await verifications.getByUidWithSubject (uid);
       if (!verification)
         return new NotFoundError(`Not found the request with uid=${uid}`);
 
+      let updated = await nearService.getVerification(
+        { uid: verification.request_uid },
+        account
+      );
+
+      // We take the chance to update the DB index here 
+      verifications.updateFields(uid, {
+        state: updated.state
+      });
+
+      verification.state = updated.state;
+      verification.contract = updated;
+      verification.requester = account;
+      
       return new Success(verification);
     }
     catch (error) {
+      console.log('getOneVerification ERR=', error);
       return new UnknownException(error);
     }
   }
@@ -118,7 +156,7 @@ class VerificationsController {
       if (err) 
         return err;
   
-      let verification = await verifications.getByUid(uid);
+      let verification = await verifications.getByRequestUid(uid);
       if (!verification)
         return new NotFoundError(`Not found the request with uid=${uid}`);
     
@@ -139,6 +177,33 @@ class VerificationsController {
     }
     catch (error) {
       return new UnknownException(error);
+    }
+  }
+
+
+  static async assignValidators({
+    request_uid,
+    payload // personal info and ...
+  }) {
+    // find a set of validators filtered by country and language
+    const validators = await accountsService.getFilteredValidators({
+      country: payload.country,
+      languages: payload.languages || config.countryLanguages[payload.country]
+    });   
+    
+    const theSet = validators.map((t) => t.linked_account_uid);
+    console.log(theSet);
+    try {
+      const selected = await nearService.assignValidators({
+        uid: request_uid, 
+        validators_set: (validators || []).map((t) => t.linked_account_uid)
+      });
+      console.log('assignValidators selected=', selected);
+      return selected;
+    }
+    catch (err) {
+      console.log('assignValidators failed ERR=', err);
+      return [];
     }
   }
 }

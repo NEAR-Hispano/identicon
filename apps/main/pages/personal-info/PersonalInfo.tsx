@@ -10,6 +10,8 @@ import {
   Radio,
   RadioGroup,
   Show,
+  Select,
+  FormErrorMessage,
   Stack,
   Tab,
   TabList,
@@ -17,6 +19,7 @@ import {
   TabPanels,
   Tabs,
   VStack,
+  Text,
   useToast
 } from "@chakra-ui/react";
 import { colors } from "../../constants/colors";
@@ -32,7 +35,7 @@ type Props = {
 const PersonalInfo = (props: Props) => {
   const route = useRouter();
   const { account_id } = props;
-const toast = useToast();
+  const toast = useToast();
  
   const { session } = useAuth();
   const { data, isLoading } = useGetAccount(session);
@@ -54,7 +57,8 @@ const toast = useToast();
       health: "",
       extras: "",
       email: "",
-      dni:""
+      dni:"",
+      can_do: "" // Only for validators
     };
   const form = useFormik({
     initialValues: initialValuesSignUp,
@@ -83,115 +87,123 @@ const toast = useToast();
       toast({
         title: "Información personal actualizada",
         status: "success",
-        duration: 9000,
+        duration: 3000,
         position: "top-right",
         isClosable: true,
       });
+      setTimeout(() => {
+        route.push("/dashboard");
+      }, 3000);
     }
   }, [isUpdateSuccess])
 
   return (
     <>
-       <Stack maxWidth={600} margin="auto" spacing={5} marginTop={5}>
+      <Stack maxWidth={600} margin="auto" spacing={6} marginTop={8}>
+
+        <FormControl>
+          <FormLabel pl={4}>Nombres y Apellidos completo</FormLabel>
+          <Input
+            id="full_name"
+            name="full_name"
+            placeholder="Juan Perez"
+            value={form.values.full_name}
+            onPaste={form.handleChange}
+            onBlur={form.handleBlur}
+            onChange={form.handleChange}
+          />
+        </FormControl>
+
+        <FormControl
+          isInvalid={
+            !!form.values.country &&
+            !!form.touched.country &&
+            !!form.errors.country
+          }
+          >
+          <FormLabel pl={4}>País</FormLabel>
+          <Select
+            id="country"
+            name="country"
+            placeholder="Seleccione un país"
+            value={form.values.country}
+            onPaste={form.handleChange}
+            onBlur={form.handleBlur}
+            onChange={form.handleChange}
+          >
+            <option value="ar">Argentina</option>
+            <option value="mx">Mexico</option>
+            <option value="ve">Venezuela</option>
+            <option value="bo">Bolivia</option>
+            <option value="cl">Chile</option>
+            <option value="uy">Uruguay</option>
+            <option value="ve">Peru</option>
+          </Select>
+          <FormErrorMessage>{form.errors.country}</FormErrorMessage>
+        </FormControl>
+
+        <FormControl
+          isInvalid={
+            !!form.values.dni &&
+            !!form.touched.dni &&
+            !!form.errors.dni
+          }
+        >
+          <FormLabel pl={4}>DNI</FormLabel>
+          <Input
+            id="dni"
+            name="dni"
+            placeholder="Número"
+            value={form.values.dni}
+            onPaste={form.handleChange}
+            onBlur={form.handleBlur}
+            onChange={form.handleChange}
+          />
+        </FormControl>
+
+        <FormControl
+          isInvalid={
+            !!form.values.languages &&
+            !!form.touched.languages &&
+            !!form.errors.languages
+          }
+          >
+          <FormLabel pl={4}>Idioma que habla</FormLabel>
+          <Select
+            id="languages"
+            name="languages"
+            placeholder="Seleccione su idioma"
+            value={form.values.languages}
+            onPaste={form.handleChange}
+            onBlur={form.handleBlur}
+            onChange={form.handleChange}
+          >
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="po">Português</option>
+          </Select>
+          <FormErrorMessage>{form.errors.languages}</FormErrorMessage>
+        </FormControl>
+
+        {(data && data.type === 'VL') && 
+          <Text size="sm">Eres un <b>Validador</b>. Por ahora solo podrás realizar validación Remota.</Text>
+        }
+
       <FormControl>
-        <FormLabel>Nombre Completo</FormLabel>
-        <Input
-          id="full_name"
-          name="full_name"
-          placeholder="Juan Perez"
-          value={form.values.full_name}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        />
-        {/* <FormLabel>Fecha de Nacimiento</FormLabel>
-        <Input
-          id="birthday"
-          name="birthday"
-          placeholder="01/01/1979"
-          value={form.values.birthday}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        /> */}
-        {/* <FormLabel>Gender</FormLabel>
-      <RadioGroup
-        defaultValue="M"
-        value={form.values.sex}
-        onBlur={form.handleBlur}
-        onChange={form.handleChange}
-      >
-        <Stack spacing={4} direction="row">
-          <Radio value="M">Male</Radio>
-          <Radio value="F">Female</Radio>
-          <Radio value="N">N/D</Radio>
-        </Stack>
-      </RadioGroup> */}
-        <FormLabel>Pais</FormLabel>
-        <Input
-          id="country"
-          name="country"
-          placeholder="Argentina"
-          value={form.values.country}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        />
-        {/* <FormLabel>Provincia</FormLabel>
-        <Input
-          id="region"
-          name="region"
-          placeholder="Tucuman"
-          value={form.values.region}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        />
-        <FormLabel>Ciudad</FormLabel>
-        <Input
-          id="comune"
-          name="comune"
-          placeholder="Tafi del Valle"
-          value={form.values.comune}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        />
-        <FormLabel>Dirección</FormLabel>
-        <Input
-          id="address"
-          name="address"
-          placeholder="Av. Juan Calchaquí 400"
-          value={form.values.address}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        /> */}
-         <FormLabel>DNI</FormLabel>
-        <Input
-          id="dni"
-          name="dni"
-          placeholder="Número"
-          value={form.values.dni}
-          onPaste={form.handleChange}
-          onBlur={form.handleBlur}
-          onChange={form.handleChange}
-        />
-      </FormControl>
-      <FormControl>
-      <Button
-        mr={3}
-        onClick={() => route.push("/")}
-      >
-        Volver
-      </Button>
-      <Button
-        colorScheme="indigo"
-        mr={3}
-        onClick={(e: any) => form.handleSubmit(e)}
-      >
-        Guardar
-      </Button>
+        <Button
+          variant="outline"
+          mr={3}
+          onClick={() => route.push("/dashboard")}
+        >
+          &lt; &nbsp; Lo haré después 
+        </Button>
+        <Button
+          colorScheme="indigo"
+          mr={3}
+          onClick={(e: any) => { form.handleSubmit(e); }}
+        >
+          Actualiza tu información personal ! 
+        </Button>
       </FormControl>
       </Stack>
     </>

@@ -1,7 +1,7 @@
 const FeaturesModel = (sequelize, { DataTypes }) => {
   const Features = sequelize.define('features', {
     // UNIQUE NEAR account ID
-    subject_id: {
+    account_uid: {
       type: DataTypes.STRING(100),
       primaryKey: true,
       unique: true,

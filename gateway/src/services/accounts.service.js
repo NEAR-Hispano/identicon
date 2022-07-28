@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { AccountsModel, SubjectsModel } = require("../models");
+const { AccountsModel, SubjectsModel, FeaturesModel, sequelize } = require("../models");
 const uuid = require("uuid");
 const { encryptIt } = require('../utils/cypher.utils');
 
@@ -13,13 +13,15 @@ class AccountsService {
     });
 
     const account = await AccountsModel.create({
-      uid: near_account.id, // instead of uuid.v4() we use this!
+      uid: uuid.v4().replace(new RegExp('-', 'g'), ''), 
       type: session.type,
       email: session.contact,
       phone: session.contact, // ToDo. manage email/phone store
-      linked_account_uid: null, // this is used only for paying validators
-      subject_id: uuid.v4(), // ToDo. subject_id should be null on creation, to be set on create verification
+      linked_account_uid: near_account.id, 
+      subject_id: null, // ToDo. subject_id should be null on creation, to be set on create verification
       keys: encryptedKeys,
+      state: 'A',
+      verified: false
     });
     return account;
   }
@@ -61,6 +63,13 @@ class AccountsService {
     return result;
   }
 
+  static async getAccountByLinkedId(linked_id) {
+    const result = await AccountsModel.findOne({
+      where: { linked_account_uid: linked_id },
+    });
+    return result;
+  }
+
   static async getAccounts() {
     const result = await AccountsModel.findAll({
       order: [
@@ -70,32 +79,37 @@ class AccountsService {
     return result;
   }
 
+
   static async updateAccount(id, account, accountUpdate) {
     let subjectId = account.subject_id;
-    console.log("account subject_id", subjectId);
-    if (subjectId == undefined || !subjectId) {
-      subjectId = uuid.v4(); // Todo: create unique subject_id (did) based on identicon docs AR_DNI_xxxxxxxxxx
-    }
-    console.log("updating subject  ", {
-      verified: account.verified,
-      subject_id: subjectId,
-      personal_info: JSON.stringify(accountUpdate.personal_info),
-    });
+    const personal = accountUpdate.personal_info;
+
+    // allways update the Subject binded to this account and
+    // assign a subject_id (did) based on Country and Dni
+    // so we can get something like: 'AR_DNI_xxxxxxxxxx'
+    subjectId = `${personal.country}_DNI_${personal.dni}`.toUpperCase(); 
     await SubjectsModel.upsert({
       verified: account.verified,
       subject_id: subjectId,
       personal_info: JSON.stringify(accountUpdate.personal_info),
     });
 
+    // need to update features binded to this account
+    // because we will need them to filter validators
+    await FeaturesModel.upsert({
+      account_uid: id,
+      country: personal.country,
+      idioms: personal.languages
+    });
+
     return await AccountsModel.update({
       ...account,
       subject_id: subjectId
-    }, {
-      where: {
-        uid: id
-      }
+    }, { 
+      where: { uid: id }
     });
   }
+
 
   static async deleteAccount(id) {
     return await AccountsModel.update({
@@ -106,6 +120,27 @@ class AccountsService {
       }
     });
   }
+
+
+  static async getFilteredValidators({
+    country, 
+    languages 
+  }) {
+    const sql = `
+      SELECT 
+        acc.uid, acc.linked_account_uid
+      FROM accounts as acc, features as fe
+      WHERE 
+        (acc.uid = fe.account_uid)
+        AND acc.state in ('A')
+        AND acc.type = 'VL'
+        AND fe.country = '${country}'  
+        AND fe.idioms = '${languages}';  
+    `;
+    const [results, _] = await sequelize.query(sql);
+    return results;
+  }
+
 }
 
 module.exports = AccountsService;
