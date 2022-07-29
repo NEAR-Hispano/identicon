@@ -164,7 +164,7 @@ const Header = (props: any) => {
                     borderRadius="xl"
                     onClick={onOpenSignUp}
                   >
-                    Crear una cuenta
+                    Crea tu cuenta
                   </Button>
                 </Box>
                 <Spacer />
