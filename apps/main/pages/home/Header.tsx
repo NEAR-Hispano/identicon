@@ -36,8 +36,8 @@ import SignUpModal from "./SignUpModal";
 import OtpModal from "./OTPVerificationModal";
 import LoginModal from "./LoginModal";
 
-//const Header: React.FC<ButtonProps> = (props) => {
-const Header = (props) => {
+//const Header: React.FC<ButtonProps> = (props: any) => {
+const Header = (props: any) => {
   const [signInAccountId, setSignInAccountId] = useState("");
   const [accountData, setAccountData] = useState<any>();
   const [isSignedIn, setisSignedIn] = useState(false);

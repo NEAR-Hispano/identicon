@@ -10,7 +10,7 @@ import { useStore as useAuth } from "../../stores/authSession";
 import { isVerificationPending, isVerificationDone } from "../../constants/states";
 
 
-export default function ValidationForm(props) {
+export default function ValidationForm(props: any) {
   const { data } = props;
   const router = useRouter();
   const { session } = useAuth();

@@ -15,7 +15,7 @@ const api = {
       .then((response) => response.data);
   },
 
-  getSingleTask: async (id) => {
+  getSingleTask: async (id: string) => {
     return axios
       .get(`${baseUrl}/v1/tasks/${id}`)
       .then((response) => response.data);

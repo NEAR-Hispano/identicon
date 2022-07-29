@@ -10,10 +10,10 @@ import {useRouter} from 'next/router';
 import Link from 'next/link';
 import { isVerificationDone, isVerificationPending } from "../../constants/states";
 import { prettyDatetime } from "../../utils/formatters";
-import { ListItem } from './ListItem';
+import ListItem  from '../../components/ListItem';
 
 
-const VerificationsList = (props) => {
+const VerificationsList = (props: any) => {
   const route = useRouter();
   const { session } = useAuth();
   const { data, isLoading } = useGetVerifications(session);
@@ -28,10 +28,10 @@ const VerificationsList = (props) => {
   }, [data]);
 
 
-  function PendingItemsList(props) {
+  function PendingItemsList(props: any) {
     const { items } = props;
-    const pending = (data || []).filter((t) => isVerificationPending(t.state));
-    const vs = pending.map((t) => {
+    const pending = (data || []).filter((t: any) => isVerificationPending(t.state));
+    const vs = pending.map((t: any) => {
         const refTo = "/verifications/"+t.request_uid;
         const item = {
           uid: t.uid,
@@ -51,10 +51,10 @@ const VerificationsList = (props) => {
      );
   }
 
-  function EmmitedItemsList(props) {
+  function EmmitedItemsList(props: any) {
     const { items } = props;
-    const emitted = (data || []).filter((t) => isVerificationDone(t.state));
-    const vs = emitted.map((t) => {
+    const emitted = (data || []).filter((t: any) => isVerificationDone(t.state));
+    const vs = emitted.map((t: any) => {
       const refTo = "/verifications/"+t.request_uid;
       const item = {
         uid: t.uid,

@@ -28,7 +28,7 @@ export const useGetVerifications = (session: AuthSessionData) => {
   );
 }
 
-export const useGetSingleVerification = (id) => {
+export const useGetSingleVerification = (id: string) => {
   return useQuery(
     "single-verification",
     () => api.getSingleVerification(id),

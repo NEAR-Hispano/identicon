@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Stack, Text, Box } from '@chakra-ui/react'
 
-const SectionPanel = (props) => { 
+const SectionPanel = (props: any) => { 
   return (
     <Box 
       width="100%" 
@@ -16,7 +16,7 @@ const SectionPanel = (props) => {
   );
 };
 
-const SectionHeading = (props) => {
+const SectionHeading = (props: any) => {
   return (
     <Text ml={4} fontSize="sm" fontWeight="bold" pt={10} pb={2}>
       { props.title }

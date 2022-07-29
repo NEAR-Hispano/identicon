@@ -8,14 +8,14 @@ import { CloseIcon } from '@chakra-ui/icons'
 import { useGetSingleVerification } from "../../hooks/verifications";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
-import { ValidatorsList } from './ValidatorsList';
-import { PersonalData } from './PersonalData';
-import { StatusNotice } from '../../components/Notice';
+import  ValidatorsList  from './ValidatorsList';
+import PersonalData  from './PersonalData';
+import  StatusNotice  from '../../components/StatusNotice';
 
-export default function VerificationContainer(props: Props) {
+export default function VerificationContainer() {
   const router = useRouter();
   const { session } = useAuth();
-  const id = router.query && router.query.id ? router.query.id : "";
+  const id = router.query && router.query.id ? router.query.id[0] : "";
   const { data, isLoading } = useGetSingleVerification(id);
   
   useEffect(()=> {

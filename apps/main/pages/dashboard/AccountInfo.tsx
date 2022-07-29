@@ -3,7 +3,7 @@ import { Text, Box, HStack, Tag } from "@chakra-ui/react";
 import { useStore } from "../../stores/authSession";
 import { useGetAccount } from "../../hooks/accounts";
 
-const AccountInfo = (props) => {
+const AccountInfo = (props: any) => {
   const { account } = props;
   const { session } = useStore();
   const { data, isLoading } = useGetAccount(session);

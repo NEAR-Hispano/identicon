@@ -8,7 +8,7 @@ const nextConfig = {
   env: {
     GATEWAY_BASE_URL: "http://localhost:4000"
   },
-  pageExtensions: ["page.tsx", "ts", "tsx"],
+  pageExtensions: ["page.tsx"],
 };
 
 module.exports = nextConfig;
