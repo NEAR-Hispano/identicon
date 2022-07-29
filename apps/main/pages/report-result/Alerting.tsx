@@ -6,7 +6,7 @@ import { StatusNotice } from '../../components/Notice';
 import { isVerificationPending, isVerificationDone } from "../../constants/states";
 
 
-export const AlertProtectData = (props) => {
+export const AlertProtectData = (props: any) => {
   const { data } = props;
   if (data && isVerificationPending(data.result)) return (
     <Alert status='warning' borderRadius="lg" mx="auto">
@@ -22,7 +22,7 @@ export const AlertProtectData = (props) => {
 }  
 
 
-export const AlertValidationInstructions = (props) => {
+export const AlertValidationInstructions = (props: any) => {
   const { data } = props;
   if (data && isVerificationPending(data.result)) return (
     <Box bg="yellow.50" mt={4} py={6} pr={8} pl={12} boxShadow="md" rounded="lg" lineHeight="1.rem">
@@ -42,7 +42,7 @@ export const AlertValidationInstructions = (props) => {
 }  
 
 
-export const AlertDone = (props) => {
+export const AlertDone = (props: any) => {
   const { data } = props;
   if (data && isVerificationDone(data.result)) return (
     <StatusNotice state={data.result} />

@@ -11,7 +11,7 @@ import { isVerificationDone, isVerificationPending, stateDescription } from "../
 import { prettyDatetime } from "../../utils/formatters";
 import { ListItem } from './ListItem';
 
-const AssignmentsList = (props) => {
+const AssignmentsList = (props: any) => {
   const route = useRouter();
   const { session } = useAuth();
   const { data, isLoading } = useGetTasksAssigned(session);
@@ -26,7 +26,7 @@ const AssignmentsList = (props) => {
   }, [data]);
 
 
-//   const ListItem = (props) => {
+//   const ListItem = (props: any) => {
 //     const 
 //       refTo = props.refTo,
 //       t = props.item;
@@ -66,10 +66,10 @@ const AssignmentsList = (props) => {
 //   }
 
 
-  function AssignedItemsList(props) {
+  function AssignedItemsList(props: any) {
     const { items } = props;
-    const pending = (data || []).filter((t) => (t.state === 'P'));
-    const vs = pending.map((t) => {
+    const pending = (data || []).filter((t: any) => (t.state === 'P'));
+    const vs = pending.map((t: any) => {
         const refTo = "/report-result/"+t.uid;
         const item = {
           uid: t.uid,
@@ -89,10 +89,10 @@ const AssignmentsList = (props) => {
     );
   }
 
-  function CompletedItemsList(props) {
+  function CompletedItemsList(props: any) {
     const { items } = props;
-    const done = (data || []).filter((t) => (t.state === 'F'));
-    const vs = done.map((t) => {
+    const done = (data || []).filter((t: any) => (t.state === 'F'));
+    const vs = done.map((t: any) => {
         const refTo = "/report-result/"+t.uid;
         const item = {
           uid: t.uid,

@@ -36,7 +36,7 @@ import { useRouter } from "next/router";
 import AccountInfo from "./AccountInfo";
 import ActionBar from "./ActionBar";
 
-const Header = (props) => {
+const Header = (props: any) => {
   const { account } = props;
   const [signInAccountId, setSignInAccountId] = useState("");
   const [accountData, setAccountData] = useState<any>();

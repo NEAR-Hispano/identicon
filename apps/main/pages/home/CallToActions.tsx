@@ -32,7 +32,7 @@ function Action({ children }: { children: ReactNode }) {
   );
 }
 
-const CallToActions = (props) => {
+const CallToActions = (props: any) => {
 
   const {
     isOpen: isOpenSignUp,

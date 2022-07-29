@@ -3,7 +3,7 @@ import { Box, Link, Text, Heading } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { CloseIcon, ArrowBackIcon } from '@chakra-ui/icons'
 
-const HelpLink = (props) => {
+const HelpLink = (props: any) => {
   const { label, xref } = props;
   return (
     <Box mb={4}>
@@ -15,7 +15,7 @@ const HelpLink = (props) => {
   )
 }
 
-const Helpbar = (props) => {
+const Helpbar = (props: any) => {
   return(
     <div>
       <Heading size="xxs" mb="1rem">Un poco de ayuda de tus amigos</Heading>

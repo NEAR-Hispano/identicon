@@ -34,7 +34,7 @@ import { useRouter } from "next/router";
 import { useDisclosure } from "@chakra-ui/hooks";
 import AccountInfo from "./AccountInfo";
 
-const ActionBar = (props) => {
+const ActionBar = (props: any) => {
   const { account } = props;
   const [signInAccountId, setSignInAccountId] = useState("");
   const [isSignedIn, setisSignedIn] = useState(false);

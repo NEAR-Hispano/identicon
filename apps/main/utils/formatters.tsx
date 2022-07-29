@@ -1,5 +1,5 @@
 
-export function prettyDatetime(ts) {
+export function prettyDatetime(ts: string) {
   /**
    * Formats a ISODatetime to pretty
    * @ts: format 

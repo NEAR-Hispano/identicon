@@ -16,7 +16,7 @@ export const useGetTasksAssigned = (session: AuthSessionData) => {
   );
 }
 
-export const useGetSingleTask = (id) => {
+export const useGetSingleTask = (id: string) => {
   return useQuery(
     "single-task",
     () => api.getSingleTask(id),

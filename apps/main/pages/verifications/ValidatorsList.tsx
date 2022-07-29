@@ -5,7 +5,7 @@ import { Loading } from '../../components/Loading';
 import { shortStateDescription } from "../../constants/states";
 
 
-export const ValidatorsList = (props) => {
+export const ValidatorsList = (props: any) => {
   const { items } = props;
 
   if (!items) return(
@@ -14,7 +14,7 @@ export const ValidatorsList = (props) => {
     </Loading>
   )
 
-  const vs = (items || []).map((t, i) => {
+  const vs = (items || []).map((t: any, i: any) => {
     return(
       <Box key={t.validator_id} 
         px={8} pt={6} pb={i===(items.length-1) ? 7 : 0}>

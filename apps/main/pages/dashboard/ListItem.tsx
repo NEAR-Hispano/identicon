@@ -3,7 +3,7 @@ import StateIcon from '../../components/StateIcon';
 import Link from 'next/link';
 import { stateDescription, shortStateDescription } from "../../constants/states";
 
-export const ListItem = (props) => {
+export const ListItem = (props: any) => {
   const 
     refTo = props.refTo,
     t = props.item;
@@ -13,7 +13,7 @@ export const ListItem = (props) => {
         py={4} pr={6} pl={0}
         borderBottom="1px solid #eeb"
         alignItems="center">
-        <Box w="4rem" align="center" fontSize="2xl">
+        <Box w="4rem" alignItems="center" fontSize="2xl">
           <StateIcon result={t.result} />
         </Box>
         <VStack align="left">

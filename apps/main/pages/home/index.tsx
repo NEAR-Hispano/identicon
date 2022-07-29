@@ -7,12 +7,9 @@ import CallToActions from "./CallToActions";
 import CallToValidators from "./CallToValidators";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router'
-type Props = {
-  account_id: string;
-};
 
-const Home = (props: Props) => {
-  const { account_id } = props;
+const Home = () => {
+
   const route = useRouter();
   const { session } = useAuth();
 

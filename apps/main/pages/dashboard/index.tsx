@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Container, Heading } from '@chakra-ui/react';
-import { colors } from '../../../constants/colors';
 import { useGetAccount } from "../../hooks/accounts";
 import { useGetVerifications } from "../../hooks/verifications";
 import { useStore as useAuth } from "../../stores/authSession";
