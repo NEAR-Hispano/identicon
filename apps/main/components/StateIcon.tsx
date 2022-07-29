@@ -6,7 +6,7 @@ import {
 } from 'react-icons/md';
 import { colors } from '../constants/colors';
 
-const StateIcon = (props) => {
+const StateIcon = (props: any) => {
   switch (props.result) {
     case 'Pending': return <MdPanTool color={colors.yellow['400']}/>;
     case 'Approved': return <MdDoneOutline  color={colors.green['400']}/>;

@@ -6,13 +6,10 @@ import "@fontsource/inter/variable.css";
 import theme from "../theme/theme";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Router, { useRouter } from "next/router";
-import { useEffect } from "react";
-import * as gtag from "../lib/gtag";
 import NProgress from "nprogress";
 import NextHead from "next/head";
 
 import "../styles/nprogress.css";
-import Header from "../components/Header";
 import Fonts from "../components/Fonts";
 import { InitAxiosInterceptor } from "../utils/interceptor";
 import { useStore} from "../stores/authSession";

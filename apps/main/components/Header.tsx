@@ -4,7 +4,7 @@ import { CloseIcon, ArrowBackIcon } from '@chakra-ui/icons'
 import { Navbar } from './Navbar';
 
 
-export const Header = (props) => {
+export const Header = (props: any) => {
   const { bigImage, miniLogo, jazzIcon, breadcrumb, title, subtitle, isLoading } = props;
 
   return (

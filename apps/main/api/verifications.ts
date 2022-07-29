@@ -22,7 +22,7 @@ const api = {
       .then((response) => response.data);
   },
 
-  getSingleVerification: async (id) => {
+  getSingleVerification: async (id: string) => {
     return axios
       .get(`${baseUrl}/v1/verifications/${id}`)
       .then((response) => response.data);

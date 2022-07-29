@@ -4,7 +4,7 @@ import { CloseIcon, ArrowBackIcon } from '@chakra-ui/icons'
 import { Navbar } from "../../components/Navbar";
 import { useRouter } from "next/router";
 
-const Header = (props) => {
+const Header = (props: any) => {
   const { account } = props;
   const router = useRouter();
 

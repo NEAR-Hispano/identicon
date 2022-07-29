@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Flex, Text, Spinner } from '@chakra-ui/react'
 
-export const Loading = (props) => {
+export const Loading = (props: any) => {
   return (
     <Flex alignItems="center" p={4}>
       <Spinner

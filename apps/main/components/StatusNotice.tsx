@@ -1,11 +1,11 @@
 import React from "react";
 import { Flex, Text, Box, propNames } from '@chakra-ui/react';
-import StateIcon from "../../components/StateIcon";
-import { Loading } from '../../components/Loading';
-import { stateDescription } from "../../constants/states";
+import StateIcon from "./StateIcon";
+import { Loading } from './Loading';
+import { stateDescription } from "../constants/states";
 
-
-const Boxed = (props) => {
+// todo move to components folder
+const Boxed = (props: any) => {
   return (
     <Box bg="yellow.50" boxShadow='lg' rounded='lg' >
       {props.children}
@@ -14,7 +14,7 @@ const Boxed = (props) => {
 }
 
 
-export const StatusNotice = (props) => {
+const StatusNotice = (props: any) => {
   const { state } = props;
 
   if (!state) return(
@@ -38,3 +38,5 @@ export const StatusNotice = (props) => {
     </Boxed>
   )
 }
+
+export default StatusNotice;

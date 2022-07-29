@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Text, Stack } from '@chakra-ui/react';
 import { isVerificationDone, shortStateDescription } from "../../constants/states";
 
-export default function ValidationStatus(props) {
+export default function ValidationStatus(props: any) {
   const { data } = props;
   if (data && isVerificationDone(data.result)) return (
     <Stack spacing={5} p={8}>

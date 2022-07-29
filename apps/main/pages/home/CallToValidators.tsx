@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Stack, VStack, Box, Flex, Text, Link, Image, Button, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
-const CallToValidators = (props) => {
+const CallToValidators = (props: any) => {
 
   const router = useRouter();
   const toast = useToast();

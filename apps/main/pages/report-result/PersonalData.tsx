@@ -3,10 +3,10 @@ import { Container, Flex, Heading, Spacer, Text, IconButton, Box } from '@chakra
 import { Table, Thead, Tbody, Tfoot, Tr, Th, Td,TableCaption, TableContainer } from '@chakra-ui/react';
 
 
-export default function PersonalData(props) {
+export default function PersonalData(props: any) {
   const { data } = props;
   
-  function Row(props) {
+  function Row(props: any) {
     const { label, content } = props;
     return <Tr>
       <Td>{label}</Td>

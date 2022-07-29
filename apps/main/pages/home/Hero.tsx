@@ -12,7 +12,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 
-const Banner = (props) => {
+const Banner = (props: any) => {
 
   const {
     isOpen: isOpenSignUp,
@@ -27,7 +27,7 @@ const Banner = (props) => {
       <Heading as="h1" 
         size="lg" //{{ base:"4xl", md: "5xl" }}
         fontWeight="bold" color="primary.700"
-        color="white"
+        colorScheme="white"
         >
         La fé de vida para tí o tus familiares sin moverte de tu casa
       </Heading>
@@ -68,14 +68,13 @@ const Banner = (props) => {
 
 
 
-const Hero = (props) => {
+const Hero = (props: any) => {
 
   return (
     <Box minH="36rem" bg="white" borderBottom="1px #aac solid" mt="104px"
       backgroundImage={'url("images/group-seniors-beach_53876-82577.webp")'}
       backgroundSize="cover"
       backgroundPosition="center"
-      minH="42rem"
       w="100%"
       position="relative"
       >
