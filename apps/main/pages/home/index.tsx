@@ -12,7 +12,6 @@ type Props = {
 };
 
 const Home = (props: Props) => {
-  const { account_id } = props;
   const route = useRouter();
   const { session } = useAuth();
 
@@ -50,18 +49,6 @@ const Home = (props: Props) => {
         disclosureSignup={disclosureSignup}
         disclosureLogin={disclosureLogin}
         />
-      <br/><br/><br/><br/><br/>
-    </>
-  );
-
-
-
-  return (
-    <>  
-      <Hero />
-      <CallToActions />
-      <CallToValidators  disclosureSignup={disclosureSignup}/>
-      <Header disclosureSignup={disclosureSignup}/>
       <br/><br/><br/><br/><br/>
     </>
   );
