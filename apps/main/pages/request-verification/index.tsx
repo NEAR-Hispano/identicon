@@ -20,7 +20,7 @@ import { RequestVerificationData } from "../../models/verifications";
 import { useRequestVerification } from "../../hooks/verifications";
 import { useStore as useAuth } from "../../stores/authSession";
 import { useRouter } from "next/router";
-import schemaValidation from "./schemaValidation";
+import schemaValidation from "../../validation/requestVerificationSchemaValidation";
 import { useGetAccount } from "../../hooks/accounts";
 import Header from './Header';
 import Helpbar from '../../components/Helpbar'

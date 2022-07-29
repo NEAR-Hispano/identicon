@@ -50,18 +50,6 @@ const Home = () => {
       <br/><br/><br/><br/><br/>
     </>
   );
-
-
-
-  return (
-    <>  
-      <Hero />
-      <CallToActions />
-      <CallToValidators  disclosureSignup={disclosureSignup}/>
-      <Header disclosureSignup={disclosureSignup}/>
-      <br/><br/><br/><br/><br/>
-    </>
-  );
 };
 
 export default Home;

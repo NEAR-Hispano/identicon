@@ -3,7 +3,8 @@ import { Table, Thead, Tbody, Tfoot, Tr, Th, Td,TableCaption, TableContainer } f
 import { Loading } from '../../components/Loading';
 import { stateDescription } from "../../constants/states";
 
-
+// Todo; move to utils file
+//From here ->
 const langDescriptions = {
   'ar': 'Castellano'
 }
@@ -25,17 +26,19 @@ const getLangDescription = (str: string) => {
   });
   return result;
 }
+// <- to here
 
+// Todo: create a new componenet file (components file) or use a chakra component
 function Row(props: any) {
   const { label, content } = props;
   return <Tr>
     <Td>{label}</Td>
-    <Td  fontSize="md">{content}</Td>
+    <Td fontSize="md">{content}</Td>
   </Tr>
 }
 
 
-export const PersonalData = (props: any) => {
+const PersonalData = (props: any) => {
   const { data } = props;
 
   if (!data) return(
@@ -55,3 +58,5 @@ export const PersonalData = (props: any) => {
     </Table>
   );
 }
+
+export default PersonalData;

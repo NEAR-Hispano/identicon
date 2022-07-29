@@ -1,36 +1,53 @@
-import { Heading, Box, Stack, Text, Flex, Spacer, Icon, VStack } from '@chakra-ui/react';
-import StateIcon from '../../components/StateIcon';
-import Link from 'next/link';
-import { stateDescription, shortStateDescription } from "../../constants/states";
+import {
+  Heading,
+  Box,
+  Stack,
+  Text,
+  Flex,
+  Spacer,
+  Icon,
+  VStack,
+} from "@chakra-ui/react";
+import StateIcon from "./StateIcon";
+import Link from "next/link";
+import {
+  stateDescription,
+  shortStateDescription,
+} from "../constants/states";
 
-export const ListItem = (props: any) => {
-  const 
-    refTo = props.refTo,
+const ListItem = (props: any) => {
+  const refTo = props.refTo,
     t = props.item;
   return (
     <Link href={refTo} key={t.uid}>
-      <Flex cursor="pointer" 
-        py={4} pr={6} pl={0}
+      <Flex
+        cursor="pointer"
+        py={4}
+        pr={6}
+        pl={0}
         borderBottom="1px solid #eeb"
-        alignItems="center">
+        alignItems="center"
+      >
         <Box w="4rem" alignItems="center" fontSize="2xl">
           <StateIcon result={t.result} />
         </Box>
         <VStack align="left">
           <Text fontSize="lg" lineHeight="1em">
-            {t.full_name}  
+            {t.full_name}
           </Text>
           <Text fontSize="xs" fontWeight="bold" color="blue" lineHeight="1em">
-            {t.subject_id} 
+            {t.subject_id}
           </Text>
         </VStack>
-        <Spacer/>
+        <Spacer />
         <Text align="right" fontSize="sm" maxW="14rem">
           {t.timing}
-          <br/>
+          <br />
           {shortStateDescription(t.result)}
         </Text>
       </Flex>
     </Link>
-  )    
-}
+  );
+};
+
+export default ListItem;

@@ -23,12 +23,9 @@ import { SectionPanel, SectionHeading } from "../../components/Section";
 import PersonalData from "./PersonalData";
 import ValidationForm from "./ValidationForm";
 import ValidationStatus from "./ValidationStatus";
-import {
-  AlertProtectData,
-  AlertValidationInstructions,
-  AlertDone,
-} from "./Alerting";
-
+import AlertProtectData from "./Alerting/AlertProtectData";
+import AlertDone from "./Alerting/AlertDone";
+import AlertValidationInstructions from "./Alerting/AlertValidationInstructions";
 const ReportResult = (props: any) => {
   const router = useRouter();
   const toast = useToast();

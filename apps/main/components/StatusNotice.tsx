@@ -4,7 +4,7 @@ import StateIcon from "./StateIcon";
 import { Loading } from './Loading';
 import { stateDescription } from "../constants/states";
 
-
+// todo move to components folder
 const Boxed = (props: any) => {
   return (
     <Box bg="yellow.50" boxShadow='lg' rounded='lg' >
@@ -14,7 +14,7 @@ const Boxed = (props: any) => {
 }
 
 
-export const StatusNotice = (props: any) => {
+const StatusNotice = (props: any) => {
   const { state } = props;
 
   if (!state) return(
@@ -38,3 +38,5 @@ export const StatusNotice = (props: any) => {
     </Boxed>
   )
 }
+
+export default StatusNotice;

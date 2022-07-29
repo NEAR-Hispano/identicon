@@ -10,7 +10,7 @@ import {useRouter} from 'next/router';
 import Link from 'next/link';
 import { isVerificationDone, isVerificationPending } from "../../constants/states";
 import { prettyDatetime } from "../../utils/formatters";
-import { ListItem } from './ListItem';
+import ListItem  from '../../components/ListItem';
 
 
 const VerificationsList = (props: any) => {

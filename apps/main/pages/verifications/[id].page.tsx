@@ -8,9 +8,9 @@ import { CloseIcon } from '@chakra-ui/icons'
 import { useGetSingleVerification } from "../../hooks/verifications";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router';
-import { ValidatorsList } from './ValidatorsList';
-import { PersonalData } from './PersonalData';
-import { StatusNotice } from '../../components/Notice';
+import  ValidatorsList  from './ValidatorsList';
+import PersonalData  from './PersonalData';
+import  StatusNotice  from '../../components/StatusNotice';
 
 export default function VerificationContainer() {
   const router = useRouter();

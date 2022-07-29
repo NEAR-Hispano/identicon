@@ -34,7 +34,7 @@ import Jazzicon from 'react-jazzicon'
 import { useStore as useAuth } from "../../stores/authSession";
 import { useRouter } from "next/router";
 import AccountInfo from "./AccountInfo";
-import ActionBar from "./ActionBar";
+import ActionBar from "../../components/ActionBar";
 
 const Header = (props: any) => {
   const { account } = props;

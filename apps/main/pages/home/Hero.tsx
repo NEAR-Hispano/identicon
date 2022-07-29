@@ -71,11 +71,10 @@ const Banner = (props: any) => {
 const Hero = (props: any) => {
 
   return (
-    <Box bg="white" borderBottom="1px #aac solid" mt="104px"
+    <Box minH="36rem" bg="white" borderBottom="1px #aac solid" mt="104px"
       backgroundImage={'url("images/group-seniors-beach_53876-82577.webp")'}
       backgroundSize="cover"
       backgroundPosition="center"
-      minH="42rem"
       w="100%"
       position="relative"
       >
