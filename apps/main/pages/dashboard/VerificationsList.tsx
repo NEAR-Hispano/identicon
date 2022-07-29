@@ -32,7 +32,7 @@ const VerificationsList = (props: any) => {
     const { items } = props;
     const pending = (data || []).filter((t: any) => isVerificationPending(t.state));
     const vs = pending.map((t: any) => {
-        const refTo = "/verifications/"+t.request_uid;
+        const refTo = `/verifications/${t.request_uid}`;
         const item = {
           uid: t.uid,
           result: t.state,
@@ -55,7 +55,7 @@ const VerificationsList = (props: any) => {
     const { items } = props;
     const emitted = (data || []).filter((t: any) => isVerificationDone(t.state));
     const vs = emitted.map((t: any) => {
-      const refTo = "/verifications/"+t.request_uid;
+      const refTo = `/verifications/${t.request_uid}`;
       const item = {
         uid: t.uid,
         result: t.state,

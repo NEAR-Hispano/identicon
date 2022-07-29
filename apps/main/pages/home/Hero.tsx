@@ -26,8 +26,9 @@ const Banner = (props: any) => {
       >
       <Heading as="h1" 
         size="lg" //{{ base:"4xl", md: "5xl" }}
-        fontWeight="bold" color="primary.700"
-        colorScheme="white"
+        fontWeight="bold" 
+        color="white"
+        // colorScheme="white"
         >
         La fé de vida para tí o tus familiares sin moverte de tu casa
       </Heading>
@@ -71,14 +72,16 @@ const Banner = (props: any) => {
 const Hero = (props: any) => {
 
   return (
-    <Box minH="36rem" bg="white" borderBottom="1px #aac solid" mt="104px"
+    <Box 
+      minH="42rem" 
+      borderBottom="1px #aac solid" mt="104px"
       backgroundImage={'url("images/group-seniors-beach_53876-82577.webp")'}
       backgroundSize="cover"
       backgroundPosition="center"
       w="100%"
       position="relative"
       >
-      <Box bg="gray.900" opacity="0.8"
+      <Box bg="gray.900" opacity="0.85"
         rounded="lg" boxShadow="xl"
         maxW="36rem"
         w="80%" 
