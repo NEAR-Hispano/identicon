@@ -22,6 +22,7 @@ import {
   Text,
   HStack,
 } from "@chakra-ui/react";
+import { Radio, RadioGroup } from '@chakra-ui/react';
 import React, { useEffect } from "react";
 import signUpSchemaValidation from "../../validation/signUpSchemaValidation";
 import { OTPData } from "../../models/accounts";
@@ -46,6 +47,7 @@ const SignUpModal = (props: {
   const finalRef = React.useRef(null);
   const initialValuesSignUp: OTPData = {
     email: "",
+    type: "RQ",
   };
   const form = useFormik({
     initialValues: initialValuesSignUp,
@@ -55,6 +57,7 @@ const SignUpModal = (props: {
     validateOnBlur: true,
     validateOnChange: true,
     onSubmit: async (values: any) => {
+      // alert(JSON.stringify(values,null,2))
       signUp(values);
     },
   });
@@ -83,10 +86,39 @@ const SignUpModal = (props: {
           </Stack>
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody pb={6}>
+
+        <ModalBody pb={4}>
           <FormControl>
             <Stack>
-              <FormLabel>Email</FormLabel>
+              <FormLabel><b>Qué deseas hacer ?</b></FormLabel>
+              <RadioGroup
+                  id="type"
+                  name="type"
+                  // value={form.values.type} // si activo esto no anda !
+                  defaultValue='RQ'
+                  onPaste={form.handleChange}
+                  onBlur={form.handleBlur}
+                  onChange={form.handleChange}
+                  >
+                <Stack direction='column'>
+                  <Radio value='RQ'>Solicitar la fé de vida para mí o mis familiares</Radio>
+                  <Radio value='VL'>Actuar como validador</Radio>
+                  <Radio 
+                    value='XA'>Usar el servicio desde mis Apps</Radio>
+                </Stack>
+              </RadioGroup>
+              {!!form.values.type &&
+                !!form.touched.type &&
+                !!form.errors.type && (
+                  <p className="error-text"> {form.errors.type}</p>
+                )}
+            </Stack>
+          </FormControl>
+
+          <FormControl>
+            <Stack>
+              <br/>
+              <FormLabel><b>Necesitamos tu Email</b></FormLabel>
               <Center>
                 <Input
                   ref={initialRef}
@@ -112,6 +144,7 @@ const SignUpModal = (props: {
               </Text>
             </Stack>
           </FormControl>
+
           {/* <Stack spacing="1" justify="center">
           
             <Button variant="link" colorScheme="blue">
