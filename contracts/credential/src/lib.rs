@@ -9,13 +9,16 @@ use near_sdk::collections::LazyOption;
 use near_sdk::{
     env, near_bindgen, AccountId, BorshStorageKey, PanicOnDefault, Promise, PromiseOrValue,
 };
+use near_sdk::collections::UnorderedMap;
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
-    tokens: NonFungibleToken,
-    metadata: LazyOption<NFTContractMetadata>,
+    pub tokens: NonFungibleToken,
+    pub metadata: LazyOption<NFTContractMetadata>,
+    pub owners: UnorderedMap<TokenId, AccountId>,
 }
+
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct PersonalInfo {
@@ -37,7 +40,7 @@ pub struct PersonalInfo {
     // dni: Option<String>
 }
 
-const DATA_IMAGE_SVG_NEAR_ICON: &str = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 288 288'%3E%3Cg id='l' data-name='l'%3E%3Cpath d='M187.58,79.81l-30.1,44.69a3.2,3.2,0,0,0,4.75,4.2L191.86,103a1.2,1.2,0,0,1,2,.91v80.46a1.2,1.2,0,0,1-2.12.77L102.18,77.93A15.35,15.35,0,0,0,90.47,72.5H87.34A15.34,15.34,0,0,0,72,87.84V201.16A15.34,15.34,0,0,0,87.34,216.5h0a15.35,15.35,0,0,0,13.08-7.31l30.1-44.69a3.2,3.2,0,0,0-4.75-4.2L96.14,186a1.2,1.2,0,0,1-2-.91V104.61a1.2,1.2,0,0,1,2.12-.77l89.55,107.23a15.35,15.35,0,0,0,11.71,5.43h3.13A15.34,15.34,0,0,0,216,201.16V87.84A15.34,15.34,0,0,0,200.66,72.5h0A15.35,15.35,0,0,0,187.58,79.81Z'/%3E%3C/g%3E%3C/svg%3E";
+const DATA_IMAGE_SVG_IDENTICON_ICON: &str = "<svg xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:cc='http://creativecommons.org/ns#' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:svg='http://www.w3.org/2000/svg' xmlns='http://www.w3.org/2000/svg' id='svg4765' version='1.1' viewBox='0 0 68.262499 68.2625' height='258' width='258'> <defs id='defs4759' /> <metadata id='metadata4762'> <rdf:RDF> <cc:Work rdf:about=''> <dc:format>image/svg+xml</dc:format> <dc:type rdf:resource='http://purl.org/dc/dcmitype/StillImage' /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><g transform='translate(0,-228.73749)' id='layer1'><g transform='translate(-149.6845,161.60881)' id='g5373'><circle style='opacity:1;fill:#5a03cb;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.66499996;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1' id='path4656' cx='183.81575' cy='101.25993' r='33.866665'/><g id='g5367' transform='translate(2.6225294,-8.1449264e-6)'><path id='path4610' d='m 172.82461,101.14398 0.0668,19.2434 c -0.0177,1.21686 0.91122,1.89379 1.76494,2.41352 l 10.26219,0.0587 c 9.83905,-0.88935 14.38279,-5.31359 14.35543,-15.26402 -1.38292,-12.156785 -10.75088,-12.418558 -13.49294,-13.165549 -0.68746,1.995652 -2.71694,3.031058 -2.86586,3.103244 2.08142,0.269861 8.51074,1.759097 8.94821,10.409275 -0.1354,6.7736 -2.83569,10.64726 -9.26386,11.91501 -1.46999,-0.0445 -2.97239,-0.3766 -3.3733,-1.84657 l -0.0277,-18.608432 c -2.23841,0.691262 -3.93901,0.664912 -6.3267,-0.05397 z' style='fill:#ffffff;fill-opacity:1;stroke:#fffdfd;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.9800664'/> <ellipse ry='7.7034998' rx='7.7035689' cy='87.811745' cx='176.01347' id='path4636' style='opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.66499996;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1' /></g></g> </g></svg>";
 
 #[derive(BorshSerialize, BorshStorageKey)]
 enum StorageKey {
@@ -60,7 +63,7 @@ impl Contract {
                 spec: NFT_METADATA_SPEC.to_string(),
                 name: "Verifiable Credential".to_string(),
                 symbol: "VC".to_string(),
-                icon: Some(DATA_IMAGE_SVG_NEAR_ICON.to_string()),
+                icon: Some(DATA_IMAGE_SVG_IDENTICON_ICON.to_string()),
                 base_uri: None,
                 reference: None,
                 reference_hash: None,
@@ -81,10 +84,11 @@ impl Contract {
                 Some(StorageKey::Approval),
             ),
             metadata: LazyOption::new(StorageKey::Metadata, Some(&metadata)),
+            owners: UnorderedMap::new(b"o"),
         }
     }
 
-    /// Mint a new token with ID=`token_id` belonging to `receiver_id`.
+    /// Mint a new credential with ID=`token_id` belonging to `receiver_id`.
     ///
     /// Since this example implements metadata, it also requires per-token metadata to be provided
     /// in this call. `self.tokens.mint` will also require it to be Some, since
@@ -93,13 +97,31 @@ impl Contract {
     /// `self.tokens.mint` will enforce `predecessor_account_id` to equal the `owner_id` given in
     /// initialization call to `new`.
     #[payable]
-    pub fn nft_mint(
+    pub fn mint_credential(
         &mut self,
         token_id: TokenId,
         receiver_id: AccountId,
         token_metadata: TokenMetadata,
     ) -> Token {
-        self.tokens.mint(token_id, receiver_id, Some(token_metadata))
+        self.owners.insert(&token_id, &receiver_id);
+        self.tokens.mint(token_id, receiver_id, Some(token_metadata))   
+    }
+
+    #[payable]
+    pub fn claim_credential(
+        &mut self,
+        token_id: TokenId,
+        receiver_id: AccountId
+    ) {
+        assert!(
+            match self.owners.get(&token_id) {
+                Some(id) => true,
+                None => false,
+            },
+            "Credential already claimed"
+        );
+        self.owners.insert(&token_id, &receiver_id);
+        self.nft_transfer(receiver_id, token_id, None, None)
     }
 }
 
@@ -141,7 +163,7 @@ mod tests {
         
         
         let json_data_string = json_data.to_string();
-    ç
+    
         TokenMetadata {
             title: Some("Proof Of Life Credential".into()),
             description: Some("The owner proof life".into()),
@@ -188,7 +210,7 @@ mod tests {
             .build());
 
         let token_id = "0".to_string();
-        let token = contract.nft_mint(token_id.clone(), accounts(0), sample_token_metadata());
+        let token = contract.mint_credential(token_id.clone(), accounts(0), sample_token_metadata());
         
         let metadata = token.metadata.unwrap();
         // let p: Value = serde_json::from_str(metadata.extra);
@@ -213,7 +235,7 @@ mod tests {
             .predecessor_account_id(accounts(0))
             .build());
         let token_id = "0".to_string();
-        contract.nft_mint(token_id.clone(), accounts(0), sample_token_metadata());
+        contract.mint_credential(token_id.clone(), accounts(0), sample_token_metadata());
 
         testing_env!(context
             .storage_usage(env::storage_usage())
@@ -250,7 +272,7 @@ mod tests {
             .predecessor_account_id(accounts(0))
             .build());
         let token_id = "0".to_string();
-        contract.nft_mint(token_id.clone(), accounts(0), sample_token_metadata());
+        contract.mint_credential(token_id.clone(), accounts(0), sample_token_metadata());
 
         // alice approves bob
         testing_env!(context
@@ -281,7 +303,7 @@ mod tests {
             .predecessor_account_id(accounts(0))
             .build());
         let token_id = "0".to_string();
-        contract.nft_mint(token_id.clone(), accounts(0), sample_token_metadata());
+        contract.mint_credential(token_id.clone(), accounts(0), sample_token_metadata());
 
         // alice approves bob
         testing_env!(context
@@ -319,7 +341,7 @@ mod tests {
             .predecessor_account_id(accounts(0))
             .build());
         let token_id = "0".to_string();
-        contract.nft_mint(token_id.clone(), accounts(0), sample_token_metadata());
+        contract.mint_credential(token_id.clone(), accounts(0), sample_token_metadata());
 
         // alice approves bob
         testing_env!(context
