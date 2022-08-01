@@ -17,7 +17,7 @@ const nearAPI = require('near-api-js');
 const Uuid = require('uuid');
 const { KeyPair, connect } = nearAPI;
 const { decryptIt } = require('../utils/cypher.utils');
-
+const Config = require ('./config');
 const
   NETWORK_ID = process.env.NETWORK_ID,
   MASTER_ACCOUNT_ID = process.env.MASTER_ACCOUNT_ID,
@@ -26,32 +26,13 @@ const
   INITIAL_BALANCE = '1000000000000000000000000',
   ATTACHED_GAS = '300000000000000';
 
-const Config = {
-  testnet: {
-    networkId: 'testnet',
-    keyStore: null,
-    nodeUrl: 'https://rpc.testnet.near.org',
-    walletUrl: 'https://wallet.testnet.near.org',
-    helperUrl: 'https://helper.testnet.near.org',
-    explorerUrl: 'https://explorer.testnet.near.org',
-  },
-  mainnet: {
-    networkId: 'mainnet',
-    keyStore: null,
-    nodeUrl: 'https://rpc.mainnet.near.org',
-    walletUrl: 'https://wallet.mainnet.near.org',
-    helperUrl: 'https://helper.mainnet.near.org',
-    explorerUrl: 'https://explorer.mainnet.near.org',
-  },
-};
-
-
 async function getConfig(accountId, privateKey) {
   /**
    * Returns the currently active NEAR Config, binded to a given account.
    * This enables this account for signing transactions.
    */
   const config = Config[NETWORK_ID];
+  console.log('config es:', config)
   console.log(`getConfig '${NETWORK_ID}' '${accountId}' '${privateKey}'`);
 
   // see: https://docs.near.org/docs/api/naj-quick-reference#key-store

@@ -1,11 +1,13 @@
 const config = require('../config');
 const { Success, NotFoundError, UnknownException, ConflictError } = require('../response');
-const { initialTaskState, finalTaskState, TaskStates, isVerificationDone } = require('../models/definitions');
+const { initialTaskState, finalTaskState, TaskStates, isVerificationDone, isVerificationApproved } = require('../models/definitions');
 const NearService = require('../services/near.service');
 const TasksService = require('../services/tasks.service');
 const VerificationsService = require('../services/verifications.service');
 const { getAccountOrError } = require('./controllers.helpers');
-
+const credentialService = require('../services/credential.service');
+const uuid = require('uuid');
+const moment = require('moment');
 class TasksController {
   constructor() {}
 
@@ -121,6 +123,33 @@ class TasksController {
       if (isVerificationDone(verified.state)) {
         // if verification has been completed, 
         // send an Email to Requester ...
+      }
+
+      if (isVerificationApproved(verified.state)) {
+        const issued_at = Date.now();
+        const expires_at = moment().add(1, 'y').toDate(); // TBD Verified credencial expiration
+        // mint credential
+        const args = {
+          credential_id:  uuid.v4(),
+          credential_metadata: {
+            title: 'Proof of Life Credential',
+            description: 'Proof of life verification',
+            media: null,
+            media_hash: null,
+            copies: 1,
+            issued_at: issued_at,
+            expires_at: expires_at,
+            starts_at: None,
+            updated_at: None,
+            extra: JSON.stringify({
+              full_name: "John Doe",
+              age: 89
+            }), // TODO use personal_info
+            reference: None,
+            reference_hash: None,
+          }
+        }
+        await credentialService.mintCredential(args);
       }
 
       return new Success(verified.state);
