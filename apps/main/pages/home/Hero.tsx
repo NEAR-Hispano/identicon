@@ -30,9 +30,9 @@ const Banner = (props: any) => {
         color="white"
         // colorScheme="white"
         >
-        La fé de vida para tí o tus familiares sin moverte de tu casa
+        La fe de vida para ti o tus familiares sin moverte de tu casa
       </Heading>
-      <HStack spacing="5">
+      <HStack spacing="5" pt={4}>
         <Box>
           <Button
             onClick={onOpenSignUp}
@@ -45,7 +45,7 @@ const Banner = (props: any) => {
             mb={4}
             borderRadius="xl"
           >
-            Solicítala ahora
+            <b>Solicítala ahora</b>
           </Button>
           <Link href="/#more-info">
           <Button

@@ -7,6 +7,7 @@ import {useRouter} from 'next/router';
 import Header from './Header'
 import VerificationsList from './VerificationsList';
 import AssignmentsList from './AssignmentsList';
+import AlertNoPersonalInfo from './AlertNoPersonalInfo';
 
 type Props = {
   account_id: string;
@@ -35,13 +36,15 @@ export default function Dashboard(props: Props) {
       )}
       <Container maxW="container.xl" id="dashboard" pb="4rem">
         {(data && (data.type === 'RQ' || data.type === 'EX')) &&
+          <AlertNoPersonalInfo account={data} />
+        }
+        {(data && (data.type === 'RQ' || data.type === 'XA')) &&
           <VerificationsList account={data} />
         }
         {(data && data.type === 'VL') &&
           <AssignmentsList  account={data} />
         }
       </Container>
-
     </>
   );
 }
