@@ -8,6 +8,8 @@ const { getAccountOrError } = require('./controllers.helpers');
 const credentialService = require('../services/credential.service');
 const uuid = require('uuid');
 const moment = require('moment');
+const AccountsService = require('../services/accounts.service');
+const SubjectsService = require('../services/tasks.service');
 class TasksController {
   constructor() {}
 
@@ -126,14 +128,17 @@ class TasksController {
       }
 
       if (isVerificationApproved(verified.state)) {
+        const subject = await SubjectsService.getByUid(account.subject_id);
+              
         const issued_at = Date.now();
-        const expires_at = moment().add(1, 'y').toDate(); // TBD Verified credencial expiration
+        const expires_at = moment().add(1, 'm').toDate(); // TBD Verified credencial expiration
         // mint credential
         const args = {
           credential_id:  uuid.v4(),
+          receiver_id: account.linked_account_uid,
           credential_metadata: {
-            title: 'Proof of Life Credential',
-            description: 'Proof of life verification',
+            title: 'Credencial de Prueba de Vida',
+            description: 'Verifiable Credential - proof of life',
             media: null,
             media_hash: null,
             copies: 1,
@@ -141,10 +146,7 @@ class TasksController {
             expires_at: expires_at,
             starts_at: None,
             updated_at: None,
-            extra: JSON.stringify({
-              full_name: "John Doe",
-              age: 89
-            }), // TODO use personal_info
+            extra: JSON.stringify(subject.personal_info),
             reference: None,
             reference_hash: None,
           }
