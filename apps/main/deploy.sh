@@ -2,14 +2,13 @@
 # Deploy the app to identicon server 
 
 yarn build
-yarn export 
 
 # The place where we exported the static build
 # after doing 'yarn build' and 'yarn export'
-BUILD=./_static
+BUILD=./.next
 
 # The place where we will copy the files
-TARGET=identicon.near:/opt/identicon/fedevida
+TARGET=identicon.near:/opt/identicon/apps/fedevida
 
 #
 # IMPORTANT: 'identicon.near' access MUST be defined in '~/.ssh/config' as: 
@@ -25,4 +24,11 @@ TARGET=identicon.near:/opt/identicon/fedevida
 echo ""
 echo "---"
 echo "Deploying to: $TARGET"
-rsync -arv $BUILD/ $TARGET/
+rsync -arv ./next.config.js  $TARGET/
+rsync -arv ./package.json  $TARGET/
+rsync -arv ./public/ $TARGET/public/
+rsync -arv $BUILD/ $TARGET/.next/
+rsync -arv $BUILD/standalone/ $TARGET/
+
+# restart 
+ssh -t identicon.near "sudo systemctl restart apps-fedevida & sudo systemctl status apps-fedevida" 
