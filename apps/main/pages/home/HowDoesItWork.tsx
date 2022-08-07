@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Stack, VStack, Box, Flex, Text, Link, Image, Button, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
-const CallToValidators = (props: any) => {
+const HowDoesItWork = (props: any) => {
 
   const router = useRouter();
   const toast = useToast();
@@ -15,7 +15,7 @@ const CallToValidators = (props: any) => {
   } = props.disclosureSignup;
 
   return (
-    <Box bg="gray.100" py={24} borderBottom="1px #aac solid">
+    <Box bg="gray.100" py={24} borderBottom="2px #fff solid">
       <Flex alignItems="center"
         justify="center"
         direction={{ base: "column-reverse", md: "row" }}
@@ -28,14 +28,14 @@ const CallToValidators = (props: any) => {
           <Image 
             objectFit="cover"
             alt="Validator images"
-            src="/images/validators-collage.png"
-            boxSize={"360px"}
+            src="/images/SimplifiedGeneralFlow.png"
+            boxSize={"460px"}
             />
         </Box>
 
         <Stack spacing={4} maxW="30rem">
-          <Text  fontSize="3xl" color="indigo.600" fontWeight={800}>
-            Únete a nuestros Validadores
+          <Text  fontSize="4xl" color="indigo.600" fontWeight={800}>
+            Cómo funciona
           </Text>        
           <Text fontSize="lg" lineHeight="1.6em">
             Es simple y solo necesitas tu móvil.
@@ -57,9 +57,10 @@ const CallToValidators = (props: any) => {
             </Button>
           </VStack>
         </Stack>
+
       </Flex>
     </Box>
   )
 }
 
-export default CallToValidators;
+export default HowDoesItWork;

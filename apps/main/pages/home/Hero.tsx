@@ -21,8 +21,8 @@ const Banner = (props: any) => {
   } = props.disclosureSignup;
 
   return (
-      <Stack spacing={4} w="full" minW="44%" px={8}
-        textAlign={{base: "center", md: "left"}}
+    <Stack spacing={4} w="full" minW="44%" px={8}
+      textAlign={{base: "center", md: "left"}}
       >
       <Heading as="h1" 
         size="lg" //{{ base:"4xl", md: "5xl" }}
@@ -74,7 +74,7 @@ const Hero = (props: any) => {
   return (
     <Box 
       minH="42rem" 
-      borderBottom="1px #aac solid" mt="104px"
+      borderBottom="0px #aac solid" mt="104px"
       backgroundImage={'url("images/group-seniors-beach_53876-82577.webp")'}
       backgroundSize="cover"
       backgroundPosition="center"
@@ -82,10 +82,10 @@ const Hero = (props: any) => {
       position="relative"
       >
       <Box bg="gray.900" opacity="0.85"
-        rounded="lg" boxShadow="xl"
+        rounded="lg" boxShadow="2xl"
         maxW="36rem"
         w="80%" 
-        p={6} position="absolute" bottom={12} left={12}>
+        p={6} position="absolute" bottom={-4} left={12}>
         <Banner 
           disclosureSignup={props.disclosureSignup}
           />

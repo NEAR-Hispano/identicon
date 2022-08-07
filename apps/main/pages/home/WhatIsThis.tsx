@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Stack, VStack, Box, Flex, Text, Link, Image, Button, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
-const CallToValidators = (props: any) => {
+const WhatIsThis = (props: any) => {
 
   const router = useRouter();
   const toast = useToast();
@@ -15,7 +15,7 @@ const CallToValidators = (props: any) => {
   } = props.disclosureSignup;
 
   return (
-    <Box bg="gray.100" py={24} borderBottom="1px #aac solid">
+    <Box bg="gray.200" pt={32} pb={24} borderBottom="0px #fff solid">
       <Flex alignItems="center"
         justify="center"
         direction={{ base: "column-reverse", md: "row" }}
@@ -24,21 +24,14 @@ const CallToValidators = (props: any) => {
         mx="auto"
         maxW="container.xl">
 
-        <Box pr={16}>
-          <Image 
-            objectFit="cover"
-            alt="Validator images"
-            src="/images/validators-collage.png"
-            boxSize={"360px"}
-            />
-        </Box>
-
         <Stack spacing={4} maxW="30rem">
-          <Text  fontSize="3xl" color="indigo.600" fontWeight={800}>
-            Únete a nuestros Validadores
+          <Text  fontSize="4xl" color="indigo.600" fontWeight={800}>
+            Qué es
           </Text>        
           <Text fontSize="lg" lineHeight="1.6em">
-            Es simple y solo necesitas tu móvil.
+            <b>Identicon.network</b>es una comunidad de informáticos 
+            y validadores, focalizados en simplificar la 
+            verificación de identidades.
           </Text>
           <Text fontSize="lg" lineHeight="1.6em">
             Puedes realizar validaciones de la Fé de Vida
@@ -57,9 +50,19 @@ const CallToValidators = (props: any) => {
             </Button>
           </VStack>
         </Stack>
+
+        <Box pl={16}>
+          <Image 
+            objectFit="cover"
+            alt="Validator images"
+            src="/images/validators-collage.png"
+            boxSize={"360px"}
+            />
+        </Box>
+
       </Flex>
     </Box>
   )
 }
 
-export default CallToValidators;
+export default WhatIsThis;
