@@ -1,6 +1,9 @@
 #!/bin/bash
 # Deploy the app to identicon server 
 
+yarn build
+yarn export 
+
 # The place where we exported the static build
 # after doing 'yarn build' and 'yarn export'
 BUILD=./_static
@@ -18,5 +21,8 @@ TARGET=identicon.near:/opt/identicon/fedevida
 #   Passw: ???
 #
 
-# We move the files using rsync to avoid copying already existen files
+# We move the files using rsync to avoid copying already existent files
+echo ""
+echo "---"
+echo "Deploying to: $TARGET"
 rsync -arv $BUILD/ $TARGET/
