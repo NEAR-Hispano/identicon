@@ -28,14 +28,16 @@ const CallToValidators = (props: any) => {
           <Image 
             objectFit="cover"
             alt="Validator images"
-            src="/images/validators-collage.png"
-            boxSize={"360px"}
+            src="/images/red-validadores-round.png"
+            boxSize={"490px"}
             />
         </Box>
 
         <Stack spacing={4} maxW="30rem">
-          <Text  fontSize="3xl" color="indigo.600" fontWeight={800}>
-            Únete a nuestros Validadores
+          <Text  fontSize="4xl" color="indigo.600">
+            <span className="feature-heading">
+              Únete a nuestros Validadores
+            </span>
           </Text>        
           <Text fontSize="lg" lineHeight="1.6em">
             Es simple y solo necesitas tu móvil.
@@ -48,11 +50,14 @@ const CallToValidators = (props: any) => {
           </Text>
           <VStack spacing={3} align="left" pl={2} fontWeight="bold">
             <Link color="blue.600" >¿Cómo puedes convertirte en un validador?</Link>
-            <Link color="blue.600" >¡Qué tareas debes realizar como validador?</Link>
+            <Link color="blue.600" >¿Qué tareas debes realizar como validador?</Link>
+            <Link color="blue.600" >¿Cómo se les recompensa y cuando?</Link>
             <br/>
             <Button 
               onClick={onOpenSignUp}
-              w="12rem" color="indigo" variant="outline" borderRadius="xl">
+              w="12rem" color="indigo" 
+              colorScheme="indigo"
+              variant="outline" borderRadius="xl">
               Comienza aquí
             </Button>
           </VStack>

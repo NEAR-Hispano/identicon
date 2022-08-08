@@ -1,7 +1,7 @@
 #!/bin/bash
 # Deploy the app to identicon server 
 
-yarn build
+#yarn build
 
 # The place where we exported the static build
 # after doing 'yarn build' and 'yarn export'

@@ -28,7 +28,7 @@ const ListItem = (props: any) => {
         borderBottom="1px solid #eeb"
         alignItems="center"
       >
-        <Box w="4rem" textAlign="center" fontSize="2xl">
+        <Box w="4rem" pl="1rem" fontSize="2xl">
           <StateIcon result={t.result} />
         </Box>
         <VStack align="left">

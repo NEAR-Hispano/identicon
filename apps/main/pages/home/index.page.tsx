@@ -9,6 +9,7 @@ import WhatIsThis from './WhatIsThis';
 import HowDoesItWork from "./HowDoesItWork";
 import WhoCanRequest from "./WhoCanRequest";
 import CallToDevs from "./CallToDevs";
+import Footer from "./Footer";
 import { useStore as useAuth } from "../../stores/authSession";
 import {useRouter} from 'next/router'
 
@@ -39,35 +40,43 @@ const Home = () => {
       <Hero 
         disclosureSignup={disclosureSignup}
         />
-      <WhatIsThis
-        disclosureSignup={disclosureSignup}
-        disclosureLogin={disclosureLogin}
-        />
-      <HowDoesItWork
-        disclosureSignup={disclosureSignup}
-        disclosureLogin={disclosureLogin}
-        />
-      <WhoCanRequest
-        disclosureSignup={disclosureSignup}
-        disclosureLogin={disclosureLogin}
-        />
-      {/* <CallToActions 
-        disclosureSignup={disclosureSignup}
-        disclosureLogin={disclosureLogin}
-        /> */}
-      <CallToValidators  
-        disclosureSignup={disclosureSignup}
-        disclosureLogin={disclosureLogin}
-        />
-      <CallToDevs
-        disclosureSignup={disclosureSignup}
-        disclosureLogin={disclosureLogin}
-        />
+      <div id="que-es">
+        <WhatIsThis
+          disclosureSignup={disclosureSignup}
+          disclosureLogin={disclosureLogin}
+          />
+      </div>
+      <div id="como-funciona">
+        <HowDoesItWork
+          id="como-funciona"
+          disclosureSignup={disclosureSignup}
+          disclosureLogin={disclosureLogin}
+          />
+      </div>
+      <div id="quienes-pueden-solicitar">
+        <WhoCanRequest
+          disclosureSignup={disclosureSignup}
+          disclosureLogin={disclosureLogin}
+          />
+      </div>
+      <div id="unete-a-validadores">
+        <CallToValidators  
+          disclosureSignup={disclosureSignup}
+          disclosureLogin={disclosureLogin}
+          />
+      </div>
+      <div id="eres-desarrollador">
+        <CallToDevs
+          disclosureSignup={disclosureSignup}
+          disclosureLogin={disclosureLogin}
+          />
+      </div>
+      <Footer/>
+      
       <Header 
         disclosureSignup={disclosureSignup}
         disclosureLogin={disclosureLogin}
         />
-      <br/><br/><br/><br/><br/>
     </>
   );
 };

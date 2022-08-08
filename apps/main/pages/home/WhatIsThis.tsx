@@ -25,29 +25,35 @@ const WhatIsThis = (props: any) => {
         maxW="container.xl">
 
         <Stack spacing={4} maxW="30rem">
-          <Text  fontSize="4xl" color="indigo.600" fontWeight={800}>
-            Qué es
+          <Text fontSize="4xl" color="indigo.600">
+            <span className="feature-heading">Qué es</span>
           </Text>        
           <Text fontSize="lg" lineHeight="1.6em">
-            <b>Identicon.network</b>es una comunidad de informáticos 
-            y validadores, focalizados en simplificar la 
-            verificación de identidades.
+            <Link color="primary" href="http://identicon.network"><b>Identicon.network</b></Link> 
+            &nbsp; es una comunidad decentralizada (<Link color="blue.600" href="https://es.wikipedia.org/wiki/Organizaci%C3%B3n_aut%C3%B3noma_descentralizada#:~:text=Una%20Organizaci%C3%B3n%20Aut%C3%B3noma%20Descentralizada%20(en,programas%20de%20ordenador%20llamados%20contratos">DAO</Link>) de  
+            validadores e informáticos, focalizados en la <b>
+            verificación de identidades digitales  
+            vinculadas a nuestras identidades reales</b>.
           </Text>
           <Text fontSize="lg" lineHeight="1.6em">
-            Puedes realizar validaciones de la Fé de Vida
-            en forma totalmente anónima, tanto remotas 
-            como presenciales, y serás recompensada/o 
-            por cada validación realizada.           
+            Nuestro <b>protocolo de verificación</b> aplica
+            a muchos casos de uso tales como verificación 
+            de identidad, verificación de vida, verificación de activos, verificación de 
+            proveedores de bienes y servicios, KYC y varios casos más.
           </Text>
           <VStack spacing={3} align="left" pl={2} fontWeight="bold">
-            <Link color="blue.600" >¿Cómo puedes convertirte en un validador?</Link>
-            <Link color="blue.600" >¡Qué tareas debes realizar como validador?</Link>
+            <Link color="blue.600" href="https://docs.google.com/document/d/1lDRp3crvEXCSTWXkbAY-ONF3Barg7jDoOdzxh1UjYmE/edit">Lee nuestro manifiesto (whitepaper)</Link>
+            <Link color="blue.600" href="faq#nuestra-tecnologia">Nuestra tecnología (NEAR Protocol)</Link>
             <br/>
-            <Button 
-              onClick={onOpenSignUp}
-              w="12rem" color="indigo" variant="outline" borderRadius="xl">
-              Comienza aquí
-            </Button>
+            <Link href="https://near.org/">
+              <Box bgColor="blue.200" w="10rem" pl={2} borderRadius="sm" py={1}>
+                  <Flex alignItems={"center"} justifyContent="start">
+                    <Image src="images/near_logo_stack.svg" alt="Right Icon" boxSize="48px"/>
+                    <Text maxW="6rem" fontSize="xs" textAlign="left" lineHeight="1.1em" ml="0.5rem">
+                      Developers in Residence Program</Text>
+                  </Flex>
+              </Box>
+            </Link>
           </VStack>
         </Stack>
 
@@ -55,8 +61,8 @@ const WhatIsThis = (props: any) => {
           <Image 
             objectFit="cover"
             alt="Validator images"
-            src="/images/validators-collage.png"
-            boxSize={"360px"}
+            src="/images/comunidad-round.png"
+            boxSize={"480px"}
             />
         </Box>
 

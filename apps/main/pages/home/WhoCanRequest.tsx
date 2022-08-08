@@ -25,21 +25,25 @@ const WhoCanRequest = (props: any) => {
         maxW="container.xl">
 
         <Stack spacing={4} maxW="30rem">
-          <Text  fontSize="4xl" color="indigo.600" fontWeight={800}>
-            Quiénes pueden solicitarla
+          <Text  fontSize="4xl" color="indigo.600">
+            <span className="feature-heading">
+              Quiénes pueden solicitarla
+            </span>
           </Text>        
           <Text fontSize="lg" lineHeight="1.6em">
-            Es simple y solo necesitas tu móvil.
+            Cualquier persona mayor de edad puede solicitarla para sí misma 
+            o para uno o más de sus familiares. 
           </Text>
           <Text fontSize="lg" lineHeight="1.6em">
-            Puedes realizar validaciones de la Fé de Vida
-            en forma totalmente anónima, tanto remotas 
-            como presenciales, y serás recompensada/o 
-            por cada validación realizada.           
+            Ten en cuenta que <b>antes de poder realizar una solicitud
+            deberemos verificar tu identidad</b>, para lo cual deberás 
+            darnos algunos datos mínimos de contacto.
           </Text>
           <VStack spacing={3} align="left" pl={2} fontWeight="bold">
-            <Link color="blue.600" >¿Cómo puedes convertirte en un validador?</Link>
-            <Link color="blue.600" >¡Qué tareas debes realizar como validador?</Link>
+            <Link color="blue.600" >¿Porqué necesitan mis datos?</Link>
+            <Link color="blue.600" >¿Qué datos debo proveer para la verificación?</Link>
+            <Link color="blue.600" >¿Cuantas verificaciones puedo solicitar?</Link>
+            <Link color="blue.600" >¿Tienen algún costo ?</Link>
             <br/>
             <Button 
               variant={"solid"}
@@ -56,8 +60,8 @@ const WhoCanRequest = (props: any) => {
           <Image 
             objectFit="cover"
             alt="Validator images"
-            src="/images/manos-levantadas2.png"
-            boxSize={"360px"}
+            src="/images/mano-levantada-round.png"
+            boxSize={"480px"}
             />
         </Box>
 

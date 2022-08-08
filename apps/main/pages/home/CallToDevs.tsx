@@ -25,33 +25,37 @@ const CallToDevs = (props: any) => {
         maxW="container.xl">
 
         <Stack spacing={4} maxW="30rem">
-          <Text  fontSize="4xl" color="indigo.600" fontWeight={800}>
-            ¿Eres desarrollador?
+          <Text  fontSize="4xl" color="indigo.600">
+            <span className="feature-heading">
+              ¿Eres desarrollador?
+            </span>
           </Text>        
           <Text fontSize="lg" lineHeight="1.6em">
             Puedes usar nuestra API para hacer solicitudes 
-            desde tus aplicaciones.
-          </Text>
-          <Text fontSize="lg" lineHeight="1.6em">
-            Solicita la verficación de una o más personas
-            usando la API. Nosotros nos ocuparemos de la verificación
-            y notificarte cuando estén finalizadas.
-          </Text>
-          <Text fontSize="lg" lineHeight="1.6em">
-            Ideal cuando necesitas conocer a tus clientes 
+            desde tus aplicaciones. Ideal cuando necesitas conocer a tus clientes 
             y consumidores (KYC) por razones regulatorias u otras.
           </Text>
+          <Text fontSize="lg" lineHeight="1.6em">
+            Solicita la verificación de una o más personas y
+            nosotros nos ocuparemos. Cuando estén finalizadas
+            te notificaremos por email, o bien puedes acceder 
+            desde tu App al estado de la verificación.
+          </Text>
+          <Text fontSize="lg" lineHeight="1.6em">
+            
+          </Text>
           <VStack spacing={3} align="left" pl={2} fontWeight="bold">
-            <Link color="blue.600" >¿Cómo puedes convertirte en un validador?</Link>
-            <Link color="blue.600" >¡Qué tareas debes realizar como validador?</Link>
+            <Link color="blue.600" href="">Como usar la API</Link>
+            <Link color="blue.600" href="">Documentos técnicos</Link>
             <br/>
             <Button 
-              variant={"solid"}
+              variant={"outline"}
               colorScheme={"indigo"}
+              color="indigo" 
               onClick={onOpenSignUp}
               w="12rem" 
               borderRadius="xl">
-              Solicítala ahora
+              Comienza ahora
             </Button>
           </VStack>
         </Stack>
@@ -60,8 +64,8 @@ const CallToDevs = (props: any) => {
           <Image 
             objectFit="cover"
             alt="Validator images"
-            src="/images/for-developers.png"
-            boxSize={"360px"}
+            src="/images/for-devs-round.png"
+            boxSize={"480px"}
             />
         </Box>
 

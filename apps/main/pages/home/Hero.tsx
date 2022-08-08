@@ -30,7 +30,9 @@ const Banner = (props: any) => {
         color="white"
         // colorScheme="white"
         >
-        La fe de vida para ti o tus familiares sin moverte de tu casa
+        <span className="feature-heading">
+          La fe de vida para ti o tus familiares sin moverte de tu casa
+        </span>
       </Heading>
       <HStack spacing="5" pt={4}>
         <Box>
@@ -47,19 +49,19 @@ const Banner = (props: any) => {
           >
             <b>Solicítala ahora</b>
           </Button>
-          <Link href="/#more-info">
-          <Button
-            size={"md"}
-            mr={4}
-            mb={4}
-            px="xl"
-            py={6}
-            borderRadius="xl"
-            borderColor="gray.300"
-            variant="outline"
-          >
-            Quiero más info
-          </Button>
+          <Link href="#que-es">
+            <Button
+              size={"md"}
+              mr={4}
+              mb={4}
+              px="xl"
+              py={6}
+              borderRadius="xl"
+              borderColor="gray.300"
+              variant="outline"
+            >
+              Quiero más info
+            </Button>
           </Link>
         </Box>
       </HStack>
@@ -83,7 +85,7 @@ const Hero = (props: any) => {
       >
       <Box bg="gray.900" opacity="0.85"
         rounded="lg" boxShadow="2xl"
-        maxW="36rem"
+        maxW="42rem"
         w="80%" 
         p={6} position="absolute" bottom={-4} left={12}>
         <Banner 
