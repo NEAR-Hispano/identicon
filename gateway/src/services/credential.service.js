@@ -92,13 +92,13 @@ async function getContract() {
   }
 }
 
-async function mintCredential(credential_id, credential_metadata) {
+async function mintCredential(credential_id, receiver_id, credential_metadata) {
     let result;
     try {
       const contract = await getContract();
       const args = {
         token_id: credential_id,
-        receiver_id: IDENTICON_ACCOUNT_ID,
+        receiver_id: receiver_id,
         token_metadata: credential_metadata
       }; 
       result = await contract.mint_credential(args, ATTACHED_GAS);
