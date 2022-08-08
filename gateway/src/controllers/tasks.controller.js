@@ -133,6 +133,7 @@ class TasksController {
     const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
     const name = `${subject_id}-${uuid.v4()}.png` 
     const image = jdenticon.toPng(name, 100);
+    fs.writeFileSync("./testicon.png", image);
     const creationDate = new Date().toISOString();
     // Uploads the image to ipfs
     const ipfsRes = await client.store({
