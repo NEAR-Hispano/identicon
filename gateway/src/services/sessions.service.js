@@ -67,8 +67,6 @@ class SessionsService {
       .createHash("sha256")
       .update(passcode)
       .digest("base64");
-    console.info("session passcode", session_passcode);
-    console.info("passcode to verify", passcodeHash);
     return session_passcode === passcodeHash;
   }
 

@@ -17,7 +17,7 @@ const nearAPI = require('near-api-js');
 const Uuid = require('uuid');
 const { KeyPair, connect } = nearAPI;
 const { decryptIt } = require('../utils/cypher.utils');
-const Config = require ('./config');
+const {getNetworkConfig} = require('./config');
 
 const
   NETWORK_ID = process.env.NETWORK_ID,
@@ -27,13 +27,14 @@ const
   CONTRACT_ID = process.env.CREDENTIAL_CONTRACT_ID,
   INITIAL_BALANCE = '1000000000000000000000000',
   ATTACHED_GAS = '300000000000000';
+  STORAGE_DEPOSIT = '100000000000000000000000'
 
 async function getConfig(accountId, privateKey) {
   /**
    * Returns the currently active NEAR Config, binded to a given account.
    * This enables this account for signing transactions.
    */
-  const config = Config[NETWORK_ID];
+  const config =  getNetworkConfig(NETWORK_ID);
   console.log(`getConfig '${NETWORK_ID}' '${accountId}' '${privateKey}'`);
 
   // see: https://docs.near.org/docs/api/naj-quick-reference#key-store
@@ -56,12 +57,13 @@ async function getConfig(accountId, privateKey) {
   return config;
 }
 
-async function getContract() {
+async function getContract(signer) {
   // @returns: the initialized contract with predefined methods
-  const signerId = MASTER_ACCOUNT_ID;
+  const signerId = signer ? signer.linked_account_uid : MASTER_ACCOUNT_ID;
   const keyPair = signer && decryptIt(signer.keys);
-  const privateKey = MASTER_PRIVATE_KEY;
-
+  const privateKey = signer ? keyPair.private_key : MASTER_PRIVATE_KEY;
+  const publicKey = signer ? keyPair.public_key : '0x0';
+  console.log('getContract signerId=', signerId);
   console.log('getContract keys prv=', privateKey, 'pub=', publicKey);
 
   const config = await getConfig(signerId, privateKey);
@@ -92,16 +94,17 @@ async function getContract() {
   }
 }
 
-async function mintCredential(credential_id, receiver_id, credential_metadata) {
+async function mintCredential(args, account) {
+  const {credential_id, receiver_id, credential_metadata} = args;
     let result;
     try {
-      const contract = await getContract();
+      const contract = await getContract(account);
       const args = {
-        token_id: credential_id,
+        token_id: credential_id.toString(),
         receiver_id: receiver_id,
         token_metadata: credential_metadata
       }; 
-      result = await contract.mint_credential(args, ATTACHED_GAS);
+      result = await contract.mint_credential(args, ATTACHED_GAS, STORAGE_DEPOSIT);
     } catch(e) {
       console.log('ERROR mint_credential', e);
       throw e;

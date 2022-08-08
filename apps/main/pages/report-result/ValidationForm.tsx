@@ -20,7 +20,7 @@ export default function ValidationForm(props: any) {
   useEffect(() => {
     if (isProcessing) {
       toast({
-        title: "EStamos enviando tu resultado ...",
+        title: "Estamos enviando tu resultado ...",
         status: "success",
         duration: 2000,
         position: "top-right",
