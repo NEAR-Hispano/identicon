@@ -87,6 +87,15 @@ router.put('/:uid',
   }
 );
 
+router.get('/test',
+AuthMiddleware,
+async (req, res, next) => {
+  const response = await TasksController.identicontest();
+  res.status(200).send(response);
+  next();
+}
+);
+
 
 // /**
 //  * POST /verifications/:uid/results

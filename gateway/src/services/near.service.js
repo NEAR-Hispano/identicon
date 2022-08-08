@@ -13,35 +13,31 @@ Implicit accounts work similarly to Bitcoin/Ethereum accounts.
 
 @created: JUN-03-2022, @mazito
 */
-const nearAPI = require('near-api-js');
-const Uuid = require('uuid');
+const nearAPI = require("near-api-js");
+const Uuid = require("uuid");
 const { KeyPair, connect } = nearAPI;
-const { decryptIt } = require('../utils/cypher.utils');
-const Config = require ('./config');
-const
-  NETWORK_ID = process.env.NETWORK_ID,
+const { decryptIt } = require("../utils/cypher.utils");
+const { getNetworkConfig } = require("./config");
+const NETWORK_ID = process.env.NETWORK_ID,
   MASTER_ACCOUNT_ID = process.env.MASTER_ACCOUNT_ID,
   MASTER_PRIVATE_KEY = process.env.MASTER_PRIVATE_KEY,
   CONTRACT_ID = process.env.CONTRACT_ID,
-  INITIAL_BALANCE = '1000000000000000000000000',
-  ATTACHED_GAS = '300000000000000';
+  INITIAL_BALANCE = "1000000000000000000000000",
+  ATTACHED_GAS = "300000000000000";
 
 async function getConfig(accountId, privateKey) {
   /**
    * Returns the currently active NEAR Config, binded to a given account.
    * This enables this account for signing transactions.
    */
-  const config = Config[NETWORK_ID];
-  console.log('config es:', config)
+  const config = getNetworkConfig(NETWORK_ID);
+  console.log("CONFIG", config);
   console.log(`getConfig '${NETWORK_ID}' '${accountId}' '${privateKey}'`);
 
   // see: https://docs.near.org/docs/api/naj-quick-reference#key-store
   // creates keyStore from a private key string
   // you can define your key here or use an environment variable
-  const {
-    keyStores,
-    KeyPair
-  } = nearAPI;
+  const { keyStores, KeyPair } = nearAPI;
   const keyStore = new keyStores.InMemoryKeyStore();
 
   // creates a public / private key pair using the provided private key
@@ -51,10 +47,9 @@ async function getConfig(accountId, privateKey) {
   // adds the keyPair you created to keyStore
   await keyStore.setKey(NETWORK_ID, accountId, keyPair);
   config.keyStore = keyStore;
-  console.log('keyStore', config.keyStore);
+  console.log("keyStore", config.keyStore);
   return config;
 }
-
 
 async function createImplicitAccount() {
   /**
@@ -64,7 +59,7 @@ async function createImplicitAccount() {
    * @example:
    *  [account, receipt] = await createImplictAccount();
    *
-   * @returns: [{id, public_key, private_key}, receipt] if success, 
+   * @returns: [{id, public_key, private_key}, receipt] if success,
    *           [null, error] otherwise
    */
   try {
@@ -72,22 +67,22 @@ async function createImplicitAccount() {
 
     // we need to use some MasterAccount to create a new account
     const config = await getConfig(MASTER_ACCOUNT_ID, MASTER_PRIVATE_KEY);
-        
+
     // create the KeyPair for the implicit account
     // see: https://github.com/near/near-cli/blob/master/commands/generate-key.js
     const keyPair = KeyPair.fromString(MASTER_PRIVATE_KEY);
     const publicKey = keyPair.publicKey.toString();
     const privateKey = keyPair.secretKey.toString();
-    console.log('KEYPAIR=',keyPair, 'pub=', publicKey, 'prv=', privateKey);
+    console.log("KEYPAIR=", keyPair, "pub=", publicKey, "prv=", privateKey);
 
     // adds the keyPair you created to keyStore
     const myKeyStore = new keyStores.InMemoryKeyStore();
-    await myKeyStore.setKey(NETWORK_ID, MASTER_ACCOUNT_ID, keyPair);    
+    await myKeyStore.setKey(NETWORK_ID, MASTER_ACCOUNT_ID, keyPair);
 
     // create the new accountId using UUIDs, because the implicit way:
     // does not seem to work for us ???
     // ??? const accountId = utils.PublicKey.fromString(publicKey).data.hexSlice();
-    const uid = Uuid.v4().replace(new RegExp('-', 'g'), '');
+    const uid = Uuid.v4().replace(new RegExp("-", "g"), "");
     const newAccountId = `${uid}.${MASTER_ACCOUNT_ID}`;
     console.info(
       `createImplicitAccount id='${newAccountId}' initial=${INITIAL_BALANCE}`
@@ -102,25 +97,29 @@ async function createImplicitAccount() {
       publicKey, // public key for new account
       INITIAL_BALANCE // initial balance for new account in yoctoNEAR
     );
-    console.info({
-      id: newAccountId,
-      public_key: publicKey,
-      private_key: privateKey
-    }, '\nreceipt=', receipt);
-
-    return [{
+    console.info(
+      {
         id: newAccountId,
         public_key: publicKey,
-        private_key: privateKey
+        private_key: privateKey,
+      },
+      "\nreceipt=",
+      receipt
+    );
+
+    return [
+      {
+        id: newAccountId,
+        public_key: publicKey,
+        private_key: privateKey,
       },
       receipt, // No errors
     ];
   } catch (error) {
-    console.log('near.service createImplicitAccount Err=', error);
+    console.log("near.service createImplicitAccount Err=", error);
     return [null, error];
   }
 }
-
 
 async function getContract(signer) {
   // @signer: (optional) is an Account object (defined in models)
@@ -128,43 +127,36 @@ async function getContract(signer) {
   const signerId = signer ? signer.linked_account_uid : MASTER_ACCOUNT_ID;
   const keyPair = signer && decryptIt(signer.keys);
   const privateKey = signer ? keyPair.private_key : MASTER_PRIVATE_KEY;
-  const publicKey = signer ? keyPair.public_key : '0x0';
-  console.log('getContract signerId=', signerId);
-  console.log('getContract keys prv=', privateKey, 'pub=', publicKey);
+  const publicKey = signer ? keyPair.public_key : "0x0";
+  console.log("getContract signerId=", signerId);
+  console.log("getContract keys prv=", privateKey, "pub=", publicKey);
 
   const config = await getConfig(signerId, privateKey);
   const near = await connect(config);
   const account = await near.account(signerId);
-  console.log('getContract config.keyStore', config.keyStore);
+  console.log("getContract config.keyStore", config.keyStore);
 
   try {
-    const contract = new nearAPI.Contract(
-      account, 
-      CONTRACT_ID, 
-      {
-        viewMethods: [
-        ],
-        changeMethods: [
-          'request_verification',
-          'cancel_verification',
-          'register_as_validator',
-          'unregister_as_validator',
-          'assign_validators',
-          'report_validation_result',
-          'get_assigned_validations',
-          'get_verification'
-        ],
-        // sender: account, // account object to initialize and sign transactions.
-      }
-    );
+    const contract = new nearAPI.Contract(account, CONTRACT_ID, {
+      viewMethods: [],
+      changeMethods: [
+        "request_verification",
+        "cancel_verification",
+        "register_as_validator",
+        "unregister_as_validator",
+        "assign_validators",
+        "report_validation_result",
+        "get_assigned_validations",
+        "get_verification",
+      ],
+      // sender: account, // account object to initialize and sign transactions.
+    });
     return contract;
-  }
-  catch (err) {
-    console.log('getContract ERR=', err);
+  } catch (err) {
+    console.log("getContract ERR=", err);
     return null;
   }
 }
-
 
 async function requestVerification(args, signer) {
   let result;
@@ -172,27 +164,25 @@ async function requestVerification(args, signer) {
     // @args: { request_uid, subject_id, is_type, payload }
     const contract = await getContract(signer);
     result = await contract.request_verification(args, ATTACHED_GAS);
-  } catch(e) {
-    console.log('ERROR request_verification', e);
+  } catch (e) {
+    console.log("ERROR request_verification", e);
     throw e;
   }
   return result;
 }
-
 
 async function registerAsValidator(args, signer) {
   let result;
   try {
-    args = args || { can_do: ['Remote'] };
+    args = args || { can_do: ["Remote"] };
     const contract = await getContract(signer);
     result = await contract.register_as_validator(args, ATTACHED_GAS);
   } catch (e) {
-    console.log('ERROR register_as_validator', e);
+    console.log("ERROR register_as_validator", e);
     throw e;
   }
   return result;
 }
-
 
 async function assignValidators(args, signer) {
   let result;
@@ -203,20 +193,19 @@ async function assignValidators(args, signer) {
     const contract = await getContract();
     result = await contract.assign_validators(args, ATTACHED_GAS);
   } catch (e) {
-    console.log('ERROR assign_validators', e);
+    console.log("ERROR assign_validators", e);
     throw e;
   }
   return result;
 }
 
-
 async function reportValidationResult(args, signer) {
   let result;
   try {
-    // args = { 
-    //   request_uid: RequestId, 
-    //   result: VerificationState, 
-    //   contents: Vec<ContentID>, 
+    // args = {
+    //   request_uid: RequestId,
+    //   result: VerificationState,
+    //   contents: Vec<ContentID>,
     //   remarks: String
     // }
     args = args || {};
@@ -224,12 +213,11 @@ async function reportValidationResult(args, signer) {
     const contract = await getContract(signer);
     result = await contract.report_validation_result(args, ATTACHED_GAS);
   } catch (e) {
-    console.log('ERROR report_validation_result', e);
+    console.log("ERROR report_validation_result", e);
     throw e;
   }
   return result;
 }
-
 
 async function getVerification(args, signer) {
   let result;
@@ -237,8 +225,8 @@ async function getVerification(args, signer) {
     // @args: { request_uid }
     const contract = await getContract(signer);
     result = await contract.get_verification(args);
-  } catch(e) {
-    console.log('ERROR get_verification', e);
+  } catch (e) {
+    console.log("ERROR get_verification", e);
     throw e;
   }
   return result;
@@ -250,13 +238,12 @@ async function getAssignedValidations(args, signer) {
     // @args {order: 'asc'} ;
     const contract = await getContract(signer);
     result = await contract.get_assigned_validations(args);
-  } catch(e) {
-    console.log('ERROR get_assigned_validations', e);
+  } catch (e) {
+    console.log("ERROR get_assigned_validations", e);
     throw e;
   }
   return result;
 }
-
 
 module.exports = {
   getConfig,
@@ -266,5 +253,5 @@ module.exports = {
   registerAsValidator,
   assignValidators,
   getAssignedValidations,
-  reportValidationResult
+  reportValidationResult,
 };
