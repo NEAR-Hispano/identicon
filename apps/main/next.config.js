@@ -9,6 +9,9 @@ const nextConfig = {
     GATEWAY_BASE_URL: "http://localhost:4000"
   },
   pageExtensions: ["page.tsx"],
+  experimental: {
+    outputStandalone: true,
+  },     
 };
 
 module.exports = nextConfig;

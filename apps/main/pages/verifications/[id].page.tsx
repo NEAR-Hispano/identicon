@@ -16,7 +16,7 @@ export default function VerificationContainer() {
   const router = useRouter();
   const { session } = useAuth();
   const id = router.query && router.query.id ? router.query.id : "";
-  const { data, isLoading } = useGetSingleVerification(id);
+  const { data, isLoading } = useGetSingleVerification(id.toString());
   
   useEffect(()=> {
     if (!isLoading && data && data.personal_info) {
