@@ -16,22 +16,26 @@ const NearService = require("../services/near.service");
 const TasksService = require("../services/tasks.service");
 const VerificationsService = require("../services/verifications.service");
 const { getAccountOrError } = require("./controllers.helpers");
-const credentialService = require("../services/credential.service");
+const credentialService = require("../services/credentialNFT.service");
 const uuid = require("uuid");
 const moment = require("moment");
 const AccountsService = require("../services/accounts.service");
 const SubjectsService = require("../services/tasks.service");
 const jdenticon = require("jdenticon");
 const fs = require("fs");
-const { NFTStorage, File, Blob } = require("nft.storage");
-const NFT_STORAGE_TOKEN = process.env.NFT_STORAGE_API_KEY;
+const { Web3Storage, File} = require('web3.storage');
+const CredentialsService = require("../services/credentials.service");
+const WEB3_STORAGE_API_KEY = process.env.WEB3_STORAGE_API_KEY;
 class TasksController {
   constructor() {}
 
   static async identicontest() {
     try {
       console.log("create identicon");
-      const imageUrl = await TasksController.createIdenticon('31019718');
+      const subject_id = 'AR_DNI_31019718';
+      const token_id = uuid.v4();
+      console.log('token id', token_id)
+      const imageUrl = await TasksController.createIdenticonOnWeb3(token_id, subject_id, 'Juan Perez');
       // const imageUrl = JSON.parse(idtcUrl);
       console.log('IMAGE URL', imageUrl)
       const issued_at = new Date().toISOString();
@@ -40,26 +44,21 @@ class TasksController {
       console.log('expires at', expires_at)
       // mint credential
       const args = {
-        credential_id: uuid.v4(),
+        credential_id: token_id,
         receiver_id: "identicon.testnet",
         credential_metadata: {
-          title: "Credencial de Prueba de Vida",
-          description: "Verifiable Credential - proof of life",
-          media: imageUrl,
-          media_hash: null,
+          title: "AHORA ANDA?",
+          description: "Verifiable Credential - TEST",
+          media: `${imageUrl}`,
           copies: 1,
-          issued_at: issued_at,
-          expires_at: expires_at,
-          starts_at: null,
-          updated_at: null,
-          extra: JSON.stringify({ name: "juan" }),
-          reference: null,
-          reference_hash: null,
+          extra: JSON.stringify({ name: "juan" })
         },
       };
       // guardar token id generado en bd
       // agregar en tabla de credencial  (request_id, credential_id)
       await credentialService.mintCredential(args);
+      const credential = await CredentialsService.create(subject_id, token_id)
+      console.log('CREDENTIAL', credential)
       return "todo bien";
     } catch (e) {
       console.log("ERROR", e);
@@ -128,24 +127,14 @@ class TasksController {
     }
   }
 
-  static async createIdenticon(subject_id, full_name) {
+  static async createIdenticonOnWeb3(token_id, subject_id, full_name) {
     try {
-    const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
+    const client = new Web3Storage({ token: WEB3_STORAGE_API_KEY });
     const name = `${subject_id}-${uuid.v4()}.png` 
     const image = jdenticon.toPng(name, 100);
-    fs.writeFileSync("./testicon.png", image);
-    const creationDate = new Date().toISOString();
     // Uploads the image to ipfs
-    const ipfsRes = await client.store({
-      name: `Credencial de Prueba de vida: ${full_name}`,
-      description: `Credencial de Prueba Creada por identicon.network`,
-      image: new File([image], name, { type: "image/svg" }),
-      properties: {
-        date: creationDate,
-      },
-    });
-    console.log('IPFS result', ipfsRes)
-    return `https://${pfsRes.ipnft}.ipfs.dweb.link`
+    const cid = await client.put([new File([image], name)], { name: name, wrapWithDirectory: false, maxRetries: 3});
+    return `https://${cid}.ipfs.dweb.link`
   }
     catch (e) {
       console.log(`error creating identicon - ${e}`)
@@ -198,8 +187,10 @@ class TasksController {
       if (isVerificationApproved(verified.state)) {
         const subject = await SubjectsService.getByUid(account.subject_id);
         const personal_info = JSON.parse(subject.personal_info);
+        const tokenId = uuid.v4()
         // console.log('personal info', personal_info)
-        const idtcUrl = await TasksController.createIdenticon(
+        const idtcUrl = await TasksController.createIdenticonOnWeb3(
+          tokenId,
           account.subject_id,
           personal_info.full_name
         );
@@ -208,26 +199,20 @@ class TasksController {
         console.log('expires at', expires_at)
         // mint credential
         const args = {
-          credential_id: uuid.v4(),
+          credential_id: tokenId,
           receiver_id: account.linked_account_uid,
           credential_metadata: {
             title: "Credencial de Prueba de Vida",
             description: "Verifiable Credential - proof of life",
-            media: idtcUrl,
-            media_hash: null,
+            media: `${idtcUrl}`,
             copies: 1,
-            issued_at: issued_at,
-            expires_at: expires_at,
-            starts_at: null,
-            updated_at: null,
-            extra: JSON.stringify(personal_info),
-            reference: null,
-            reference_hash: null,
+            extra: JSON.stringify(personal_info)
           },
         };
         // guardar token id generado en bd
         // agregar en tabla de credencial  (request_id, credential_id)
         await credentialService.mintCredential(args, account);
+        await CredentialsService.create(account.subject_id, tokenId)
       }
 
       return new Success(verified.state);

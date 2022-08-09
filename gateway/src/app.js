@@ -19,7 +19,7 @@ const accountsRoutes = require('./routes/accounts.route');
 const sessionRoutes = require('./routes/sessions.route');
 const verificationsRoutes = require('./routes/verifications.route');
 const tasksRoutes = require('./routes/tasks.route');
-
+const credentialsRoutes = require('./routes/credentials.route');
 process.env.uuid = uuidv4();
 
 app.use(cors());
@@ -43,6 +43,7 @@ app.use('/v1/accounts', accountsRoutes);
 app.use('/v1/sessions', sessionRoutes);
 app.use('/v1/verifications', verificationsRoutes);
 app.use('/v1/tasks', tasksRoutes);
+app.use('/v1/credentials', credentialsRoutes);
 
 sequelize.sync({ 
   // force: true,
