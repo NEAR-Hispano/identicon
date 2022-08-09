@@ -26,7 +26,8 @@ function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <NextHead>
           <meta charSet="UTF-8" />
-          <title> Identicon - Main app.</title>
+          <title>Fe de vida | Identicon.network</title>
+          <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         </NextHead>
         {/* <Header /> */}
         <Component {...pageProps} />
