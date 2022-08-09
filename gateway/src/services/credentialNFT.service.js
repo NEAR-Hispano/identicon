@@ -15,10 +15,10 @@ Implicit accounts work similarly to Bitcoin/Ethereum accounts.
 */
 const nearAPI = require('near-api-js');
 const Uuid = require('uuid');
-const { KeyPair, connect } = nearAPI;
+const { KeyPair, connect, providers } = nearAPI;
 const { decryptIt } = require('../utils/cypher.utils');
+const { encodeJsonRpcData, decodeJsonRpcData } = require('../utils/transactions.utils');
 const {getNetworkConfig} = require('./config');
-
 const
   NETWORK_ID = process.env.NETWORK_ID,
   IDENTICON_ACCOUNT_ID = process.env.MASTER_ACCOUNT_ID,
@@ -28,7 +28,8 @@ const
   INITIAL_BALANCE = '1000000000000000000000000',
   ATTACHED_GAS = '300000000000000';
   STORAGE_DEPOSIT = '100000000000000000000000'
-
+const nearConfig = getNetworkConfig(NETWORK_ID);
+const provider = new providers.JsonRpcProvider({ url: nearConfig.nodeUrl });
 async function getConfig(accountId, privateKey) {
   /**
    * Returns the currently active NEAR Config, binded to a given account.
@@ -77,6 +78,7 @@ async function getContract(signer) {
       CONTRACT_ID, 
       {
         viewMethods: [
+          'nft_token'
         ],
         changeMethods: [
           'mint_credential',
@@ -104,6 +106,7 @@ async function mintCredential(args, account) {
         receiver_id: receiver_id,
         token_metadata: credential_metadata
       }; 
+      console.log('args', args)
       result = await contract.mint_credential(args, ATTACHED_GAS, STORAGE_DEPOSIT);
     } catch(e) {
       console.log('ERROR mint_credential', e);
@@ -112,23 +115,23 @@ async function mintCredential(args, account) {
     return result;
 }
 
-async function claimCredential(credential_id, credential_metadata) {
-  let result;
-  try {
-    const contract = await getContract();
-    const args = {
-      token_id: credential_id,
-      receiver_id: IDENTICON_ACCOUNT_ID
-    }; 
-    result = await contract.mint_credential(args, ATTACHED_GAS);
-  } catch(e) {
-    console.log('ERROR mint_credential', e);
-    throw e;
-  }
-  return result;
+async function getCredentialMetadata(credential_id) {
+  const args = {
+    token_id: credential_id
+  }; 
+  const response = await provider.query({
+    request_type: "call_function",
+    finality: "optimistic",
+    account_id: CONTRACT_ID,
+    method_name: 'nft_token',
+    args_base64: encodeJsonRpcData(args),
+  });
+
+  return decodeJsonRpcData(response.result);
+
 }
 
 module.exports = {
   mintCredential,
-  claimCredential
+  getCredentialMetadata
 };

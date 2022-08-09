@@ -77,8 +77,9 @@ class VerificationsService {
     uid
   ) {
     const sql = `
-      SELECT v.*, su.personal_info FROM verifications as v, subjects as su
-      WHERE 
+    SELECT v.*, su.personal_info, c.token_id  FROM verifications as v, subjects as su
+    LEFT JOIN credentials c on c.subject_id = su.subject_id 
+         WHERE
         v.request_uid ='${uid}' AND (v.subject_id = su.subject_id)
     `;
     const [results, _] = await sequelize.query(sql);

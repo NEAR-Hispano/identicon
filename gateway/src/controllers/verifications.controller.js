@@ -117,7 +117,7 @@ class VerificationsController {
       let subject = await subjects.getById(account.subject_id);
       account.full_name = JSON.parse(subject.personal_info).full_name ;
        
-      let verification = await verifications.getByUidWithSubject (uid);
+      let verification = await verifications.getByUidWithSubject(uid);
       if (!verification)
         return new NotFoundError(`Not found the request with uid=${uid}`);
 

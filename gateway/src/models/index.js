@@ -24,6 +24,7 @@ const VerificationsModel = require('./verifications.model.js');
 const TasksModel = require('./tasks.model.js');
 const SubjectsModel = require('./subjects.model.js');
 const SessionsModel = require('./sessions.model.js');
+const CredentialModel = require('./credentials.model');
 
 const models = {
   AccountsModel: AccountsModel(sequelize, Sequelize),
@@ -31,7 +32,8 @@ const models = {
   VerificationsModel: VerificationsModel(sequelize, Sequelize),
   TasksModel: TasksModel(sequelize, Sequelize),
   SubjectsModel: SubjectsModel(sequelize, Sequelize),
-  SessionsModel: SessionsModel(sequelize, Sequelize)
+  SessionsModel: SessionsModel(sequelize, Sequelize),
+  CredentialModel: CredentialModel(sequelize, Sequelize)
 }; 
 
 // db relations

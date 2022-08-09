@@ -24,10 +24,10 @@
     "moment": "^2.29.4",
     "morgan-body": "^2.6.6",
     "near-api-js": "^0.45.1",
-    "nft.storage": "^7.0.0",
     "sequelize": "^6.17.0",
     "sqlite3": "^5.0.8",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "web3.storage": "^4.3.0"
   },
   "devDependencies": {
     "dotenv": "^16.0.1",

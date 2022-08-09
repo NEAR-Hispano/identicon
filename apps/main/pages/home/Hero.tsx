@@ -49,7 +49,7 @@ const Banner = (props: any) => {
           </Button>
           <Link href="/#more-info">
           <Button
-            size={"md"}
+            size={"lg"}
             mr={4}
             mb={4}
             px="xl"
