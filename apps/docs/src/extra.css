@@ -1,0 +1,27 @@
+/**
+* Fix some minor styling issues
+*/
+.md-header {
+  /* fix header bg and fg color */
+  background-color: var(--md-default-bg-color--light) !important;
+  color: var(--md-primary-fg-color) !important;
+}
+
+.md-header__inner {
+  /* add some vertical padding to header*/
+  padding: 0.50rem .2rem !important;
+}
+
+.md-header__button.md-logo {
+  padding: 0 0.4rem !important;
+}
+
+.md-header__button.md-logo :is(img,svg) {
+  height: 2.125rem !important;
+  border-radius: 100%;
+}
+
+.md-search__form:hover {
+  border: 1px solid #ccc !important;
+  background-color: #99a;/*hsla(0,0%,99%,.52) !important;*/
+}
