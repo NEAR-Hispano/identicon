@@ -1,0 +1,45 @@
+site_name: 'Identicon.network | Documentos'
+
+theme:
+  language: es
+  name: material
+  logo: images/identicon-logo-v3.svg
+  favicon: images/favicon.ico
+  font:
+    text: 'Nunito'
+  palette:
+    primary: 'indigo'
+  features:
+    - navigation.instant    
+    # - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes 
+    - toc.integrate            
+
+extra_css:
+  - extra.css
+
+markdown_extensions:
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji 
+      emoji_generator: !!python/name:materialx.emoji.to_svg  
+
+docs_dir: 'src'
+nav:
+    - '': 'index.md'
+    - 'Manifiesto': 'manifest.md'
+    - 'Tecnología': 'techstack.md'
+    - 'Conceptos': 'concepts.md'
+    - 'La fe de vida ': 'fedevida.md'
+    - 'Preguntas frecuentes':
+      - 'Solicitantes': 'faqs/solicitantes.md'
+      - 'Validadores': 'faqs/validadores.md'
+      - 'Desarrolladores': 'faqs/devs.md'
+    
