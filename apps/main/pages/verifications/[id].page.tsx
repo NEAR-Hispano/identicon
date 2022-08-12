@@ -64,11 +64,12 @@ export default function VerificationContainer() {
 
       <Container maxW="container.xl" id="dashboard" pt={8}>
         <StatusNotice state={data && data.state} />
-
-        <SectionHeading title="DATOS PERSONALES" />
+        <SectionHeading title="CREDENCIAL" />
         <SectionPanel>
           <VerifiableCredential token_id={data && data.token_id}/>
         </SectionPanel>
+        <SectionHeading title="DATOS PERSONALES" />
+  
         <SectionPanel>
           <PersonalData data={data} />
         </SectionPanel>
