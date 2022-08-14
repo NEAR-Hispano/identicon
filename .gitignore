@@ -30,5 +30,8 @@ Cargo.lock
 /db/*.sqbpro
 /gateway/db/*.sqlite
 
+#DOCS
+/apps/docs/site/
+
 # IDE
 /.vscode/*

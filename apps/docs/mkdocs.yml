@@ -35,9 +35,9 @@ docs_dir: 'src'
 nav:
     - '': 'index.md'
     - 'Manifiesto': 'manifest.md'
-    - 'Tecnología': 'techstack.md'
-    - 'Conceptos': 'concepts.md'
-    - 'La fe de vida ': 'fedevida.md'
+    - 'Tecnología': 'tech/techstack.md'
+    - 'Conceptos': 'intro/concepts.md'
+    - 'La fe de vida ': 'intro/fedevida.md'
     - 'Preguntas frecuentes':
       - 'Solicitantes': 'faqs/solicitantes.md'
       - 'Validadores': 'faqs/validadores.md'
