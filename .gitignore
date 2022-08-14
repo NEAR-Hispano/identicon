@@ -25,10 +25,13 @@ Cargo.lock
 /gateway/*.zip
 /gateway/temp/*
 
-#DB
+# DB
 /db/*.sqlite
 /db/*.sqbpro
 /gateway/db/*.sqlite
 
 # IDE
 /.vscode/*
+
+# DOCS
+/apps/docs/site/
