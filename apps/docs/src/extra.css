@@ -1,6 +1,9 @@
 /**
 * Fix some minor styling issues
 */
+
+/** Navigation and header fixes **/
+
 .md-header {
   /* fix header bg and fg color */
   background-color: var(--md-default-bg-color--light) !important;
@@ -24,4 +27,20 @@
 .md-search__form:hover {
   border: 1px solid #ccc !important;
   background-color: #99a;/*hsla(0,0%,99%,.52) !important;*/
+}
+
+
+/** Content fixes */
+:root > * {
+  --md-code-hl-number-color: purple; /* #90030C;*/
+}
+
+code {
+  color: var(--md-code-hl-number-color) !important;
+}
+
+h3 code {
+  NObackground-color: var(--md-default-fg-color--lightest) !important;
+  padding: 0.075em 0.25em !important; 
+  border-radius: 4px;
 }

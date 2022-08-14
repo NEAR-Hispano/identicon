@@ -1,5 +1,7 @@
 # Bienvenidos a Identicon.network
 
+[TOC] 
+
 Este sitio contiene documentación de interés:
 
 - **Público en general**: [INICIO](./intro/manifest.md)

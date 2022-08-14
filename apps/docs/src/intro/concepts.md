@@ -1,57 +1,59 @@
-
 # Algunos conceptos básicos
 
-#### ¿Qué es una *verificación* ?
+### `Verificación`
 
-Es el proceso realizado por un conjunto de validadores humanos con el objetivo de verificar que cierta persona (también conocida como *Sujeto*) es quien dice ser y está viva.
+Es el proceso realizado por un conjunto de validadores humanos con el objetivo de verificar que cierta persona (también conocida como [Sujeto](#sujeto)) es quien dice ser y está viva. 
 
-#### ¿Cómo se realiza la verificación?
+### `Sujeto`
 
-1. Alguien (también conocido como *Solicitante*) solicita la verificación de la identidad/vida/etc. de alguna persona en particular (también conocido como *Sujeto*).
+El sujeto es la persona que será verificada. 
 
-2. Un grupo de personas (también conocido como los *Validadores*) visitan al sujeto en la dirección dada, o lo entrevistan mediante una video llamada, dentro de una determinada *Ventana de tiempo*.
+### `Solicitante`
 
-3. Verifican que el sujeto esté vivo, que es quien afirma y reportan su conclusión.
+Es quien realiza la [solicitud de verificación](#verificación), relacionada con cierto [Sujeto](#sujeto). 
 
-4. Cuando se completan todas las verificaciones, el estado final se evalúa en función de los resultados de la verificación.
+El solicitante puede requerir la verificación para sí mismo, o puede ser una persona distinta a la persona que será verificada, tal como un familiar, un amigo o un vecino. 
 
-5. Una vez completada la verificación, se pagan las recompensas a los validadores.
+### `Validador`
 
-#### ¿Qué tipos de verificaciones están permitidas?
+Es la persona que realizará una entrevista (presencial o remota) con el [sujeto](#sujeto) para verificar que es quién dice ser y que está vivo.
 
-Casos:
+Es importante entender que **los validadores son anónimos** y permanecerán anónimos** durante la entrevista para garantizar la transparencia del protocolo.
 
-- Constancia de Vida de algún ser humano
-- Prueba de Identidad de algún ser humano
-- Prueba de existencia de un determinado bien o servicio
-- Prueba de estado de un determinado bien o servicio
-- Prueba de propiedad de un determinado bien o servicio
-- Prueba de servicio de que se completó un determinado servicio
+### `Revisor`
 
-#### ¿Quién puede *solicitar* una verificación?
+Es un validador que ya ha realizado una cantidad de validaciones importantes, y que puede revisar (aprobando o rechazando) las validaciones realizadas por otros validadores menos experimentados.
 
-Cualquier persona que tenga una cuenta NEAR puede solicitarla.
+Es importante entender que **los revisores son anónimos** y permanecerán anónimos** para garantizar la transparencia del protocolo.
 
- #### Quién va a pagar por ello ?
+### `Compensación` 
 
-El solicitante debe pagar por la verificación, y siempre es una cuenta NEAR.
+Es el monto que recibe un cierto validador or revisor por la tarea realizada. 
 
-#### Cuál es el sujeto* ?
-
-El sujeto es el ser humano que será verificado.
-
-#### ¿Qué es una identificación del gobierno?
+### `Identificación del gobierno`
 
 Es el documento de identidad (DNI, Pasaporte, Licencia de conducir, etc.) emitido por algún gobierno local/nacional que proporciona una identificación única para una persona determinada.
 
-#### ¿Quién puede ser un *validador*?
+### `Credencial verificable`
 
-Cualquier persona con una cuenta NEAR puede actuar como validador, pero debe estar registrado en el Dapp.
+Es un certificado digital (en la forma de un NFT individual e intransferible) generado por [el protocolo de Identicon](http://identicon.network) que atestigua que la verificación fue realizada y fue exitosa. Información detallada en: [Credenciales verificables](./credential.md)
 
-#### ¿Cómo serán compensados?
+Se puede utilizar para confirmar la identidad verificada en la OpenWeb y en una o más Blockchains (actualmente limitadas a [NEAR Protocol](http://near.org)).
 
-Recibirán una monto a determinar por verificación completada, según el tipo de verificación.
+### `Tipo de verificación`
 
-#### ¿Qué es el *certificado digital*?
+Define que variantes de verificación (dentro de las disponibles) debe ser realizada. El protocolo puede tener requerimientos y criterios diferentes según el caso. 
+Actualmente está disponible:
 
-Es un NFT (individual e intransferible) generado por el protocolo de verificación que se puede utilizar para confirmar la identidad verificada en la OpenWeb y en una o más Blockchains (actualmente limitadas a NEAR).
+- `ProofOfLife`: Constancia de Vida de algún ser humano, o [Fe de vida](./fedevida.md).
+
+Pueden estar disponibles en el futuro otros tipos:
+
+- _ProofOfIdentity_: Prueba de Identidad de algún ser humano.
+- _ProofOfExistence_: Prueba de existencia de un determinado bien o servicio
+- _ProofOfState_: Prueba de estado de un determinado bien o servicio
+- _ProofOfOwnership_: Prueba de propiedad de un determinado bien o servicio
+- _ProofOfCompletion_: Prueba de servicio de que se completó un determinado servicio
+
+------------------------------------------------------------------------------------------
+
