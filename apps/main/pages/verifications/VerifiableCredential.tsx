@@ -34,6 +34,12 @@ const VerifiableCredential = (props: any) => {
       });
     }
   }, [data]);
+
+  const 
+    bg1 = useColorModeValue("white", "gray.900"),
+    bg2 = useColorModeValue("gray.700", "gray.400"),
+    bg3 = useColorModeValue("gray.50", "gray.800");
+  
   if (!token_id || !data || isLoading)
     return <Loading>Cargando credencial</Loading>;
 
@@ -42,7 +48,7 @@ const VerifiableCredential = (props: any) => {
       <Box
         maxW={"320px"}
         w={"full"}
-        bg={useColorModeValue("white", "gray.900")}
+        bg={bg1}
         boxShadow={"2xl"}
         rounded={"lg"}
         p={6}
@@ -74,7 +80,7 @@ const VerifiableCredential = (props: any) => {
           </Text>
           <Text
             textAlign={"center"}
-            color={useColorModeValue("gray.700", "gray.400")}
+            color={bg2}
             px={3}
           >
             {credential && credential.metadata.description}
@@ -106,7 +112,7 @@ const VerifiableCredential = (props: any) => {
           <Badge
             px={2}
             py={1}
-            bg={useColorModeValue("gray.50", "gray.800")}
+            bg={bg3}
             fontWeight={"400"}
           >
             {credential && credential.metadata.title.toLowerCase()}
