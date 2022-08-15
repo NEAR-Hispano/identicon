@@ -42,8 +42,8 @@ const WhatIsThis = (props: any) => {
             proveedores de bienes y servicios, KYC y varios casos más.
           </Text>
           <VStack spacing={3} align="left" pl={2} fontWeight="bold">
-            <Link color="blue.600" href="https://docs.google.com/document/d/1lDRp3crvEXCSTWXkbAY-ONF3Barg7jDoOdzxh1UjYmE/edit">Lee nuestro manifiesto (whitepaper)</Link>
-            <Link color="blue.600" href="faq#nuestra-tecnologia">Nuestra tecnología (NEAR Protocol)</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/intro/manifest/">Lee nuestro Manifiesto</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/tech/techstack/">Nuestra tecnología (NEAR Protocol)</Link>
             <br/>
             <Link href="https://near.org/">
               <Box bgColor="blue.200" w="10rem" pl={2} borderRadius="sm" py={1}>

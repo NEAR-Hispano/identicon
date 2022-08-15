@@ -8,6 +8,7 @@ import Header from './Header'
 import VerificationsList from './VerificationsList';
 import AssignmentsList from './AssignmentsList';
 import AlertNoPersonalInfo from './AlertNoPersonalInfo';
+import AlertAPIKey from './AlertAPIKey';
 
 type Props = {
   account_id: string;
@@ -35,8 +36,11 @@ export default function Dashboard(props: Props) {
         <Header account={data}/>
       )}
       <Container maxW="container.xl" id="dashboard" pb="4rem">
-        {(data && (data.type === 'RQ' || data.type === 'EX')) &&
+        {(data) &&
           <AlertNoPersonalInfo account={data} />
+        }
+        {(data && (data.type === 'XA')) &&
+          <AlertAPIKey account={data} session={session}/>
         }
         {(data && (data.type === 'RQ' || data.type === 'XA')) &&
           <VerificationsList account={data} />

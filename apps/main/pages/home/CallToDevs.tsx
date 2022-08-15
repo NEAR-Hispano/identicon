@@ -45,8 +45,8 @@ const CallToDevs = (props: any) => {
             
           </Text>
           <VStack spacing={3} align="left" pl={2} fontWeight="bold">
-            <Link color="blue.600" href="">Como usar la API</Link>
-            <Link color="blue.600" href="">Documentos técnicos</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/devs/#como-debes-registrate">¿Cómo me registro como desarrollador?</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/devs/#usa-la-api">¿Como usar la API?</Link>
             <br/>
             <Button 
               variant={"outline"}

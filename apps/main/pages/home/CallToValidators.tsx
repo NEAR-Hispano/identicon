@@ -49,9 +49,9 @@ const CallToValidators = (props: any) => {
             por cada validación realizada.           
           </Text>
           <VStack spacing={3} align="left" pl={2} fontWeight="bold">
-            <Link color="blue.600" >¿Cómo puedes convertirte en un validador?</Link>
-            <Link color="blue.600" >¿Qué tareas debes realizar como validador?</Link>
-            <Link color="blue.600" >¿Cómo se les recompensa y cuando?</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/validadores/#como-convertirte-en-validador">¿Cómo puedes convertirte en un validador?</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/validadores/#que-tareas-debes-realizar">¿Qué tareas debes realizar como validador?</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/validadores/#como-se-recompensa-y-cuando">¿Cómo se les recompensa y cuando?</Link>
             <br/>
             <Button 
               onClick={onOpenSignUp}

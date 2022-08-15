@@ -57,7 +57,7 @@ const ActionBar = ({ account }: Props) => {
   return (
     <>
       <Flex alignItems={"center"}>
-        {account.type !== "VL" && account.subject_id && (
+        {account.type === "RQ" && account.subject_id && (
           <Button
             variant={"solid"}
             colorScheme={"green"}
