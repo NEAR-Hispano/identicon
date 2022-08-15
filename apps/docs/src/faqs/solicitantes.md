@@ -1,7 +1,7 @@
 Solicitantes
 ============
 
-A aquí aclaramos preguntas frecuentes de quienes necesitan solicitar una `Fe de Vida`.
+Aquí aclaramos preguntas frecuentes de quienes necesitan solicitar una `Fe de Vida`.
 
 ### Qué es una Solicitud de Verificación
 
@@ -29,7 +29,7 @@ La entrevista entre el validador y el sujeto a verificar se realiza utilizando u
 
 ### Quienes son los validadores
 
-Los validadores son ciudadanos y miembros de la comunidad de [Identicon DAO](../intro/dao.md), quienes se han registrado para actuar como tales, han sido verificados y han cumplimentado una serie de requisitos y capacitaciones necesarias para realizar la tarea de validación.
+Los validadores son ciudadanos y miembros de la comunidad de [Identicon DAO](../index.md#quiénes-somos), quienes se han registrado para actuar como tales, han sido verificados y han cumplimentado una serie de requisitos y capacitaciones necesarias para realizar la tarea de validación.
 
 Los validadores que participarán en un cierta verificación son anónimos y elegidos al azar, para garantizar la transparencia del protocolo.
 
@@ -44,7 +44,7 @@ Esta credencial es un Certificado digital único y no modificable por terceros q
 - El número de identicación del sujeto verificado, formado por el `codigo de país`+`tipo del documento`+`número del documento`. Por ej: `AR_DNI_1234567890`
 - Las fecha de emisión y validez de la credencial.
 
-###     Porqué necesitan mis datos
+### Porqué necesitan mis datos
 
 Necesitamos solo algunos pocos datos personales para:
 
@@ -52,29 +52,28 @@ Necesitamos solo algunos pocos datos personales para:
 - Los validadores necesitan esos datos a efectos de contactarte y poder verificar que eres quien dices ser.
 - La identificación permite asociar una sola persona a cada cuenta, evitando que se creen cuentas falsas abusando del protocolo. 
 
-###     Qué datos debo proveer
+### Qué datos debo proveer
 
 Hemos minimizado los datos personales que necesitamos, pero los que siguen son absolutamente necesarios:
 
-- Tu nombre y apellido completos: son necesarios para una identificación mínima de tu persona.
-- Tu país, tipo de documento y número: : son necesarios para generar una identificación digital única para todas las verificaciones que solicites.
-- Tu email y teléfono: son necesarios para poder ingresar a tu cuenta. En lugar de usar contraseñas enviamos códigos de ingreso a cada uno de estos.
-- Tu teléfono movil: es necesario para poder contactrte y realizar la entrevista usando una app de mansajería segura (Wahtaspp o Telegram)
-- Tu país de residencia e idioma preferido: es necesario para poder elegir validadores que hablen tu mismo idioma y residean en el mismo país.
+- **Tu nombre y apellido completos**: son necesarios para una identificación mínima de tu persona.
+- **Tu país, tipo de documento y número**: son necesarios para generar una identificación digital única para todas las verificaciones que solicites.
+- **Tu email**: es necesario para poder crear e ingresar a tu cuenta. En lugar de usar contraseñas enviamos códigos de ingreso a tu email.
+- **Tu teléfono movil**: es necesario para poder contactarte y realizar la entrevista usando una app de mensajería segura (Whatsapp o Telegram)
+- **Tu país de residencia e idioma preferido**: es necesario para poder elegir validadores que hablen tu mismo idioma y residan en el mismo país.
 
-Por supuesto que estos datos personales NUNCA SERÁN COMPARTIDOS con nadie fuera de aquellos validadores que deban realizr las entrevistas.
+Por supuesto que estos datos personales NUNCA SERÁN COMPARTIDOS con nadie fuera de aquellos validadores que deban realizar las entrevistas.
 
-###     Cuantas puedo solicitar
+### Cuantas puedo solicitar
 
 Tenemos un límite de hasta cuatro (4) solicitudes por mes por cada solicitante. Esto permite que solicites verificaciones para tí y hasta tres familiares adicionales, o hasta cuatro familiares o vecinos.
 
-Si necesitas realizar verificaciones adicionales, estas pueden tendrán un costo extra que aún no hemos detrerminado.
+Si necesitas realizar verificaciones adicionales, estas pueden tendrán un costo extra que aún no hemos determinado.
 
-###     Tienen algún costo        
+### Tienen algún costo        
 
 Por el momento, y **mientras continuemos en el período de prueba, las verificaciones no tienen costo**. 
 
 Una vez superado el período de prueba definiremos la mejor manera de solventar nuestros costos de operación y recompensar a los validadores.
 
 De todos modos, siendo este un esfuerzo comunitario, estamos buscando maneras de minimizar los costos de verificación para que sea accesible para todos.
-

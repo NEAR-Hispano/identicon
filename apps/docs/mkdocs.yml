@@ -44,6 +44,7 @@ nav:
     - 'Manifiesto': 'intro/manifest.md'
     - 'Tecnología': 'tech/techstack.md'
     - 'Conceptos básicos': 'intro/concepts.md'
+    - 'Cómo funciona': 'intro/como-funciona.md'
     - 'La fe de vida ': 'intro/fedevida.md'
     - 'Credencial Verificable': 'intro/credential.md'
     - 'Preguntas frecuentes':
