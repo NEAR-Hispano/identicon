@@ -38,8 +38,8 @@ export default function VerificationContainer() {
   const { session } = useAuth();
   const id = router.query && router.query.id ? router.query.id : "";
   const { data, isLoading } = useGetSingleVerification(id.toString());
-  
-  useEffect(()=> {
+
+  useEffect(() => {
     if (!isLoading && data && data.personal_info) {
       console.log("Requester account info loaded", data);
     }
@@ -64,12 +64,17 @@ export default function VerificationContainer() {
 
       <Container maxW="container.xl" id="dashboard" pt={8}>
         <StatusNotice state={data && data.state} />
-        <SectionHeading title="CREDENCIAL" />
-        <SectionPanel>
-          <VerifiableCredential token_id={data && data.token_id}/>
-        </SectionPanel>
+        {data && data.token_id && (
+          <>
+            <SectionHeading title="CREDENCIAL" />
+            <SectionPanel>
+              <VerifiableCredential token_id={data && data.token_id} />
+            </SectionPanel>
+          </>
+        )}
+
         <SectionHeading title="DATOS PERSONALES" />
-  
+
         <SectionPanel>
           <PersonalData data={data} />
         </SectionPanel>
