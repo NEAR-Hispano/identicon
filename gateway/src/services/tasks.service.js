@@ -86,7 +86,7 @@ class SubjectsService {
     uid
   }) {
     const sql = `
-      SELECT t.*, vr.subject_id, su.personal_info 
+      SELECT t.*, vr.subject_id, su.personal_info
       FROM tasks as t, subjects as su, verifications as vr
       WHERE 
         t.uid ='${uid}'
