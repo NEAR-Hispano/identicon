@@ -8,7 +8,9 @@ theme:
   font:
     text: 'Nunito'
   palette:
+    scheme: default
     primary: 'indigo'
+    accent: cyan
   features:
     - navigation.instant    
     # - navigation.tabs
@@ -22,6 +24,11 @@ extra_css:
   - extra.css
 
 markdown_extensions:
+  - toc:
+      permalink: true  
+  - def_list  
+  - attr_list
+  - md_in_html  
   - pymdownx.betterem
   - pymdownx.caret
   - pymdownx.mark
@@ -34,10 +41,12 @@ markdown_extensions:
 docs_dir: 'src'
 nav:
     - '': 'index.md'
-    - 'Manifiesto': 'manifest.md'
-    - 'Tecnología': 'techstack.md'
-    - 'Conceptos': 'concepts.md'
-    - 'La fe de vida ': 'fedevida.md'
+    - 'Manifiesto': 'intro/manifest.md'
+    - 'Tecnología': 'tech/techstack.md'
+    - 'Conceptos básicos': 'intro/concepts.md'
+    - 'Cómo funciona': 'intro/como-funciona.md'
+    - 'La fe de vida ': 'intro/fedevida.md'
+    - 'Credencial Verificable': 'intro/credential.md'
     - 'Preguntas frecuentes':
       - 'Solicitantes': 'faqs/solicitantes.md'
       - 'Validadores': 'faqs/validadores.md'

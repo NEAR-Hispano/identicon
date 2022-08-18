@@ -33,10 +33,21 @@ const Footer = (props: any) => {
       <Box>
         <VStack spacing={4} align="flex-start" color="white">
         <Text fontSize="sm" color="gray.400">DOCUMENTOS</Text>
-          <Link href="">Preguntas frecuentes</Link>
-          <Link href="">Manifiesto (Whitepaper)</Link>
-          <Link href="">Tecnología y NEAR</Link>
+          <Link href="http://docs.identicon.network/intro/manifest/">Manifiesto</Link>
+          <Link href="http://docs.identicon.network/intro/como-funciona/">Como funciona</Link>
+          <Link href="http://docs.identicon.network/tech/techstack/">Tecnología y NEAR</Link>
+          <Link href="http://docs.identicon.network/intro/concepts/">Conceptos básicos</Link>
+          <Link href="http://docs.identicon.network/intro/fedevida/">La fe de vida</Link>
+          <Link href="http://docs.identicon.network/intro/credential/">Credenciales verificables</Link>
           <Link href="https://github.com/NEAR-Hispano/identicon/blob/master/docs/apis/gateway-api.md">Nuestra API</Link>
+        </VStack>
+      </Box>
+      <Box>
+        <VStack spacing={4} align="flex-start" color="white">
+        <Text fontSize="sm" color="gray.400">PREGUNTAS FRECUENTES</Text>
+          <Link href="http://docs.identicon.network/faqs/solicitantes/">Solicitantes</Link>
+          <Link href="http://docs.identicon.network/faqs/validadores/">Validadores</Link>
+          <Link href="http://docs.identicon.network/faqs/devs/">Desarrolladores</Link>
         </VStack>
       </Box>
       <Box>
@@ -44,7 +55,7 @@ const Footer = (props: any) => {
           <Text fontSize="sm" color="gray.400">CONTACTOS</Text>
           <Link href="">Discord</Link>
           <Link href="">Twitter</Link>
-          <Link href="">Github</Link>
+          <Link href="https://github.com/NEAR-Hispano/identicon">Github</Link>
         </VStack>
       </Box>
     </Flex>

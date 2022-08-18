@@ -54,10 +54,10 @@ const HowDoesItWork = (props: any) => {
             </OrderedList>
           </Box>
           <VStack spacing={3} align="left" pl={2} fontWeight="bold">
-            <Link color="blue.600" >Conceptos básicos</Link>
-            <Link color="blue.600" >¿Cómo se realiza la entrevista?</Link>
-            <Link color="blue.600" >¿Quiénes son los validadores?</Link>
-            <Link color="blue.600" >¿Qué es la Credencial Verificable?</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/intro/concepts/">Conceptos básicos</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/solicitantes/#como-se-realiza-la-entrevista">¿Cómo se realiza la entrevista?</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/solicitantes/#quienes-son-los-validadores">¿Quiénes son los validadores?</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/solicitantes/#que-es-la-credencial-verificable">¿Qué es la Credencial Verificable?</Link>
               <br/>
               <Button 
                 onClick={onOpenSignUp}

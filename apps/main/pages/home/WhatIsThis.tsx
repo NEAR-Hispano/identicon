@@ -29,7 +29,7 @@ const WhatIsThis = (props: any) => {
             <span className="feature-heading">Qué es</span>
           </Text>        
           <Text fontSize="lg" lineHeight="1.6em">
-            <Link color="primary" href="http://identicon.network"><b>Identicon.network</b></Link> 
+            <Link color="primary" href="http://docs.identicon.network/"><b>Identicon.network</b></Link> 
             &nbsp; es una comunidad decentralizada (<Link color="blue.600" href="https://es.wikipedia.org/wiki/Organizaci%C3%B3n_aut%C3%B3noma_descentralizada#:~:text=Una%20Organizaci%C3%B3n%20Aut%C3%B3noma%20Descentralizada%20(en,programas%20de%20ordenador%20llamados%20contratos">DAO</Link>) de  
             validadores e informáticos, focalizados en la <b>
             verificación de identidades digitales  
@@ -42,8 +42,8 @@ const WhatIsThis = (props: any) => {
             proveedores de bienes y servicios, KYC y varios casos más.
           </Text>
           <VStack spacing={3} align="left" pl={2} fontWeight="bold">
-            <Link color="blue.600" href="https://docs.google.com/document/d/1lDRp3crvEXCSTWXkbAY-ONF3Barg7jDoOdzxh1UjYmE/edit">Lee nuestro manifiesto (whitepaper)</Link>
-            <Link color="blue.600" href="faq#nuestra-tecnologia">Nuestra tecnología (NEAR Protocol)</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/intro/manifest/">Lee nuestro Manifiesto</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/tech/techstack/">Nuestra tecnología (NEAR Protocol)</Link>
             <br/>
             <Link href="https://near.org/">
               <Box bgColor="blue.200" w="10rem" pl={2} borderRadius="sm" py={1}>

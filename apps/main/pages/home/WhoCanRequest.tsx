@@ -40,10 +40,10 @@ const WhoCanRequest = (props: any) => {
             darnos algunos datos mínimos de contacto.
           </Text>
           <VStack spacing={3} align="left" pl={2} fontWeight="bold">
-            <Link color="blue.600" >¿Porqué necesitan mis datos?</Link>
-            <Link color="blue.600" >¿Qué datos debo proveer para la verificación?</Link>
-            <Link color="blue.600" >¿Cuantas verificaciones puedo solicitar?</Link>
-            <Link color="blue.600" >¿Tienen algún costo ?</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/solicitantes/#porque-necesitan-mis-datos">¿Porqué necesitan mis datos?</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/solicitantes/#que-datos-debo-proveer">¿Qué datos debo proveer para la verificación?</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/solicitantes/#cuantas-puedo-solicitar">¿Cuantas verificaciones puedo solicitar?</Link>
+            <Link color="blue.600" href="http://docs.identicon.network/faqs/solicitantes/#tienen-algun-costo">¿Tienen algún costo ?</Link>
             <br/>
             <Button 
               variant={"solid"}

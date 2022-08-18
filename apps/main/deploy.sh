@@ -1,7 +1,7 @@
 #!/bin/bash
 # Deploy the app to identicon server 
 
-#yarn build
+yarn build
 
 # The place where we exported the static build
 # after doing 'yarn build' and 'yarn export'
@@ -31,4 +31,4 @@ rsync -arv $BUILD/ $TARGET/.next/
 rsync -arv $BUILD/standalone/ $TARGET/
 
 # restart 
-ssh -t identicon.near "sudo systemctl restart apps-fedevida & sudo systemctl status apps-fedevida" 
+ssh -t identicon.near "sudo systemctl restart fedevida.app & sudo systemctl status fedevida.app" 

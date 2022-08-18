@@ -21,6 +21,9 @@ const AccountInfo = (props: any) => {
         {(account.type === 'RQ') &&
           <span>/ <b>Solicitante</b></span>
         }
+        {(account.type === 'XA') &&
+          <span>/ <b>Aplicación externa</b></span>
+        }
       </HStack>
       <Text fontSize="xl" py={0} lineHeight="1.5em" fontWeight="bold">
         {account && account.personal_info
