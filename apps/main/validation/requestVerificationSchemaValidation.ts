@@ -9,12 +9,12 @@ Yup.setLocale({
 });
 
 const requestVerificationSchemaValidation = Yup.object().shape({
-  full_name: Yup.string().required(),
+  full_name: Yup.string().required("Nombre completo es requerido"),
   birthday: Yup.date()
     .required("Fecha de nacimiento es requerido")
 
     .max(moment().subtract(18, "years").toDate()),
-  dni: Yup.number().required(),
+  dni: Yup.number().required("DNI es requerido"),
   email: Yup.string().email("Formato de email invalido"),
   phone: Yup.number().nullable(),
 });

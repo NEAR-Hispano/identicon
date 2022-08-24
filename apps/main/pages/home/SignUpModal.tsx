@@ -1,5 +1,4 @@
-import { useDisclosure } from "@chakra-ui/hooks";
-import { useFormik } from "formik";
+import { ErrorMessage, useFormik } from "formik";
 import {
   Button,
   FormControl,
@@ -12,17 +11,15 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Flex,
   Center,
   Stack,
   Heading,
   useBreakpointValue,
-  Box,
-  useColorModeValue,
   Text,
   HStack,
+  FormErrorMessage,
 } from "@chakra-ui/react";
-import { Radio, RadioGroup } from '@chakra-ui/react';
+import { Radio, RadioGroup } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import signUpSchemaValidation from "../../validation/signUpSchemaValidation";
 import { OTPData } from "../../models/accounts";
@@ -57,7 +54,6 @@ const SignUpModal = (props: {
     validateOnBlur: true,
     validateOnChange: true,
     onSubmit: async (values: any) => {
-      // alert(JSON.stringify(values,null,2))
       signUp(values);
     },
   });
@@ -90,21 +86,23 @@ const SignUpModal = (props: {
         <ModalBody pb={4}>
           <FormControl>
             <Stack>
-              <FormLabel><b>Qué deseas hacer ?</b></FormLabel>
+              <FormLabel>
+                <b>Qué deseas hacer ?</b>
+              </FormLabel>
               <RadioGroup
-                  id="type"
-                  name="type"
-                  // value={form.values.type} // si activo esto no anda !
-                  defaultValue='RQ'
-                  onPaste={form.handleChange}
-                  onBlur={form.handleBlur}
-                  onChange={form.handleChange}
-                  >
-                <Stack direction='column'>
-                  <Radio value='RQ'>Solicitar la fé de vida para mí o mis familiares</Radio>
-                  <Radio value='VL'>Actuar como validador</Radio>
-                  <Radio 
-                    value='XA'>Usar el servicio desde mis Apps</Radio>
+                id="type"
+                name="type"
+                value={form.values.type}
+                onPaste={form.handleChange}
+                onBlur={form.handleBlur}
+                onChange={(e) => form.setFieldValue("type", e)}
+              >
+                <Stack direction="column">
+                  <Radio value="RQ">
+                    Solicitar la fé de vida para mí o mis familiares
+                  </Radio>
+                  <Radio value="VL">Actuar como validador</Radio>
+                  <Radio value="XA">Usar el servicio desde mis Apps</Radio>
                 </Stack>
               </RadioGroup>
               {!!form.values.type &&
@@ -115,10 +113,12 @@ const SignUpModal = (props: {
             </Stack>
           </FormControl>
 
-          <FormControl>
+          <FormControl isInvalid={!!form.errors.email && !!form.touched.email}>
             <Stack>
-              <br/>
-              <FormLabel><b>Necesitamos tu Email</b></FormLabel>
+              <br />
+              <FormLabel>
+                <b>Necesitamos tu Email</b>
+              </FormLabel>
               <Center>
                 <Input
                   ref={initialRef}
@@ -131,16 +131,13 @@ const SignUpModal = (props: {
                   onChange={form.handleChange}
                 />
               </Center>
-              {!!form.values.email &&
-                !!form.touched.email &&
-                !!form.errors.email && (
-                  <p className="error-text"> {form.errors.email}</p>
-                )}
+
+              <FormErrorMessage>{form.errors.email}</FormErrorMessage>
             </Stack>
             <Stack spacing="1" mt={4} justify="center">
               <Text fontSize="md" color="muted">
-                A continuación te enviaremos un código
-                numérico que deberás ingresar para completar el registro
+                A continuación te enviaremos un código numérico que deberás
+                ingresar para completar el registro
               </Text>
             </Stack>
           </FormControl>

@@ -37,7 +37,7 @@ export interface PersonalInfoData {
 }
 
 export interface OTPData {
-    email?: string;
+    email: string;
     phone?: string;
     type?: string;
 }
