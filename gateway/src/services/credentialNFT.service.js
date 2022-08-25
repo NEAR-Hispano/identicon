@@ -22,6 +22,7 @@ const {getNetworkConfig} = require('./config');
 const
   NETWORK_ID = process.env.NETWORK_ID,
   IDENTICON_ACCOUNT_ID = process.env.MASTER_ACCOUNT_ID,
+  IDENTICON_PRIVATE_KEY = process.env.MASTER_PRIVATE_KEY
   MASTER_ACCOUNT_ID = process.env.CREDENTIAL_CONTRACT_ID,
   MASTER_PRIVATE_KEY = process.env.CREDENTIAL_PRIVATE_KEY,
   CONTRACT_ID = process.env.CREDENTIAL_CONTRACT_ID,
@@ -60,10 +61,10 @@ async function getConfig(accountId, privateKey) {
 
 async function getContract(signer) {
   // @returns: the initialized contract with predefined methods
-  const signerId = signer ? signer.linked_account_uid : MASTER_ACCOUNT_ID;
-  const keyPair = signer && decryptIt(signer.keys);
-  const privateKey = signer ? keyPair.private_key : MASTER_PRIVATE_KEY;
-  const publicKey = signer ? keyPair.public_key : '0x0';
+  const signerId = MASTER_ACCOUNT_ID;
+  // const keyPair = signer && decryptIt(signer.keys);
+  const privateKey =  MASTER_PRIVATE_KEY;
+  const publicKey = '0x0';
   console.log('getContract signerId=', signerId);
   console.log('getContract keys prv=', privateKey, 'pub=', publicKey);
 

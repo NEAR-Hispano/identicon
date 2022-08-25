@@ -26,6 +26,7 @@ const fs = require("fs");
 const { Web3Storage, File} = require('web3.storage');
 const CredentialsService = require("../services/credentials.service");
 const WEB3_STORAGE_API_KEY = process.env.WEB3_STORAGE_API_KEY;
+const MASTER_ACCOUNT_ID = process.env.MASTER_ACCOUNT_ID | "identicon.testnet";
 class TasksController {
   constructor() {}
 
@@ -56,6 +57,7 @@ class TasksController {
       };
       // guardar token id generado en bd
       // agregar en tabla de credencial  (request_id, credential_id)
+      console.log('MINTING CREDENTIAL for', JSON.stringify(ars));
       await credentialService.mintCredential(args);
       const credential = await CredentialsService.create(subject_id, token_id)
       console.log('CREDENTIAL', credential)
@@ -149,13 +151,12 @@ class TasksController {
     authorized_uid,
   }) {
     try {
-      console.log("entro ");
       const [account, err] = await getAccountOrError(authorized_uid);
       console.log("account", account);
       if (err) return err;
       if (!account) return NotFoundError(`Account ${authorized_uid} not found`);
-
       const task = await TasksService.getByUid(uid);
+      const task_with_personal_info = await TasksService.getByIdWithSubjectInfo(uid)
       if (!task) return NotFoundError(`Task ${uid} not found`);
 
       const verified = await NearService.reportValidationResult(
@@ -185,13 +186,13 @@ class TasksController {
       }
 
       if (isVerificationApproved(verified.state)) {
-        const subject = await SubjectsService.getByUid(account.subject_id);
-        const personal_info = JSON.parse(subject.personal_info);
-        const tokenId = uuid.v4()
+        const subject_id = task_with_personal_info.subject_id;
+        const personal_info = JSON.parse(task.task_with_personal_info);
+        const tokenId = uuid.v4()  // change to a hash from personnal info
         // console.log('personal info', personal_info)
         const idtcUrl = await TasksController.createIdenticonOnWeb3(
           tokenId,
-          account.subject_id,
+          subject_id,
           personal_info.full_name
         );
         const issued_at = new Date().toISOString();
@@ -200,13 +201,18 @@ class TasksController {
         // mint credential
         const args = {
           credential_id: tokenId,
-          receiver_id: account.linked_account_uid,
+          receiver_id: MASTER_ACCOUNT_ID,
           credential_metadata: {
             title: "Credencial de Prueba de Vida",
             description: "Verifiable Credential - proof of life",
             media: `${idtcUrl}`,
             copies: 1,
-            extra: JSON.stringify(personal_info)
+            extra: JSON.stringify({
+              full_name: personal_info.full_name,
+              subject_id: personal_info.subject_id,
+              birthday: personal_info.birthday,
+              dni: personal_info.dni
+            })
           },
         };
         // guardar token id generado en bd
