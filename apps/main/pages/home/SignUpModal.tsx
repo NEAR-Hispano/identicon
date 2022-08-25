@@ -113,7 +113,7 @@ const SignUpModal = (props: {
             </Stack>
           </FormControl>
 
-          <FormControl isInvalid={!!form.errors.email && !!form.touched.email}>
+          <FormControl isInvalid={!!form.values.email && !!form.errors.email && !!form.touched.email}>
             <Stack>
               <br />
               <FormLabel>
