@@ -15,8 +15,8 @@ const requestVerificationSchemaValidation = Yup.object().shape({
 
     .max(moment().subtract(18, "years").toDate()),
   dni: Yup.number().required("DNI es requerido"),
-  email: Yup.string().email("Formato de email invalido"),
-  phone: Yup.number().nullable(),
+  email: Yup.string().required("Email es requerido").email("Formato de email invalido"),
+  phone: Yup.number().required("Telefono es requerido"),
 });
 
 export default requestVerificationSchemaValidation;

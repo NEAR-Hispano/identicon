@@ -15,13 +15,13 @@ import {
   ModalHeader,
   ModalOverlay,
   PinInput,
-  PinInputField,
+  PinInputField
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import signUpSchemaValidation from "../../validation/signUpSchemaValidation";
 import { OTPData } from "../../models/accounts";
 import { useStore } from "../../stores/authSession";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import { useLogin } from "../../hooks/sessions";
 const OtpModal = (props: {
   data: any;
@@ -31,13 +31,15 @@ const OtpModal = (props: {
   onOpen: any;
   onClose: any;
 }) => {
-  const { data, setisSignedIn, setSignInAccountId, isOpen, onOpen, onClose } = props;
-  const { login, isLogginIn, isLoginSuccess, loginData, isLoginError } = useLogin();
+  const { data, setisSignedIn, setSignInAccountId, isOpen, onOpen, onClose } =
+    props;
+  const { login, isLogginIn, isLoginSuccess, loginData, isLoginError } =
+    useLogin();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const [value, setValue] = useState("");
   const { session, setSession } = useStore();
-  const router = useRouter()
+  const router = useRouter();
 
   const handleChange = (value: string) => {
     setValue(value);
@@ -48,17 +50,15 @@ const OtpModal = (props: {
       session_key: data.session,
       passcode: value,
     });
-    console.log("login result", result);
-  
   };
 
   useEffect(() => {
     if (isLoginSuccess) {
-      setSession(loginData)
-      setisSignedIn(true)
-      setSignInAccountId(loginData.id)
+      setSession(loginData);
+      setisSignedIn(true);
+      setSignInAccountId(loginData.id);
       onClose();
-      router.push('/dashboard')
+      router.push("/dashboard");
     }
   }, [isLoginSuccess]);
 
@@ -71,19 +71,24 @@ const OtpModal = (props: {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>One-Time password</ModalHeader>
+        <ModalHeader>Verificación de password de un solo uso</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
           <FormControl as="fieldset">
             <Center>
-              <FormLabel>Ingresa el código que te enviamos por correo</FormLabel>
+              <FormLabel>
+                Ingresa el código que te enviamos por correo
+              </FormLabel>
+            </Center>
+            <Center>
               <PinInput
                 otp
                 value={value}
                 onChange={handleChange}
                 onComplete={handleComplete}
+                placeholder=''
               >
-                <PinInputField />
+                <PinInputField  />
                 <PinInputField />
                 <PinInputField />
                 <PinInputField />
@@ -98,7 +103,7 @@ const OtpModal = (props: {
           <Button
             colorScheme="blue"
             mr={3}
-            onClick={(e: any) => handleComplete(e)}
+            onClick={(e: any) => handleComplete(value)}
           >
             Enviar
           </Button>

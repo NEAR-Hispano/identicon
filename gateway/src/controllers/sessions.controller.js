@@ -56,11 +56,11 @@ class SessionsController {
     try {
       const session = await SessionsService.getSessionByKey(session_key);
       if (!session)  {
-        return new ConflictError('Session not found')
+        return new ConflictError('La sesión no pudo ser encontrada')
       }
       const valid = await SessionsService.verifyPasscode(session.passcode, passcode);
       if (!valid) {
-        return new UnauthorizedError("Passcode is not valid");
+        return new UnauthorizedError("Código no válido");
       }
       let account = await AccountsService.getAccountByContact(
         session.contact

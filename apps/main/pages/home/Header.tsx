@@ -70,7 +70,7 @@ const Header = (props: any) => {
 
   const onSignUp = (data: any) => {
     toast({
-      title: "OTP was successfully sent",
+      title: "El password de un solo uso ha sido enviado",
       status: "success",
       duration: 9000,
       position: "top-right",
@@ -83,7 +83,7 @@ const Header = (props: any) => {
 
   const onLogin = (data: any) => {
     toast({
-      title: "OTP was successfully sent",
+      title: "El password de un solo uso ha sido enviado",
       status: "success",
       duration: 9000,
       position: "top-right",
